@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:theme="@style/RobotoTextViewStyle">
+
+    <TextView
+        android:id="@+id/ann_monthtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:text="May 2018"
+        android:textColor="@color/cpb_red"
+        android:textSize="20sp"
+        tools:ignore="RtlSymmetry" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp">
+
+        <RelativeLayout
+            android:id="@+id/dateCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/ann_ldate"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/login_button"
+                android:backgroundTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="28"
+                android:textColor="@color/cpb_white"
+                android:textSize="23sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@id/dateCircle"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ann_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="Results of M.Tech Examination Dec 2017(Calicut cluster) has been published"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/ann_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="Results of M.Tech Examination Dec 2017(Calicut cluster) has been published"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:id="@+id/announcementLinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:id="@+id/ann_link1_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="B.Tech S2 Comprehensive Examination Time Table"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/ann_link2_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="B.Tech S4 Comprehensive Examination Time Table"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/ann_link3_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="B.Tech S6 Comprehensive Examination Time Table"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/ann_rdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingRight="10dp"
+                android:text="Mon May 28 2018"
+                android:textSize="10sp"
+                android:textStyle="italic" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/black" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

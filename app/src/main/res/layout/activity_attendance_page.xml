@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="170dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:elevation="1dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_education_desk"
+        android:tint="#00900000" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:rotation="180"
+        android:scaleType="fitXY"
+        android:src="@drawable/violet_circle" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/violet_circle" />
+
+            <LinearLayout
+                android:id="@+id/checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="8dp"
+                    android:clickable="false"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/cpb_white"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="3dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingLeft="23dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="110dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/raleway"
+                                android:padding="10dp"
+                                android:text="From Date: "
+                                android:textColor="#424242"
+                                android:textSize="14dp" />
+
+
+                            <EditText
+                                android:id="@+id/fromAttendance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:gravity="center_vertical"
+                                android:text="01/01/2018"
+                                android:textColor="#494949"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="110dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/raleway"
+                                android:padding="10dp"
+                                android:text="To Date: "
+                                android:textColor="#424242"
+                                android:textSize="14dp" />
+
+
+                            <EditText
+                                android:id="@+id/toAttendance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:inputType="none"
+                                android:text="03/05/2018"
+                                android:textColor="#494949"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:id="@+id/submitAttendance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginRight="120dp"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/login_button"
+                    android:backgroundTint="#ffffff"
+                    android:fontFamily="sans-serif"
+                    android:text="Submit"
+                    android:textAllCaps="false"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:text="*Dates don't matter, Its subject wise."
+                    android:textColor="@color/cpb_white"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarAttendance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@android:color/transparent"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/MyApp.ActionBarTheme"
+                app:titleTextColor="@color/cpb_white" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:clickable="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/cpb_white"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+
+                        <ListView
+                            android:id="@+id/listAtendance"
+                            android:layout_width="match_parent"
+                            android:layout_height="310dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="10dp" />
+                    </LinearLayout>
+                </ScrollView>
+
+            </HorizontalScrollView>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <ProgressBar
+        android:id="@+id/progressAttendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:elevation="3dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

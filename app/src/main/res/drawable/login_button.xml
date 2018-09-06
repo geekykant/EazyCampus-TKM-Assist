@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorAccent"> <!-- this is the ripple color(first touch color changes into this color) -->
+    <item>
+        <selector>
+            <item android:state_enabled="true">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <!-- default button color -->
+
+                    <solid android:color="@color/colorAccent"></solid>
+
+                    <corners android:radius="200dp"></corners>
+
+                </shape>
+            </item>
+            <item>
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <!-- button disabled color opposite behaviour -->
+                    <solid android:color="#b42f5c"></solid>
+
+                    <corners android:radius="200dp"></corners>
+
+                </shape>
+            </item>
+        </selector>
+    </item>
+    <item>
+        <selector>
+            <item android:state_pressed="true">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <!-- button first touch of your finger color -->
+                    <solid android:color="#b42f5c"></solid>
+
+                    <corners android:radius="200dp"></corners>
+
+                </shape>
+            </item>
+        </selector>
+    </item>
+    <item>
+        <selector>
+            <item android:state_hovered="true">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <!-- hovered with a note pencil -->
+                    <solid android:color="#b42f5c"></solid>
+
+                    <corners android:radius="200dp"></corners>
+
+                </shape>
+            </item>
+        </selector>
+    </item>
+
+</ripple>

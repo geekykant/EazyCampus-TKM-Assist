@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffffff"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:theme="@style/RobotoTextViewStyle">
+
+    <RelativeLayout
+        android:gravity="center"
+        android:paddingRight="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/graduationIcon"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:src="@drawable/ic_graduation" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_toRightOf="@id/graduationIcon"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:text="Psst!"
+            android:textColor="#ff000000"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/ads_dialog_message"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/submitAdsBox"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:background="@drawable/login_button"
+        android:fontFamily="sans-serif"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="14sp" />
+
+
+</LinearLayout>

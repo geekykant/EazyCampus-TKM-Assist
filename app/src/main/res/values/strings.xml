@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">EazyCampus</string>
+    <string name="action_settings">Settings</string>
+    <string name="toolbar_title">Faculty Directory</string>
+    <string name="action_search">Search</string>
+    <string name="search_hint">Type name…</string>
+
+    <string name="feedback_help">Help &amp; Support</string>
+    <string name="open_toggle">Open</string>
+    <string name="close_toggle">Close</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="choose_email_client">Choose email client</string>
+
+    <string name="default_notification_channel_id">global</string>
+
+    <!--<string name="about_description"> EazyCampus is an unofficial android app for TKM students to ease the process of checking attendance, marks and reaching out to other useful features.</string>-->
+    <string name="about_description"> EazyCampus : A Campus app for TKM College of Engineering students that eases the process of browsing website, getting marks, attendance with much more other useful features.</string>
+    <string name="ktu_announcement">KTU Announcement</string>
+    <string name="border_line_attendance">You are on the border line! Push it up a little.</string>
+    <string name="share_eazycampus_text">🔥🎓 Eazy Campus- A Campus app for TKM College of Engineering students that eases the process of browsing website with some amazing extra features.\n\n- Grab Attendance and Marks reports in less than 10 seconds (Believe me!)\n- Instant KTU announcements &amp; Campus stories 👨‍🎓👩‍🎓\n- Faculty directory: The Complete college staffs/teachers directory\n- Intuitive and user-friendly UI.\n- Automated Staff Evaluation (Finally😎)\n\nDownload the app right now on PlayStore: https://play.google.com/store/apps/details?id=com.diyandroid.eazycampus \n\n(Apple fanboys need to buy this developer an iPhone to begin the development..Please😜) \n\nShare this app with your friends and do let them know!\n\nYour friendly geeky👨‍💻,\nApp developer obviously.</string>
+    <string name="support_eazycampus_development">Support EazyCampus development</string>
+    <string name="ads_dialog_message">Sorry for enabling ads! But as a student it fills up my coffee and beer mug! I will remove ads with graduation! Pinky Promise!</string>
+</resources>

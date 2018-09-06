@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1b1b1b">
+
+    <ImageView
+        android:id="@+id/timeline_image"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/timeline_wallpaper" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="40dp"
+        android:scrollbars="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="52dp"
+            android:src="@drawable/contact"
+            app:civ_border_color="#4fc3f7"
+            android:transitionName="imageTransition"
+            app:civ_border_width="3dp" />
+
+        <LinearLayout
+            android:id="@+id/nameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:transitionName="nameTransition"
+                android:text="Sreekant Shenoy"
+                android:textAlignment="center"
+                android:textColor="#1e88e5"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profile_department"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Electronics And Communication Engineering"
+                android:textColor="#fff"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/profile_designation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Professor"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mobileNoLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="40dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="#fff"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/call_mobile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="7dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#039be5"
+                android:drawableTint="#ffffff"
+                android:drawableTop="@drawable/ic_call"
+                android:paddingTop="15dp"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/profile_mobile_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:text="+91 7012966072"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/message_mobile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="7dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#039be5"
+                android:drawableTint="#ffffff"
+                android:drawableTop="@drawable/ic_message"
+                android:paddingTop="15dp"
+                android:textColor="#fff" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/officeNoLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_call"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:tint="#66bb6a" />
+
+                <TextView
+                    android:id="@+id/profile_office_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="+91 7012966072"
+                    android:textSize="18sp"
+                    android:textColor="#fff" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/emailLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_mail" />
+
+                <TextView
+                    android:id="@+id/profile_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="geekykant@gmail.com"
+                    android:textColor="#fff"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/addressLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_margin="27dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:src="@drawable/ic_address"
+                android:tint="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/profile_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:text="TRA-32, Thanikkal Lane, Elamakkara, Ernakulam 682026"
+                android:textColor="#fff"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

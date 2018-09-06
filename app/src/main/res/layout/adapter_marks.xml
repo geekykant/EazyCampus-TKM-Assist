@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/marksLayoutAdapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/mark1"
+                android:layout_width="220dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp"
+                android:text="Subject Name" />
+
+            <TextView
+                android:id="@+id/mark2"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark3"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark4"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark5"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark6"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark7"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark8"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark9"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark10"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark11"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark12"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark13"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark14"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark15"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark16"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark17"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark18"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark19"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+
+            <TextView
+                android:id="@+id/mark20"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark21"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark22"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark23"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark24"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+
+            <TextView
+                android:id="@+id/mark25"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="9dp" />
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

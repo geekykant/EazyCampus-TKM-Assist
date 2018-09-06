@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Notifications">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_notification_receive"
+            android:title="Receive Push Notifications" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Select your semester"
+            android:entries="@array/pref_upload_quality_entries"
+            android:entryValues="@array/pref_upload_quality_values"
+            android:key="key_notification_semester"
+            android:summary="Select your semester"
+            android:title="Notification Semester" />
+    </PreferenceCategory>
+</PreferenceScreen>

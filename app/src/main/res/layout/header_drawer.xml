@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@drawable/tkm_cover"
+    android:orientation="vertical"
+    android:backgroundTint="#11000000"
+    android:backgroundTintMode="src_over"
+    android:theme="@style/RobotoTextViewStyle"
+    android:padding="18dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="23dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile_ic_1"
+        app:civ_border_color="#ffffff"
+        android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/login_button"
+        app:civ_border_width="3dp" />
+
+    <TextView
+        android:id="@+id/drawerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="Sreekant Shenoy"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/drawerEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TKM College of Engineering"
+        android:textColor="@color/cpb_white"
+        android:textSize="13sp"
+        android:textStyle="italic" />
+
+</LinearLayout>
