@@ -3,6 +3,7 @@ package com.diyandroid.eazycampus.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -16,11 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
 import com.google.gson.Gson;
@@ -31,12 +36,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class LoginPage extends AppCompatActivity {
 
-    private EditText username, password;
+    private EditText username, password, captcha;
     private Button login_button;
     private ProgressBar progressBar;
     private CheckBox checkBox;
@@ -56,9 +60,13 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
+        new getCaptcha(this).execute();
+
         login_button = (Button) findViewById(R.id.login_button);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
+        captcha = (EditText) findViewById(R.id.captchaInput);
+
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
         LinearLayout layout = findViewById(R.id.rememberme);
@@ -98,6 +106,7 @@ public class LoginPage extends AppCompatActivity {
             login_button.setClickable(false);
             username.setEnabled(false);
             password.setEnabled(false);
+            captcha.setEnabled(false);
             new getWebsite(this).execute();
         } else {
             Toast.makeText(LoginPage.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
@@ -117,14 +126,86 @@ public class LoginPage extends AppCompatActivity {
             username.setText(USR_NAME);
             password.setText(PASS_NAME);
             ((TextInputLayout) findViewById(R.id.passbox)).setPasswordVisibilityToggleEnabled(false);
-            doLogin();
+//            doLogin();
         }
     }
 
-    private class getWebsite extends ExceptionHandlingAsyncTask<String, Void, Element> {
+    private Document loginPage;
+    private Map<String, String> loginCookies;
 
+    private boolean captchaGet = false;
+
+    private class getCaptcha extends ExceptionHandlingAsyncTask<String, Void, Element> {
+
+        private Connection.Response homePage;
+
+        public getCaptcha(Context context) {
+            super(context);
+        }
+
+        ImageView captchaImage = (ImageView) findViewById(R.id.captchaImage);
+
+        String captchaHTML;
+        Bitmap bmp;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Progress bar implementations
+        }
+
+        @Override
+        protected Element doInBackground2(String... strings) {
+            try {
+                final String userAgent = "Firefox";
+
+                Connection.Response loginForm = Jsoup.connect(getString(R.string.tkmce_index_url))
+                        .method(Connection.Method.GET)
+                        .userAgent(userAgent)
+                        .execute();
+
+                Log.d("FacultyDirectory", "Scraped Login Page!");
+
+                loginPage = loginForm.parse(); //Same
+                loginCookies = loginForm.cookies(); //Grabs all cookies
+
+                captchaHTML = loginPage.getElementById("ImgCaptcha").attr("abs:src");
+
+                captchaGet = true;
+            } catch (IOException | RuntimeException ex) {
+                ex.printStackTrace();
+                captchaGet = false;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute2(Element element) {
+
+            Toast.makeText(LoginPage.this, "Captcha: " + captchaHTML, Toast.LENGTH_SHORT).show();
+
+            if (captchaGet) {
+
+//                byte[] data = captchaHTML.html().getBytes();
+//                bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+//                captchaImage.setImageBitmap(bmp);
+
+                Log.d("MainActivity", "captch: ");
+
+                Glide.with(getApplicationContext())
+                        .load(bmp)
+                        .apply(new RequestOptions().placeholder(R.drawable.error_faculty))
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true))
+                        .into(captchaImage);
+            }
+        }
+    }
+
+
+    private class getWebsite extends ExceptionHandlingAsyncTask<String, Void, Element> {
         private boolean loginCheck = false;
-        private Map<String, String> loginCookies = new HashMap<>();
         private String LoginName = "";
         private Connection.Response homePage;
 
@@ -144,16 +225,6 @@ public class LoginPage extends AppCompatActivity {
             try {
                 final String userAgent = "Firefox";
 
-                Connection.Response loginForm = Jsoup.connect(getString(R.string.tkmce_index_url))
-                        .method(Connection.Method.GET)
-                        .userAgent(userAgent)
-                        .execute();
-
-                Log.d("FacultyDirectory", "Scraped Login Page!");
-
-                Document loginPage = loginForm.parse(); //Same
-                loginCookies = loginForm.cookies(); //Grabs all cookies
-
                 homePage = Jsoup.connect(getString(R.string.tkmce_index_url))
                         .data("__LASTFOCUS", "")
                         .data("__EVENTTARGET", "")
@@ -165,10 +236,11 @@ public class LoginPage extends AppCompatActivity {
                         .data("hdnstatus0", "0")
                         .data("txtUserName", username.getText().toString().trim())
                         .data("txtPassword", password.getText().toString().trim())
+                        .data("txtInput", captcha.getText().toString().trim())
                         .data("btnLogin", "Login")
                         .userAgent(userAgent)
                         .followRedirects(true)
-                        .referrer("http://210.212.227.210/tkmce/index.aspx")
+                        .referrer(getString(R.string.tkmce_index_url))
                         .cookies(loginCookies)
                         .method(Connection.Method.POST)
                         .timeout(120 * 1000)
@@ -196,6 +268,7 @@ public class LoginPage extends AppCompatActivity {
             login_button.setClickable(true);
             username.setEnabled(true);
             password.setEnabled(true);
+            captcha.setEnabled(true);
 
             if (loginCheck) {
                 Intent intent = new Intent(LoginPage.this, HomePage.class);
@@ -220,6 +293,9 @@ public class LoginPage extends AppCompatActivity {
             } else {
                 username.setError("Username incorrect");
                 password.setError("Password incorrect");
+                captcha.setError("Captcha incorrect");
+
+                new getCaptcha(getApplicationContext()).execute();
             }
         }
     }
