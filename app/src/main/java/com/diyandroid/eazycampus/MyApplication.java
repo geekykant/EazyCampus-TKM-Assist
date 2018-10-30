@@ -12,7 +12,6 @@ public class MyApplication extends Application {
     public static final String TAG = MyApplication.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
-
     private static MyApplication mInstance;
 
     @Override
@@ -49,4 +48,5 @@ public class MyApplication extends Application {
             mRequestQueue.cancelAll(tag);
         }
     }
+
 }

@@ -1,5 +1,8 @@
 package com.diyandroid.eazycampus;
 
+import android.support.annotation.Keep;
+
+@Keep
 public class Contact {
     String name;
     String image;

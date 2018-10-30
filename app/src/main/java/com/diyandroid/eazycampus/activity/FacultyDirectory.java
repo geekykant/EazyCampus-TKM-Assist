@@ -46,10 +46,6 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
     ProgressBar progressBar;
 
-    // url to fetch contacts json
-    private static final String URL = "https://eazycampus-80ef8.firebaseio.com/All/faculty.json";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +81,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
      * fetches json by making http calls
      */
     private void fetchContacts() {
-        JsonArrayRequest request = new JsonArrayRequest(URL,
+        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.all_faculty_url),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -184,8 +180,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
     @Override
     public void onContactSelected(Contact contact) {
-        Gson gson = new Gson();
-        String jsonContact = gson.toJson(contact);
+        String jsonContact =  new Gson().toJson(contact);
 
         Intent intent = new Intent(FacultyDirectory.this, FacultyProfile.class);
         intent.putExtra("SELECTED_FACULTY", jsonContact);

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">EazyCampus</string>
-    <string name="action_settings">Settings</string>
     <string name="toolbar_title">Faculty Directory</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Type name…</string>
@@ -10,15 +9,58 @@
     <string name="close_toggle">Close</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="choose_email_client">Choose email client</string>
-
     <string name="default_notification_channel_id">global</string>
 
-    <!--<string name="about_description"> EazyCampus is an unofficial android app for TKM students to ease the process of checking attendance, marks and reaching out to other useful features.</string>-->
     <string name="about_description"> EazyCampus : A Campus app for TKM College of Engineering students that eases the process of browsing website, getting marks, attendance with much more other useful features.</string>
     <string name="ktu_announcement">KTU Announcement</string>
     <string name="border_line_attendance">You are on the border line! Push it up a little.</string>
     <string name="share_eazycampus_text">🔥🎓 Eazy Campus- A Campus app for TKM College of Engineering students that eases the process of browsing website with some amazing extra features.\n\n- Grab Attendance and Marks reports in less than 10 seconds (Believe me!)\n- Instant KTU announcements &amp; Campus stories 👨‍🎓👩‍🎓\n- Faculty directory: The Complete college staffs/teachers directory\n- Intuitive and user-friendly UI.\n- Automated Staff Evaluation (Finally😎)\n\nDownload the app right now on PlayStore: https://play.google.com/store/apps/details?id=com.diyandroid.eazycampus \n\n(Apple fanboys need to buy this developer an iPhone to begin the development..Please😜) \n\nShare this app with your friends and do let them know!\n\nYour friendly geeky👨‍💻,\nApp developer obviously.</string>
     <string name="support_eazycampus_development">Support EazyCampus development</string>
-    <string name="ads_dialog_message">Sorry for enabling ads! But as a student it fills up my coffee and beer mug! I will remove ads with graduation! Pinky Promise!</string>
+    <!--<string name="ads_dialog_message">Sorry for enabling ads! But as a student it fills up my coffee and beer mug! I will remove ads with graduation! Pinky Promise!</string>-->
+    <string name="ads_dialog_message"> I am Sreekant, the app developer. It really motivates me if you could appreciate my app and give it a 5⭐ rating. Cheers!</string>
+    <string name="privacy_policy_text">By clicking on login,\nYou agree to our <u>Privacy Policy</u>.</string>
+    <string name="hi_sreekant">Hi Sreekant!</string>
+    <string name="directory">Directory</string>
+    <string name="evaluation">Evaluation</string>
+    <string name="marks">Marks</string>
+    <string name="attendance">Attendance</string>
+    <string name="reference">Reference</string>
+    <string name="calendar">Calendar</string>
+    <string name="updates">Updates</string>
+    <string name="booster">Booster</string>
+    <string name="quote_of_the_day">QUOTE OF THE DAY</string>
+    <string name="quote_text">“If you’re doing what everyone else is doing, you’re doing it wrong.”</string>
+    <string name="quote_author">-Casey Neistat</string>
+    <string name="campus_stories">CAMPUS STORIES</string>
+    <string name="network_error">NETWORK ERROR!</string>
+    <string name="stack_text_1">Everything You Need to Know About KTU!</string>
+    <string name="stack_text_2">5 Effective Ways To Spend Vacation</string>
+    <string name="stack_text_3">Grace Mark Awarded to Kerala Flood Participation</string>
+    <string name="stack_text_4">Grace Mark Awarded to Kerala Flood Participation</string>
+    <string name="stack_text_5">Grace Mark Awarded to Kerala Flood Participation</string>
+    <string name="tkmce_home">http://210.212.227.210/tkmce/Common/Home/Home.aspx</string>
+    <string name="tkmce_evaluation_url">http://210.212.227.210/tkmce/Student%20Evaluation/StudSubjectStaffsList.aspx</string>
+    <string name="evaluation_staffs_table_id">table#ctl00_ContentPlaceHolder1_gvStudSubjectStaffsList</string>
+    <string name="network_problem">Network Problem!</string>
+    <string name="no_staff_evaluation">No Staff Evaluation!</string>
+    <string name="tkmce_attendance_url">http://210.212.227.210/tkmce/Student/SubjectwiseAttendanceStudent.aspx</string>
+    <string name="tkmce_attendance_subjectwise_url">http://210.212.227.210/tkmce/Student/SubjectwiseAttendanceStudent.aspx</string>
+    <string name="tkmce_index_url">http://210.212.227.210/tkmce/index.aspx</string>
+    <string name="tkmce_marks_page">http://210.212.227.210/tkmce/ExamManagement/AutoMarkStatusofStudent.aspx</string>
+    <string name="privacy_policy_link">https://www.ktustudy.in/eazycampus-privacy-policy</string>
+    <string name="staff_evaluation_id">table#ctl00_ContentPlaceHolder1_dlAlertLIst_dlAlertDisplay</string>
+    <string name="evaluation_notif_text">If Evaluation doesn\'t progress, then evaluation \nisn\'t open yet.</string>
+    <string name="attendance_table_id">ctl00_ContentPlaceHolder1_tblStudentDetails</string>
+    <string name="ktu_announcements_url">https://ktu.edu.in/eu/core/announcements.htm</string>
+    <string name="all_faculty_url">https://eazycampus-80ef8.firebaseio.com/All/faculty.json</string>
+    <string name="academic_calendar_url">https://www.ktustudy.in/go/academic-calendar-2018-19</string>
+    <string name="ktustudy_blog_url">https://www.ktustudy.in/blog</string>
+    <string name="quotes_firebase_url">https://eazycampus-80ef8.firebaseio.com/quotesDaily.json</string>
+    <string name="stories_firebase_url">https://eazycampus-80ef8.firebaseio.com/Notifications/Stories.json</string>
+    <string name="marks_table_id">ctl00_ContentPlaceHolder1_tblStudentMarks</string>
+    <string name="marks_table_id2">ctl00_ContentPlaceHolder1_tblStudentMarks</string>
+    <string name="marks_table_id3">ctl00_ContentPlaceHolder1_tblStudentMarks</string>
+    <string name="ktustudy_url">www.ktustudy.in</string>
+    <string name="internal_marks">Internal Marks</string>
+    <string name="sessional_marks">Sessional Marks</string>
 </resources>

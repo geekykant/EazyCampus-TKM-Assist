@@ -1,5 +1,8 @@
 package com.diyandroid.eazycampus;
 
+import android.support.annotation.Keep;
+
+@Keep
 public class Notification {
     String title, message;
     String link1, link2, link3, link1_title, link2_title, link3_title;

@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7200d9"
-    android:theme="@style/RobotoTextViewStyle"
-    tools:context="com.diyandroid.eazycampus.activity.BoosterAttendance">
+    android:background="#7200d9">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbarAttendanceBooster"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        android:elevation="2dp"
-        app:popupTheme="@style/AppTheme.NoActionBar"
-        app:theme="@style/AppTheme.NoActionBar" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/whiteGlue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:src="@drawable/violet_circle"
-        android:tint="@color/cpb_white" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarAttendanceBooster"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            android:elevation="2dp"
+            android:padding="10dp"
+            app:popupTheme="@style/AppTheme.NoActionBar"
+            app:theme="@style/AppTheme.NoActionBar" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        <ImageView
+            android:id="@+id/whiteGlue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:src="@drawable/violet_circle"
+            android:tint="@color/cpb_white" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="10dp">
 
             <TextView
-                android:id="@+id/headingBooster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -44,13 +42,10 @@
                 android:textSize="26sp" />
 
             <LinearLayout
-                android:id="@+id/takeInOptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="?attr/actionBarSize"
                 android:orientation="vertical"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:paddingTop="10dp">
 
                 <LinearLayout
@@ -59,54 +54,57 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="30dp"
                     android:layout_marginTop="20dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
+                        android:paddingEnd="10dp"
                         android:text="No. of classes attended:"
                         android:textColor="@color/black"
                         android:textSize="17sp" />
 
-                    <EditText
-                        android:id="@+id/classesAttended"
-                        android:layout_width="wrap_content"
-                        android:hint="0"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:padding="10dp"
-                        android:maxLength="3"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="20sp" />
+                        <EditText
+                            android:id="@+id/classesAttended"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:hint="0"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="20sp" />
+
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="15dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
+                        android:paddingEnd="10dp"
                         android:text="Total No. of classes:"
                         android:textColor="@color/black"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        tools:ignore="RtlSymmetry" />
 
-                    <EditText
-                        android:id="@+id/totalClasses"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:maxLength="3"
-                        android:hint="0"
-                        android:padding="10dp"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="20sp" />
+
+                        <EditText
+                            android:id="@+id/totalClasses"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:hint="0"
+                            android:maxLength="3"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -127,54 +125,55 @@
             </LinearLayout>
 
         </RelativeLayout>
-    </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/whiteGlue"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom|center"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_below="@id/whiteGlue"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom|center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="% of attendance:"
+                    android:textColor="@color/cpb_white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/percentAttendance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="100%"
+                    android:textColor="@color/green"
+                    android:textSize="30sp" />
+            </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/decisionBooster"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="% of attendance:"
+                android:fontFamily="@font/raleway"
+                android:gravity="center"
+                android:padding="25dp"
+                android:text="You have to sit in 1 more classes to attain the minimum percentage."
                 android:textColor="@color/cpb_white"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/percentAttendance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="100%"
-                android:textColor="@color/green"
-                android:textSize="30sp" />
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/decisionBooster"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/raleway"
-            android:padding="25dp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="You have to sit in 1 more classes to attain the minimum percentage."
-            android:textColor="@color/cpb_white"
-            android:textSize="20sp" />
-
-
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

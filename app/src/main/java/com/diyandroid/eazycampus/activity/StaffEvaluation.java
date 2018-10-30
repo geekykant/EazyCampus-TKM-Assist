@@ -1,6 +1,9 @@
 package com.diyandroid.eazycampus.activity;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -9,27 +12,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
+import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class StaffEvaluation extends AppCompatActivity {
+public class StaffEvaluation extends AppCompatActivity implements LogOutTimerUtil.LogOutListener {
 
     private ProgressBar progressBar;
     private Button submit;
@@ -41,16 +45,24 @@ public class StaffEvaluation extends AppCompatActivity {
     private int Count = 0, staffno = 0;
     private String[] newHref;
     private Elements links;
-    private List<String> hreffs = new ArrayList<String>();
+    private List<String> hreffs = new ArrayList<>();
 
     private final String userAgent = "Firefox";
-    private final String urlEvaluation = "http://210.212.227.210/tkmce/Student%20Evaluation/StudSubjectStaffsList.aspx";
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    String evalValues[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_evaluation);
 
+        progressNo = (TextView) findViewById(R.id.progressNo);
         String jsonCookies = getIntent().getStringExtra("COOKIES");
 
         Toolbar toolbar = findViewById(R.id.toolbarEvaluation);
@@ -60,31 +72,50 @@ public class StaffEvaluation extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Staff Evaluation");
 
-
-        loginCookies =  new Gson().fromJson(jsonCookies, new TypeToken<Map<String, String>>() {}.getType());
+        loginCookies = new Gson().fromJson(jsonCookies, new TypeToken<Map<String, String>>() {
+        }.getType());
 
         submit = (Button) findViewById(R.id.submit);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
         progressBar.setVisibility(View.INVISIBLE);
-        new submitEvaluation().execute();
+        new submitEvaluation(this).execute();
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                startEvaluation(newHref[staffno]);
+                if (isNetworkAvailable() && newHref.length != 0) {
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    if (((RadioButton) findViewById(R.id.negative)).isChecked()) {
+                        evalValues = new String[]{"3.5313", "2.0125", "1.1250", "5.8500", "0.6738", "2.5000", "1.1913", "0.7375", "1.2788", "5.0638", "1.5625"};
+                    } else {
+                        evalValues = new String[]{"17.7500", "14.5000", "7.5000", "7.5000", "5.8500", "4.0000", "9.2500", "4.7500", "6.8750", "6.7500", "11.5000", "11.2500"};
+                    }
+                    
+                    try {
+                        new startEvaluation(getApplicationContext(), newHref[staffno]).execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(StaffEvaluation.this, "Network Problem!", Toast.LENGTH_SHORT).show();
+                    progressNo.setText(R.string.network_problem);
+                }
             }
         });
-
     }
 
     private boolean parsingSuccessful;
 
     //This function is process
-    private class submitEvaluation extends AsyncTask<Void, Void, Void> {
-
+    private class submitEvaluation extends ExceptionHandlingAsyncTask<String, Void, Element> {
         Document homePage = null;
+        Connection.Response response;
+
+        public submitEvaluation(Context context) {
+            super(context);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -96,202 +127,213 @@ public class StaffEvaluation extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-
-            Log.d("StaffEvaluation", "Reached Evaluation Page!");
-
+        protected Element doInBackground2(String... strings) {
             try {
-                homePage = (Jsoup.connect("http://210.212.227.210/tkmce/Common/Home/Home.aspx")
+                response = (Jsoup.connect(getString(R.string.tkmce_home))
                         .method(Connection.Method.GET)
                         .userAgent(userAgent)
                         .cookies(loginCookies)
-                        .referrer("http://210.212.227.210/tkmce/Common/Home/Home.aspx")
-                        .execute()).parse();
+                        .referrer(getString(R.string.tkmce_home))
+                        .execute());
 
-                Log.d("FacultyDirectory", "Scraped Staff Evaluation Page!");
+                homePage = response.parse();
 
             } catch (IOException ex) {
                 ex.printStackTrace();
                 parsingSuccessful = false;
             }
 
-            return null;
+            return homePage;
         }
 
-
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute2(Element element) {
             progressBar.setVisibility(View.GONE);
-            submit.setClickable(true);
 
-            if (parsingSuccessful) {
-
-                TextView progressNo = (TextView) findViewById(R.id.progressNo);
-
-                if (homePage.select("table#ctl00_ContentPlaceHolder1_dlAlertLIst_dlAlertDisplay").size() != 0) {
+            if (parsingSuccessful && isNetworkAvailable()) {
+                if (homePage.select(getString(R.string.staff_evaluation_id)).size() != 0) {
                     evalCheck = true;
                 }
 
                 if (evalCheck) {
                     Toast.makeText(StaffEvaluation.this, "You have Staff Evaluation!!", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.VISIBLE);
-                    submit.setEnabled(true);
-                    getEvaluation();
+                    new getEvaluation(getApplicationContext()).execute();
+
                 } else {
                     submit.setClickable(false);
-                    progressNo.setText("No Staff Evaluation!");
+                    progressNo.setText(R.string.no_staff_evaluation);
                     Toast.makeText(StaffEvaluation.this, "No Staff Evaluation!", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 Toast.makeText(StaffEvaluation.this, "Failed retrieving data!", Toast.LENGTH_SHORT).show();
+                progressNo.setText(R.string.network_problem);
             }
         }
     }
 
-    private void getEvaluation() {
-        staffList = (TextView) findViewById(R.id.staffList);
-        progressNo = (TextView) findViewById(R.id.progressNo);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final StringBuilder builder = new StringBuilder();
+    class getEvaluation extends ExceptionHandlingAsyncTask<String, Void, Element> {
+        public getEvaluation(Context context) {
+            super(context);
+        }
 
-                try {
-                    Connection.Response loginForm = Jsoup.connect(urlEvaluation)
-                            .method(Connection.Method.GET)
-                            .userAgent(userAgent)
-                            .cookies(loginCookies)
-                            .timeout(10 * 1000)
-                            .referrer("http://210.212.227.210/tkmce/Common/Home/Home.aspx")
-                            .execute();
+        Connection.Response loginForm = null;
 
-                    Log.d("FacultyDirectory", "Scraped Staff Evaluation Page!");
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            staffList = (TextView) findViewById(R.id.staffList);
+            progressNo = (TextView) findViewById(R.id.progressNo);
+            parsingSuccessful = false;
+        }
 
-                    doc = loginForm.parse();
+        @Override
+        protected Element doInBackground2(String... strings) {
+            final StringBuilder builder = new StringBuilder();
 
-                } catch (IOException e) {
-                    builder.append("Error : ").append(e.getMessage()).append("n");
-                }
+            try {
+                loginForm = Jsoup.connect(getString(R.string.tkmce_evaluation_url))
+                        .method(Connection.Method.GET)
+                        .userAgent(userAgent)
+                        .cookies(loginCookies)
+                        .timeout(10 * 1000)
+                        .referrer(getString(R.string.tkmce_home))
+                        .execute();
 
+                doc = loginForm.parse();
+                parsingSuccessful = true;
+            } catch (Exception e) {
+                builder.append("Error : ").append(e.getMessage()).append("n");
+                parsingSuccessful = false;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute2(Element element) {
+            if (isNetworkAvailable() && parsingSuccessful && loginForm.statusCode() == 200 && doc != null) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Count = 0;
                         StringBuilder staffs = new StringBuilder();
-                        links = doc.select("table#ctl00_ContentPlaceHolder1_gvStudSubjectStaffsList").select("a");
+                        links = doc.select(getString(R.string.evaluation_staffs_table_id)).select("a");
                         for (Element link : links) {
                             String href = link.attr("abs:href");
                             if (!(href.equals("") || link.text().equals(""))) {
-//                                staffs+= Count + " : " + href + " : " + link.text() + "\n";
                                 Count++;
                                 staffs.append("").append(link.text().toUpperCase()).append("\n\n");
                             }
                         }
 
-                        staffList.setText(staffs.toString());
-                        progressNo.setText(Count + " Staffs Remaining");
+                        if (Count == 0) {
+                            submit.setEnabled(false);
+                            progressNo.setText("All done!");
 
-                        for (Element link : links) {
-                            href = link.attr("abs:href");
-                            if (!(href.equals("") || link.text().equals(""))) {
-                                hreffs.add(href);
+                        } else {
+                            staffList.setText(staffs.toString());
+                            submit.setEnabled(true);
+                            progressNo.setText(Count + " Staffs Remaining");
+
+                            for (Element link : links) {
+                                href = link.attr("abs:href");
+                                if (!(href.equals("") || link.text().equals(""))) {
+                                    hreffs.add(href);
+                                }
+                                newHref = new String[hreffs.size()];
+                                newHref = hreffs.toArray(newHref);
                             }
-                            newHref = new String[hreffs.size()];
-                            newHref = hreffs.toArray(newHref);
+
+                            CardView cardView = findViewById(R.id.cardView6);
+                            cardView.setVisibility(View.VISIBLE);
                         }
 
-                        CardView cardView = findViewById(R.id.cardView6);
-                        cardView.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                     }
                 });
             }
-        }).start();
+        }
     }
 
-    private void startEvaluation(final String href) {
-        Log.d("EvaluationPage", "Link: " + href);
+    class startEvaluation extends ExceptionHandlingAsyncTask<String, Void, Element> {
+        public startEvaluation(Context context, String link_href) {
+            super(context);
+            href = link_href;
+        }
 
-        staffList = (TextView) findViewById(R.id.staffList);
-        progressNo = (TextView) findViewById(R.id.progressNo);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final StringBuilder builder = new StringBuilder();
-                Connection.Response loginForm = null;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d("EvaluationPage", "Link: " + href);
+            staffList = (TextView) findViewById(R.id.staffList);
+            parsingSuccessful = false;
+        }
 
-                try {
-                    Connection.Response getForm = Jsoup.connect(href)
-                            .method(Connection.Method.GET)
-                            .userAgent(userAgent)
-                            .cookies(loginCookies)
-                            .referrer(urlEvaluation)
-                            .header("Upgrade-Insecure-Requests", "1")
-                            .followRedirects(false)
-                            .execute();
+        final StringBuilder builder = new StringBuilder();
+        Connection.Response loginForm = null;
+        Document evalData = null;
 
-                    Document evalData = getForm.parse();
+        @Override
+        protected Element doInBackground2(String... strings) {
+            try {
+                Connection.Response getForm = Jsoup.connect(href)
+                        .method(Connection.Method.GET)
+                        .userAgent(userAgent)
+                        .cookies(loginCookies)
+                        .referrer(getString(R.string.tkmce_evaluation_url))
+                        .header("Upgrade-Insecure-Requests", "1")
+                        .followRedirects(false)
+                        .execute();
 
-                    loginForm = Jsoup.connect(href)
-                            .method(Connection.Method.POST)
-                            .userAgent(userAgent)
-                            .cookies(loginCookies)
-                            .referrer(href)
-                            .data("__EVENTTARGET", "")
-                            .data("__EVENTARGUMENT", "")
-                            .data("__VIEWSTATE", evalData.getElementById("__VIEWSTATE").val())
-                            .data("__VIEWSTATEGENERATOR", evalData.getElementById("__VIEWSTATEGENERATOR").val())
-                            .data("__EVENTVALIDATION", evalData.getElementById("__EVENTVALIDATION").val())
-                            .data("ctl00$hdnisclose", "false")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl02$rbtn_Choice_1", "17.7500")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl03$rbtn_Choice_2", "14.5000")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl04$rbtn_Choice_3", "7.5000")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl05$rbtn_Choice_4", "5.8500")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl06$rbtn_Choice_5", "4.0000")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl07$rbtn_Choice_6", "9.2500")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl08$rbtn_Choice_7", "4.7500")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl09$rbtn_Choice_8", "6.8750")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl10$rbtn_Choice_9", "6.7500")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl11$rbtn_Choice_10", "11.5000")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl12$rbtn_Choice_11", "11.2500")
-                            .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl13$txt_Choice_12", "")
-                            .data("ctl00$ContentPlaceHolder1$btnSave", "Save")
-                            .data("ctl00$HiddenField1", "")
-                            .followRedirects(true)
-                            .execute();
+                evalData = getForm.parse();
 
-                    Log.d("FacultyDirectory", "I guess evaluation done!");
+                loginForm = Jsoup.connect(href)
+                        .method(Connection.Method.POST)
+                        .userAgent(userAgent)
+                        .cookies(loginCookies)
+                        .referrer(href)
+                        .data("__EVENTTARGET", "")
+                        .data("__EVENTARGUMENT", "")
+                        .data("__VIEWSTATE", evalData.getElementById("__VIEWSTATE").val())
+                        .data("__VIEWSTATEGENERATOR", evalData.getElementById("__VIEWSTATEGENERATOR").val())
+                        .data("__EVENTVALIDATION", evalData.getElementById("__EVENTVALIDATION").val())
+                        .data("ctl00$hdnisclose", "false")
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl02$rbtn_Choice_1", evalValues[0])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl03$rbtn_Choice_2", evalValues[1])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl04$rbtn_Choice_3", evalValues[2])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl05$rbtn_Choice_4", evalValues[3])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl06$rbtn_Choice_5", evalValues[4])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl07$rbtn_Choice_6", evalValues[5])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl08$rbtn_Choice_7", evalValues[6])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl09$rbtn_Choice_8", evalValues[7])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl10$rbtn_Choice_9", evalValues[8])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl11$rbtn_Choice_10", evalValues[9])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl12$rbtn_Choice_11", evalValues[10])
+                        .data("ctl00$ContentPlaceHolder1$gvQuestionsList$ctl13$txt_Choice_12", "")
+                        .data("ctl00$ContentPlaceHolder1$btnSave", "Save")
+                        .data("ctl00$HiddenField1", "")
+                        .followRedirects(true)
+                        .execute();
 
-                } catch (IOException e) {
-                    builder.append("Error : ").append(e.getMessage()).append("n");
-                }
-
-                if (loginForm.url().toExternalForm().equals(urlEvaluation)) {
-                    Log.d("StaffEvaluation", "Evaluation Completed!!");
-                    staffno++;
-                } else {
-                    Log.d("StaffEvaluation", "Not Completed In!");
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Count--;
-                        String words[] = staffList.getText().toString().split("\n");
-                        List<String> list = new ArrayList<String>(Arrays.asList(words));
-                        list.remove(0);
-                        words = list.toArray(new String[0]);
-                        staffList.setText(StringUtil.join(words, "\n"));
-                        if (Count > 0) {
-                            progressNo.setText(Count + " Staffs Remaining");
-                        } else {
-                            progressNo.setText("Evaluation Successfully Completed!");
-                        }
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+                parsingSuccessful = true;
+            } catch (Exception e) {
+                builder.append("Error : ").append(e.getMessage()).append("n");
+                parsingSuccessful = false;
             }
-        }).start();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute2(Element element) {
+            if (isNetworkAvailable() && parsingSuccessful && loginForm.statusCode() == 200 && loginForm != null) {
+                if (loginForm.url().toExternalForm().equals(getString(R.string.tkmce_evaluation_url))) {
+                    staffno++;
+                    new getEvaluation(getApplicationContext()).execute();
+                }
+            } else {
+                progressNo.setText(R.string.network_problem);
+            }
+        }
     }
 
     //Closing Activity with back button
@@ -299,6 +341,24 @@ public class StaffEvaluation extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogOutTimerUtil.startLogoutTimer(this, this);
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        LogOutTimerUtil.startLogoutTimer(this, this);
+    }
+
+    @Override
+    public void doLogout() {
+        startActivity(new Intent(StaffEvaluation.this, SplashLoading.class));
+        finish();
     }
 
 }

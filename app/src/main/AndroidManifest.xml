@@ -22,11 +22,11 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".FacultyProfile"
             android:screenOrientation="portrait"
@@ -40,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.LoginPage"
             android:screenOrientation="portrait" />
@@ -67,8 +68,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <!-- ./Firebase Notifications -->
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification_icon" />
@@ -105,6 +104,7 @@
             android:name=".activity.ReferenceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AttendanceTheme" />
+
     </application>
 
 </manifest>

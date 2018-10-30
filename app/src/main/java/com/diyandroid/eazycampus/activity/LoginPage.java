@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,14 +18,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
 import com.google.gson.Gson;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -60,6 +64,15 @@ public class LoginPage extends AppCompatActivity {
         LinearLayout layout = findViewById(R.id.rememberme);
         checkBox = (CheckBox) findViewById(R.id.rememberCheck);
 
+        ((TextView) findViewById(R.id.privacy_policy)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(getString(R.string.privacy_policy_link)));
+                startActivity(i);
+            }
+        });
+
         //Listener for Remember Me
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,14 +93,14 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
-    private void doLogin(){
+    private void doLogin() {
         if (isNetworkAvailable()) {
             login_button.setClickable(false);
             username.setEnabled(false);
             password.setEnabled(false);
-            new getWebsite().execute();
+            new getWebsite(this).execute();
         } else {
-            Toast.makeText(LoginPage.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginPage.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -95,24 +108,29 @@ public class LoginPage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this); //getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         String USR_NAME = pref.getString("username", null);
         final String PASS_NAME = pref.getString("password", null);
 
-        if (!TextUtils.isEmpty(USR_NAME) && !TextUtils.isEmpty(PASS_NAME)){
+        if (!TextUtils.isEmpty(USR_NAME) && !TextUtils.isEmpty(PASS_NAME)) {
             //Prompt for username and password
             username.setText(USR_NAME);
             password.setText(PASS_NAME);
+            ((TextInputLayout) findViewById(R.id.passbox)).setPasswordVisibilityToggleEnabled(false);
             doLogin();
         }
     }
 
-    public class getWebsite extends AsyncTask<Void, Void, Void> {
+    private class getWebsite extends ExceptionHandlingAsyncTask<String, Void, Element> {
 
-        boolean loginCheck = false;
-        Map<String, String> loginCookies = new HashMap<>();
-        String LoginName = "";
-        Connection.Response homePage;
+        private boolean loginCheck = false;
+        private Map<String, String> loginCookies = new HashMap<>();
+        private String LoginName = "";
+        private Connection.Response homePage;
+
+        public getWebsite(Context context) {
+            super(context);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -122,12 +140,11 @@ public class LoginPage extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Element doInBackground2(String... strings) {
             try {
-                final String urlLogin = "http://210.212.227.210/tkmce/index.aspx";
                 final String userAgent = "Firefox";
 
-                Connection.Response loginForm = Jsoup.connect(urlLogin)
+                Connection.Response loginForm = Jsoup.connect(getString(R.string.tkmce_index_url))
                         .method(Connection.Method.GET)
                         .userAgent(userAgent)
                         .execute();
@@ -137,7 +154,7 @@ public class LoginPage extends AppCompatActivity {
                 Document loginPage = loginForm.parse(); //Same
                 loginCookies = loginForm.cookies(); //Grabs all cookies
 
-                homePage = Jsoup.connect(urlLogin)
+                homePage = Jsoup.connect(getString(R.string.tkmce_index_url))
                         .data("__LASTFOCUS", "")
                         .data("__EVENTTARGET", "")
                         .data("__EVENTARGUMENT", "")
@@ -160,22 +177,21 @@ public class LoginPage extends AppCompatActivity {
                 LoginName = homePage.parse().select("span#ctl00_lblFirstName").text();
                 // Evaluator = homePage.parse().select("table#ctl00_ContentPlaceHolder1_dlAlertLIst_dlAlertDisplay").toString();
 
-            } catch (IOException ex) {
+            } catch (IOException | RuntimeException ex) {
                 ex.printStackTrace();
             }
 
-            if (homePage.url().toExternalForm().equals("http://210.212.227.210/tkmce/Common/Home/Home.aspx")) {
+            if (homePage.url().toExternalForm().equals(getString(R.string.tkmce_home))) {
                 loginCheck = true;
                 Log.d("FacultyDirectory", "Logged In!");
             } else {
                 Log.d("FacultyDirectory", "Not Logged In!");
             }
-
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute2(Element element) {
             progressBar.setVisibility(View.GONE);
             login_button.setClickable(true);
             username.setEnabled(true);
@@ -192,7 +208,6 @@ public class LoginPage extends AppCompatActivity {
                             .putString(PREF_USERNAME, username.getText().toString())
                             .putString(PREF_PASSWORD, password.getText().toString())
                             .apply();
-
                 }
 
                 intent.putExtra("COOKIES", jsonCookie);  //send cookies
@@ -207,5 +222,12 @@ public class LoginPage extends AppCompatActivity {
                 password.setError("Password incorrect");
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+//        super.onBackPressed();
+//        Toast.makeText(this, "Hello!", Toast.LENGTH_SHORT).show();
     }
 }

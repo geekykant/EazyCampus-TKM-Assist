@@ -142,7 +142,7 @@ public class NotificationUtils {
      * Downloading push notification image before displaying it in
      * the notification tray
      */
-    public Bitmap getBitmapFromURL(String strURL) {
+    private Bitmap getBitmapFromURL(String strURL) {
         try {
             URL url = new URL(strURL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

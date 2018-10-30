@@ -1,7 +1,11 @@
 package com.diyandroid.eazycampus.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -32,63 +37,88 @@ import java.util.ArrayList;
 
 public class EventsActivity extends AppCompatActivity {
 
-    int limit = 2;
+    int limit = 5;
     SharedPreferences pref;
     Query recentPostsQuery;
     DatabaseReference databaseReference;
     AnnouncementListAdapter adapter;
+
+    ProgressBar progressBar;
+    ListView listView;
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_events);
 
+        progressBar = findViewById(R.id.progressbarEvent);
+        listView = (ListView) findViewById(R.id.listviewAnnouncements);
+
         // toolbar fancy stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-        limit = pref.getInt("FILTER_NOTIF", 2);
+        limit = pref.getInt("FILTER_NOTIF", 5);
+
         retrieveAnnouncements();
     }
 
+    ArrayList<Notification> announcements;
+
     private void retrieveAnnouncements() {
-        ListView listView = (ListView) findViewById(R.id.listviewAnnouncements);
-        final ProgressBar progressBar = findViewById(R.id.progressbarEvent);
+        if (isNetworkAvailable()) {
+            ((LinearLayout) findViewById(R.id.noInternetConnection)).setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.VISIBLE);
 
-        final ArrayList<Notification> announcements = new ArrayList<>();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            announcements = new ArrayList<>();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        databaseReference = database.getReference("Notifications");
-        recentPostsQuery = databaseReference.child("KTU").limitToLast(limit);
+            databaseReference = database.getReference("Notifications");
+            recentPostsQuery = databaseReference.child("KTU").limitToLast(limit);
 
-        adapter = new AnnouncementListAdapter(this, R.layout.events_adapter, announcements);
-        listView.setAdapter(adapter);
+            adapter = new AnnouncementListAdapter(this, R.layout.events_adapter, announcements);
+            listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(EventsActivity.this, ReferenceActivity.class);
-                intent.putExtra("INTENT_URL", "https://ktu.edu.in/eu/core/announcements.htm");
-                startActivity(intent);
-            }
-        });
-
-        // Attach a listener to read the data at our posts reference
-        recentPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot notification : dataSnapshot.getChildren()) {
-                    Notification anm = notification.getValue(Notification.class);
-                    announcements.add(anm);
-                    adapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.GONE);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(getString(R.string.ktu_announcements_url)));
+                    startActivity(intent);
                 }
-            }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+            // Attach a listener to read the data at our posts reference
+            recentPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot notification : dataSnapshot.getChildren()) {
+                            Notification anm = notification.getValue(Notification.class);
+                            announcements.add(anm);
+                            adapter.notifyDataSetChanged();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+        } else {
+            ((LinearLayout) findViewById(R.id.noInternetConnection)).setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            listView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -136,7 +166,9 @@ public class EventsActivity extends AppCompatActivity {
                     } else {
                         filterDialogue.dismiss();
                         recentPostsQuery = databaseReference.child("KTU").limitToLast(limit);
+                        announcements.clear();
                         retrieveAnnouncements();
+                        adapter.notifyDataSetChanged();
                         pref.edit().putInt("FILTER_NOTIF", limit).apply();
                     }
                 }

@@ -1,7 +1,10 @@
 package com.diyandroid.eazycampus;
 
+import android.support.annotation.Keep;
+
 import java.util.ArrayList;
 
+@Keep
 public class Marks {
     ArrayList<String> marksList;
 

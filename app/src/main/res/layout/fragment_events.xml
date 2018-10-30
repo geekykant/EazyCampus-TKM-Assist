@@ -11,8 +11,33 @@
         android:divider="@null"
         android:orientation="vertical"
         android:overScrollMode="never"
-        android:paddingLeft="10dp"
-        android:paddingRight="3dp" />
+        android:paddingStart="10dp"
+        android:paddingEnd="3dp" />
+
+    <LinearLayout
+        android:id="@+id/noInternetConnection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_error"
+            android:layout_gravity="center"
+            android:textSize="23sp"
+            android:fontFamily="@font/raleway"
+            android:textColor="@color/cpb_red" />
+
+        <ImageView
+            android:layout_width="230dp"
+            android:layout_height="230dp"
+            android:src="@drawable/ic_error_404" />
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressbarEvent"

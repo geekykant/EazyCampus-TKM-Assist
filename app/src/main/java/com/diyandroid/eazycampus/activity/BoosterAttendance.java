@@ -25,7 +25,7 @@ public class BoosterAttendance extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setTitle("");
 
         Button submit = (Button) findViewById(R.id.submitAttendanceBooster);
         attendedClasses = (TextView) findViewById(R.id.classesAttended);

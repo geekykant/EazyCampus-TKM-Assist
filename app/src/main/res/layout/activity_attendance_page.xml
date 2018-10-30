@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +12,6 @@
         android:layout_height="170dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:elevation="1dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_education_desk"
         android:tint="#00900000" />
@@ -29,6 +28,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:scrollbars="none">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,9 +38,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/background_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/violet_circle" />
@@ -54,9 +53,8 @@
                 android:padding="10dp">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cardView3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginTop="8dp"
                     android:clickable="false"
@@ -65,12 +63,12 @@
                     app:cardCornerRadius="15dp"
                     app:cardElevation="3dp">
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingLeft="23dp">
+                        android:paddingStart="23dp"
+                        tools:ignore="RtlSymmetry">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -148,14 +146,14 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/headerAttendance"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:text="*Dates don't matter, Its subject wise."
                     android:textColor="@color/cpb_white"
                     android:textSize="13sp" />
-
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
@@ -169,58 +167,47 @@
                 android:minHeight="?attr/actionBarSize"
                 android:theme="@style/MyApp.ActionBarTheme"
                 app:titleTextColor="@color/cpb_white" />
-        </RelativeLayout>
 
-    </ScrollView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:clickable="false"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:padding="10dp"
-        android:visibility="gone"
-        app:cardBackgroundColor="@color/cpb_white"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <HorizontalScrollView
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardView4"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkbox"
+                android:layout_marginBottom="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:clickable="false"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="10dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/cpb_white"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="4dp">
 
-                <ScrollView
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                         <ListView
                             android:id="@+id/listAtendance"
                             android:layout_width="match_parent"
-                            android:layout_height="310dp"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="8dp"
                             android:layout_marginRight="8dp"
                             android:layout_marginTop="10dp" />
                     </LinearLayout>
-                </ScrollView>
 
-            </HorizontalScrollView>
-        </LinearLayout>
+                </HorizontalScrollView>
 
-    </android.support.v7.widget.CardView>
-
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </ScrollView>
 
     <ProgressBar
         android:id="@+id/progressAttendance"

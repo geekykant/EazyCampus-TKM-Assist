@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/LoginPageLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2e2d2d">
@@ -78,59 +77,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-
-            <!--<android.support.design.widget.TextInputLayout-->
-                <!--android:id="@+id/usrbox"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/eazylogo"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:layout_marginTop="30dp"-->
-                <!--android:hint="Username"-->
-                <!--android:paddingLeft="50dp"-->
-                <!--android:paddingRight="50dp"-->
-                <!--android:textColorHint="#ffffff">-->
-
-                <!--<EditText-->
-                    <!--android:id="@+id/username"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:ems="10"-->
-                    <!--android:fontFamily="sans-serif"-->
-                    <!--android:inputType="number"-->
-                    <!--android:maxLength="6"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                    <!--android:textColor="#d810a7" />-->
-            <!--</android.support.design.widget.TextInputLayout>-->
-
-            <!--<android.support.design.widget.TextInputLayout-->
-                <!--android:id="@+id/passbox"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/usrbox"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:hint="Password"-->
-                <!--android:paddingLeft="50dp"-->
-                <!--android:paddingRight="50dp"-->
-                <!--android:textColorHint="#ffffff"-->
-                <!--app:passwordToggleEnabled="true"-->
-                <!--app:passwordToggleTint="#ffffff">-->
-
-                <!--<EditText-->
-                    <!--android:id="@+id/password"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:ems="10"-->
-                    <!--android:fontFamily="sans-serif"-->
-                    <!--android:inputType="textPassword"-->
-                    <!--android:maxLength="20"-->
-                    <!--android:textAllCaps="false"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                    <!--android:textColor="#d810a7" />-->
-
-            <!--</android.support.design.widget.TextInputLayout>-->
-
             <LinearLayout
                 android:id="@+id/rememberme"
                 android:layout_width="wrap_content"
@@ -146,7 +92,7 @@
                     android:id="@+id/rememberCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="false" />
+                    android:checked="true" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -177,8 +123,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/login_button"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="15dp"
                 android:fontFamily="sans-serif"
                 android:text="Contact developer in case you aren't able to login."
                 android:textColor="@color/cpb_white"
@@ -187,6 +133,18 @@
         </RelativeLayout>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/privacy_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:fontFamily="sans-serif"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:text="@string/privacy_policy_text"
+        android:textColor="@color/cpb_white"
+        android:textSize="13sp" />
 
     <RelativeLayout
         android:layout_width="wrap_content"

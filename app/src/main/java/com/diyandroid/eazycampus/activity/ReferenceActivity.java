@@ -74,7 +74,7 @@ public class ReferenceActivity extends AppCompatActivity {
     private class MyWebviewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (Uri.parse(url).getHost().equals("www.ktustudy.in") || Uri.parse(url).getHost().equals("www.ktu.edu.in")) {
+            if (Uri.parse(url).getHost().equals(getString(R.string.ktustudy_url))) {
                 //open url contents in webview
                 return false;
             } else {

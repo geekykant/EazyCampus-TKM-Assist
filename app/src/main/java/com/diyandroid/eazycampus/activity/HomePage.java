@@ -1,8 +1,10 @@
 package com.diyandroid.eazycampus.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +19,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,11 +34,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.diyandroid.eazycampus.MyApplication;
+import com.diyandroid.eazycampus.R;
+import com.diyandroid.eazycampus.Story;
 import com.diyandroid.eazycampus.app.Config;
+import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.fragment.HelpSupportFragment;
-import com.diyandroid.eazycampus.R;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,14 +63,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+        LogOutTimerUtil.LogOutListener{
 
     private CircleImageView profile_image;
     private AlertDialog profileDialog;
@@ -71,6 +89,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +104,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
         boolean FIRST_TIME = pref.getBoolean("FIRST_RUN", true);
 
+        String loginName = getIntent().getStringExtra("LOGIN_NAME");
+        loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
+
         // Default Mailing system for all_semesters (Add Intent Later)
         if (FIRST_TIME) {
             //Ads dialogue display
             View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
+            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
             final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
             adsDialogue.setView(adsDialogueView);
 
@@ -163,9 +186,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         jsonCookies = getIntent().getStringExtra("COOKIES");
 
-        String loginName = getIntent().getStringExtra("LOGIN_NAME");
-        loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
-
         TextView welName = (TextView) findViewById(R.id.welName);
         welName.setText("Hi " + loginName + "!");
         drawerName.setText(loginName);
@@ -190,6 +210,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             ((LinearLayout) findViewById(intentId)).setOnClickListener(this);
         }
 
+        fetchStories();
     }
 
     @Override
@@ -255,11 +276,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 pref.edit()
                         .remove("username")
                         .remove("password")
+                        .remove("FIRST_RUN")
                         .apply();
 
                 Toast.makeText(this, "You have logged out!", Toast.LENGTH_SHORT).show();
                 break;
-
         }
 
         if (fragment != null) {
@@ -305,7 +326,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
             case R.id.calendar:
                 Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
-                String remoteURL = "https://www.ktustudy.in/go/academic-calendar-2018-19";
+                String remoteURL = getString(R.string.academic_calendar_url);
                 intent.putExtra("INTENT_URL", remoteURL);
                 intent.putExtra("IS_CALENDAR", true);
                 startActivity(intent);
@@ -313,7 +334,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
             case R.id.notes:
                 intent = new Intent(HomePage.this, ReferenceActivity.class);
-                intent.putExtra("INTENT_URL", "https://www.ktustudy.in/blog");
+                intent.putExtra("INTENT_URL", getString(R.string.ktustudy_blog_url));
                 startActivity(intent);
                 break;
 
@@ -328,14 +349,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     }
 
-    public class getQuote extends AsyncTask<Void, Void, Void> {
+    private class getQuote extends AsyncTask<Void, Void, Void> {
         String data = "";
         String quoteAuthor, quoteText;
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                URL url = new URL("https://eazycampus-80ef8.firebaseio.com/quotesDaily.json");
+                URL url = new URL(getString(R.string.quotes_firebase_url));
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -370,19 +391,96 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             ((TextView) findViewById(R.id.quoteWritten)).setText(quoteText);
             ((TextView) findViewById(R.id.quoteBy)).setText(quoteAuthor);
 
-//            getSharedPreferences(PREF_NAME, MODE_MULTI_PROCESS)
-//                    .edit()
-//                    .putString(PREF_QUOTE_AUTHOR, quoteAuthor)
-//                    .putString(PREF_QUOTE_TEXT, quoteText)
-//                    .putString(PREF_TODAY_DATE, today)
-//                    .apply();
-//
-          pref.edit()
+            pref.edit()
                     .putString(PREF_QUOTE_AUTHOR, quoteAuthor)
                     .putString(PREF_QUOTE_TEXT, quoteText)
                     .putString(PREF_TODAY_DATE, today)
                     .apply();
         }
+    }
+
+    private void fetchStories() {
+        final ArrayList<Story> campusStories = new ArrayList<>();
+
+        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.stories_firebase_url),
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response == null) {
+                            return;
+                        }
+
+                        List<Story> items = new Gson().fromJson(response.toString(), new TypeToken<List<Story>>() {
+                        }.getType());
+
+                        // adding contacts to contacts list
+                        campusStories.clear();
+                        campusStories.addAll(items);
+
+                        int ids[] = {
+                                R.id.storyCard1,
+                                R.id.storyCard2,
+                                R.id.storyCard3,
+                                R.id.storyCard4,
+                                R.id.storyCard5,
+                        };
+
+                        int text_ids[] = {
+                                R.id.stackTitle1,
+                                R.id.stackTitle2,
+                                R.id.stackTitle3,
+                                R.id.stackTitle4,
+                                R.id.stackTitle5,
+                        };
+
+                        int image_ids[] = {
+                                R.id.stackImage1,
+                                R.id.stackImage2,
+                                R.id.stackImage3,
+                                R.id.stackImage4,
+                                R.id.stackImage5
+                        };
+
+                        if (campusStories.size() != 0) {
+                            for (int i = 0; i < 5; i++) {
+                                Story story1 = campusStories.get(i);
+                                if (story1.isIs_present()) {
+                                    ((CardView) findViewById(ids[i])).setVisibility(View.VISIBLE);
+                                    final int finalI = i;
+
+                                    ((TextView) findViewById(text_ids[i])).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent i = new Intent(Intent.ACTION_VIEW);
+                                            i.setData(Uri.parse(campusStories.get(finalI).getIntentURL()));
+                                            startActivity(i);
+
+                                        }
+                                    });
+
+                                    if (story1.getTitle().length() > 37) {
+                                        ((TextView) findViewById(text_ids[i])).setText(story1.getTitle().substring(0, 37) + "...");
+                                    }
+                                    Glide.with(getApplicationContext())
+                                            .load(story1.getImageURL())
+                                            .apply(new RequestOptions().placeholder(R.drawable.horizontal_stack))
+                                            .transition(DrawableTransitionOptions.withCrossFade(1000))
+                                            .into((ImageView) findViewById(image_ids[i]));
+                                } else {
+                                    ((CardView) findViewById(ids[i])).setVisibility(View.GONE);
+                                }
+                            }
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // error in getting json
+                Log.e("HomePage", "Error: " + error.getMessage());
+            }
+        });
+        MyApplication.getInstance().addToRequestQueue(request);
     }
 
     boolean doubleBackToExitPressedOnce = false;
@@ -438,10 +536,22 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     };
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (pref.getBoolean("FIRST_RUN", true)) {
             pref.edit().putBoolean("FIRST_RUN", false).apply();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogOutTimerUtil.startLogoutTimer(this, this);
+    }
+
+    @Override
+    public void doLogout() {
+        startActivity(new Intent(HomePage.this, SplashLoading.class));
+        finish();
     }
 }

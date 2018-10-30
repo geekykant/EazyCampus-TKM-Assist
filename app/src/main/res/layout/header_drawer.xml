@@ -32,7 +32,6 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/drawerEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TKM College of Engineering"
