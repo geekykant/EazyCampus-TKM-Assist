@@ -60,6 +60,10 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
+//        Intent intent = new Intent(LoginPage.this,ReferenceActivity.class);
+//        intent.putExtra("INTENT_URL","http://210.212.227.210/tkmce/");
+//        startActivity(intent);
+
         new getCaptcha(this).execute();
 
         login_button = (Button) findViewById(R.id.login_button);
@@ -182,7 +186,7 @@ public class LoginPage extends AppCompatActivity {
         @Override
         protected void onPostExecute2(Element element) {
 
-            Toast.makeText(LoginPage.this, "Captcha: " + captchaHTML, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(LoginPage.this, "Captcha: " + captchaHTML, Toast.LENGTH_SHORT).show();
 
             if (captchaGet) {
 
