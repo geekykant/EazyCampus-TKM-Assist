@@ -185,6 +185,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
 
         jsonCookies = getIntent().getStringExtra("COOKIES");
+        Toast.makeText(this, "Hompage: " + jsonCookies, Toast.LENGTH_SHORT).show();
 
         TextView welName = (TextView) findViewById(R.id.welName);
         welName.setText("Hi " + loginName + "!");

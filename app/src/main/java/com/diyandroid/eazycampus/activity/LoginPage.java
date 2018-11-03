@@ -60,9 +60,9 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
-//        Intent intent = new Intent(LoginPage.this,ReferenceActivity.class);
-//        intent.putExtra("INTENT_URL","http://210.212.227.210/tkmce/");
-//        startActivity(intent);
+        Intent intent = new Intent(LoginPage.this,ReferenceActivity.class);
+        intent.putExtra("INTENT_URL","http://210.212.227.210/tkmce/");
+        startActivity(intent);
 
         new getCaptcha(this).execute();
 
