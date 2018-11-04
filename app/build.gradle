@@ -19,12 +19,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        debug {
-            minifyEnabled true
-            useProguard true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+//        debug {
+//            minifyEnabled true
+//            useProguard true
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
     }
     productFlavors {
     }
@@ -46,7 +46,7 @@ dependencies {
     // recycler view
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     // glide image library
-    implementation 'com.github.bumptech.glide:glide:4.3.1'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
     // volley http library
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'

@@ -3,8 +3,6 @@ package com.diyandroid.eazycampus.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,7 +12,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JsResult;
@@ -32,9 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
 import com.diyandroid.eazycampus.R;
 import com.google.gson.Gson;
 
@@ -77,7 +71,6 @@ public class LoginPage extends AppCompatActivity {
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
 
-        mwebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mwebView.loadUrl(getString(R.string.tkmce_index_url));
 
         mwebView.setWebViewClient(new MyWebviewClient());
@@ -87,28 +80,24 @@ public class LoginPage extends AppCompatActivity {
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 if (url.equals(getString(R.string.tkmce_index_url)) || url.equals("http://210.212.227.210/tkmce/")) {
 
-                    byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
+                    Toast.makeText(LoginPage.this, "length: " + message.length(), Toast.LENGTH_SHORT).show();
 
-                    System.out.print(message);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
+                    byte[] imageByteArray = Base64.decode(message, Base64.DEFAULT);
                     Glide.with(getApplicationContext())
-                            .load(bitmap)
-                            .transition(new DrawableTransitionOptions().crossFade())
-                            .apply(new RequestOptions()
-                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .skipMemoryCache(true))
+                            .asBitmap()
+                            .load(imageByteArray)
                             .into(captchaImage);
 
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeResource(getResources(), R.id.captchaImage, options);
-                    int imageHeight = options.outHeight;
-                    int imageWidth = options.outWidth;
-                    String imageType = options.outMimeType;
-
-                    Log.d("LoginPage", imageHeight + " : " + imageWidth + " : " + imageType);
-                    Log.d("LoginPage", "Length: " + decodedString.length);
+//                    byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
+//                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//
+//                    Glide.with(getApplicationContext())
+//                            .asBitmap()
+//                            .load(bitmap)
+//                            .apply(new RequestOptions()
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true))
+//                            .into(captchaImage);
 
                     captchaImage.setVisibility(View.VISIBLE);
 
