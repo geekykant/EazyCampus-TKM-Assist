@@ -14,6 +14,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JsResult;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.diyandroid.eazycampus.R;
 import com.google.gson.Gson;
@@ -47,10 +49,6 @@ public class LoginPage extends AppCompatActivity {
     private CheckBox checkBox;
     ImageView captchaImage;
     private WebView mwebView;
-
-    //Shared preferences to remember credentials
-    private static final String PREF_USERNAME = "username";
-    private static final String PREF_PASSWORD = "password";
 
     private String loginName = "Godaddy", jsonCookie;
 
@@ -79,6 +77,7 @@ public class LoginPage extends AppCompatActivity {
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
 
+        mwebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mwebView.loadUrl(getString(R.string.tkmce_index_url));
 
         mwebView.setWebViewClient(new MyWebviewClient());
@@ -86,17 +85,30 @@ public class LoginPage extends AppCompatActivity {
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-
                 if (url.equals(getString(R.string.tkmce_index_url)) || url.equals("http://210.212.227.210/tkmce/")) {
-                    byte[] data = Base64.decode(message, Base64.DEFAULT);
 
-                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
+
+                    System.out.print(message);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
                     Glide.with(getApplicationContext())
-                            .load(bmp)
+                            .load(bitmap)
+                            .transition(new DrawableTransitionOptions().crossFade())
                             .apply(new RequestOptions()
                                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                                     .skipMemoryCache(true))
                             .into(captchaImage);
+
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeResource(getResources(), R.id.captchaImage, options);
+                    int imageHeight = options.outHeight;
+                    int imageWidth = options.outWidth;
+                    String imageType = options.outMimeType;
+
+                    Log.d("LoginPage", imageHeight + " : " + imageWidth + " : " + imageType);
+                    Log.d("LoginPage", "Length: " + decodedString.length);
 
                     captchaImage.setVisibility(View.VISIBLE);
 
@@ -112,8 +124,15 @@ public class LoginPage extends AppCompatActivity {
                     Intent intent = new Intent(LoginPage.this, HomePage.class);
                     intent.putExtra("COOKIES", jsonCookie);  //send cookies
                     intent.putExtra("LOGIN_NAME", loginName);
+                    intent.putExtra("USER_ID", username.getText().toString().trim());
                     startActivity(intent);
                     finish();
+
+                    if (checkBox.isChecked()) {
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        pref.edit().putString("username", username.getText().toString().trim())
+                                .putString("password", password.getText().toString().trim()).apply();
+                    }
                 }
                 result.confirm();
                 return true;
@@ -192,21 +211,30 @@ public class LoginPage extends AppCompatActivity {
                         "})()");
             }
 
-            progressBar.setVisibility(View.GONE
-            );
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     private void doLogin() {
         if (isNetworkAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
-            mwebView.loadUrl(
-                    "javascript:(function() { " +
-                            "document.getElementById('txtUserName').value = '170907';" +
-                            "document.getElementById('txtPassword').value = 'Indomania6';" +
-                            "document.getElementById('txtInput').value = '" + captcha.getText() + "';" +
-                            "document.getElementById('btnLogin').click()" +
-                            "})()");
+            if (TextUtils.isEmpty(username.getText().toString()) && TextUtils.isEmpty(password.getText().toString())) {
+                username.setError("Username incorrect");
+                password.setError("Password incorrect");
+                return;
+            }
+
+            if (TextUtils.isEmpty(captcha.getText().toString())) {
+                captcha.setError("Captcha incorrect");
+            } else {
+                mwebView.loadUrl(
+                        "javascript:(function() { " +
+                                "document.getElementById('txtUserName').value = '" + username.getText() + "';" +
+                                "document.getElementById('txtPassword').value = '" + password.getText() + "';" +
+                                "document.getElementById('txtInput').value = '" + captcha.getText() + "';" +
+                                "document.getElementById('btnLogin').click()" +
+                                "})()");
+                progressBar.setVisibility(View.VISIBLE);
+            }
         } else {
             Toast.makeText(LoginPage.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
         }
@@ -232,6 +260,5 @@ public class LoginPage extends AppCompatActivity {
     public void onBackPressed() {
         finishAffinity();
 //        super.onBackPressed();
-//        Toast.makeText(this, "Hello!", Toast.LENGTH_SHORT).show();
     }
 }

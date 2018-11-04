@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -65,6 +66,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -73,7 +75,7 @@ import java.util.Random;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        LogOutTimerUtil.LogOutListener{
+        LogOutTimerUtil.LogOutListener {
 
     private CircleImageView profile_image;
     private AlertDialog profileDialog;
@@ -89,6 +91,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
+    private AlertDialog adsDialogue;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,30 +106,41 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         String TODAY_DATE = pref.getString(PREF_TODAY_DATE, null);
 
         String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
-        boolean FIRST_TIME = pref.getBoolean("FIRST_RUN", true);
+        int FIRST_TIME = pref.getInt("FIRST_RUN", 0);
 
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
         loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
 
         // Default Mailing system for all_semesters (Add Intent Later)
-//        if (FIRST_TIME) {
+        if (FIRST_TIME % 4 == 0) {
+            pref.edit().putInt("FIRST_RUN", FIRST_TIME + 1).apply();
+
             //Ads dialogue display
-            View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
+            final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
             ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
-            final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
+            adsDialogue = new AlertDialog.Builder(this).create();
             adsDialogue.setCancelable(false);
             adsDialogue.setCanceledOnTouchOutside(false);
             adsDialogue.setView(adsDialogueView);
+
+            Button contribute = (Button) adsDialogueView.findViewById(R.id.contribute);
+            Button later = (Button) adsDialogueView.findViewById(R.id.later);
 
             new android.os.Handler().postDelayed(
                     new Runnable() {
                         public void run() {
                             adsDialogue.show();
                         }
-                    }, 2000);
+                    }, 3000);
 
-            Button submitAdsBox = (Button) adsDialogueView.findViewById(R.id.contribute);
-            submitAdsBox.setOnClickListener(new View.OnClickListener() {
+            contribute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    paywithUPI();
+                }
+            });
+
+            later.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adsDialogue.hide();
@@ -134,7 +149,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
             FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
             FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-//        }
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -215,6 +230,23 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         fetchStories();
     }
 
+    private void paywithUPI() {
+        Uri UPI = new Uri.Builder()
+                .scheme("upi")
+                .authority("pay")
+                .appendQueryParameter("pa", "eazycampusapp@paytm")
+                .appendQueryParameter("pn", "SREEKANT S SHENOY")
+                .appendQueryParameter("tn", "EazyCampus Development Support :)")
+                .appendQueryParameter("cu", "INR")
+                .build();
+
+        Intent intent = new Intent();
+        intent.setData(UPI);
+        Intent chooser = Intent.createChooser(intent, "Pay with...");
+        ActivityCompat.startActivityForResult(HomePage.this, chooser, 1337, null);
+        adsDialogue.hide();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -278,7 +310,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 pref.edit()
                         .remove("username")
                         .remove("password")
-                        .remove("FIRST_RUN")
                         .apply();
 
                 Toast.makeText(this, "You have logged out!", Toast.LENGTH_SHORT).show();
@@ -519,7 +550,71 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             navigationView.setCheckedItem(R.id.home);
             FrameLayout layout = (FrameLayout) findViewById(R.id.showFragment);
             layout.removeAllViewsInLayout();
+
+        } else if (requestCode == 1337) {
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                String response = bundle.getString("response");
+                String responseValues[] = getKeyValueFromString(response, "&");
+                HashMap<String, String> keyValueOfResponse = new HashMap<>();
+                for (String responseValue : responseValues) {
+                    String[] keyValue = getKeyValueFromString(responseValue, "=");
+                    if (keyValue != null && keyValue.length > 1) {
+                        keyValueOfResponse.put(keyValue[0], keyValue[1]);
+                    }
+                }
+                String txnRef = keyValueOfResponse.get("txnRef");
+                String responseCode = keyValueOfResponse.get("responseCode");
+                String Status = keyValueOfResponse.get("Status");
+                String txnId = keyValueOfResponse.get("txnId");
+
+                View contributionView = LayoutInflater.from(this).inflate(R.layout.contribution_summary, null);
+
+                final AlertDialog contriDialogue = new AlertDialog.Builder(this).create();
+                contriDialogue.setCancelable(false);
+                contriDialogue.setCanceledOnTouchOutside(false);
+                contriDialogue.setView(contributionView);
+
+                Button tryagain = (Button) contributionView.findViewById(R.id.tryagain);
+                Button later = (Button) contributionView.findViewById(R.id.cont_later);
+                CircleImageView tick = (CircleImageView) contributionView.findViewById(R.id.tick);
+
+                if (Status.equals("SUCCESS")) {
+                    tryagain.setVisibility(View.VISIBLE);
+                    ((TextView) contributionView.findViewById(R.id.contribution_title)).setText("Thank you!");
+                    ((TextView) contributionView.findViewById(R.id.transaction_desc)).setText("Your contribution has been sent to the developer.");
+
+                    pref.edit().putInt("FIRST_RUN", -1).apply();
+                } else if (Status.equals("FAILURE")) {
+                    tick.setImageResource(R.drawable.ic_cross);
+                    ((TextView) contributionView.findViewById(R.id.contribution_title)).setText("Transaction Failed!");
+                }
+
+                tryagain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        contriDialogue.hide();
+                        paywithUPI();
+                    }
+                });
+
+                later.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        contriDialogue.hide();
+                    }
+                });
+                Log.d("UPI RESULT: ", txnRef + " : " + responseCode + " : " + Status + " : " + txnId);
+            }
         }
+
+    }
+
+    private String[] getKeyValueFromString(String stringToSplit, String splitBy) {
+        if (stringToSplit == null) {
+            return null;
+        }
+        return stringToSplit.split(splitBy);
     }
 
     View.OnClickListener btnClickListener = new View.OnClickListener() {
@@ -537,13 +632,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (pref.getBoolean("FIRST_RUN", true)) {
-            pref.edit().putBoolean("FIRST_RUN", false).apply();
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (pref.getInt("FIRST_RUN", true)) {
+//            pref.edit().putBoolean("FIRST_RUN", false).apply();
+//        }
+//    }
 
     @Override
     protected void onStart() {

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffffffff"
@@ -6,31 +7,32 @@
     android:padding="10dp"
     android:theme="@style/RobotoTextViewStyle">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:orientation="horizontal"
         android:paddingRight="30dp">
 
-        <ImageView
-            android:id="@+id/graduationIcon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_graduation" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/tick"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_check"
+            app:civ_circle_background_color="@color/green" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_toEndOf="@id/graduationIcon"
-            android:padding="10dp"
-            android:text="Support this app!"
+            android:layout_marginStart="15dp"
+            android:paddingTop="20dp"
+            android:id="@+id/contribution_title"
+            android:text="Something went wrong"
             android:textColor="#ff000000"
             android:textSize="18sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -42,11 +44,11 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:id="@+id/ads_description"
+            android:id="@+id/transaction_desc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/ads_dialog_message"
+            android:text="Your transaction had some problem. You can still contribute from the 'about' seciton."
             android:textColor="@color/black"
             android:textSize="15sp" />
 
@@ -60,28 +62,28 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/contribute"
+            android:id="@+id/tryagain"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            android:backgroundTint="@color/cpb_red"
             android:background="@drawable/login_button"
+            android:backgroundTint="@color/cpb_red"
             android:fontFamily="sans-serif"
-            android:text="Yes! Support."
+            android:text="Try Again"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/later"
+            android:id="@+id/cont_later"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:background="@drawable/login_button"
-            android:fontFamily="sans-serif"
             android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif"
             android:text="Later(3)"
             android:textAllCaps="false"
             android:textColor="#fff"
