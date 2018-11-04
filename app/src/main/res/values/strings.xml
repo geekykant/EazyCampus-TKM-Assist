@@ -17,7 +17,8 @@
     <string name="share_eazycampus_text">🔥🎓 Eazy Campus- A Campus app for TKM College of Engineering students that eases the process of browsing website with some amazing extra features.\n\n- Grab Attendance and Marks reports in less than 10 seconds (Believe me!)\n- Instant KTU announcements &amp; Campus stories 👨‍🎓👩‍🎓\n- Faculty directory: The Complete college staffs/teachers directory\n- Intuitive and user-friendly UI.\n- Automated Staff Evaluation (Finally😎)\n\nDownload the app right now on PlayStore: https://play.google.com/store/apps/details?id=com.diyandroid.eazycampus \n\n(Apple fanboys need to buy this developer an iPhone to begin the development..Please😜) \n\nShare this app with your friends and do let them know!\n\nYour friendly geeky👨‍💻,\nApp developer obviously.</string>
     <string name="support_eazycampus_development">Support EazyCampus development</string>
     <!--<string name="ads_dialog_message">Sorry for enabling ads! But as a student it fills up my coffee and beer mug! I will remove ads with graduation! Pinky Promise!</string>-->
-    <string name="ads_dialog_message"> I am Sreekant, the app developer. It really motivates me if you could appreciate my app and give it a 5⭐ rating. Cheers!</string>
+    <!--<string name="ads_dialog_message"> I am Sreekant, the app developer. It really motivates me if you could appreciate my app and give it a 5⭐ rating. Cheers!</string>-->
+    <string name="ads_dialog_message"> As a student, Developing this app requires a lot of effort and time. Giving me a few bucks would help support faster app development.</string>
     <string name="privacy_policy_text">By clicking on login,\nYou agree to our <u>Privacy Policy</u>.</string>
     <string name="hi_sreekant">Hi Sreekant!</string>
     <string name="directory">Directory</string>

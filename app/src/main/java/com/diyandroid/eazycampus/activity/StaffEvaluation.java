@@ -90,7 +90,7 @@ public class StaffEvaluation extends AppCompatActivity implements LogOutTimerUti
                     if (((RadioButton) findViewById(R.id.negative)).isChecked()) {
                         evalValues = new String[]{"3.5313", "2.0125", "1.1250", "5.8500", "0.6738", "2.5000", "1.1913", "0.7375", "1.2788", "5.0638", "1.5625"};
                     } else {
-                        evalValues = new String[]{"17.7500", "14.5000", "7.5000", "7.5000", "5.8500", "4.0000", "9.2500", "4.7500", "6.8750", "6.7500", "11.5000", "11.2500"};
+                        evalValues = new String[]{"17.7500", "14.5000", "7.5000", "5.8500", "4.0000", "9.2500", "4.7500", "6.8750", "6.7500", "11.5000", "11.2500"};
                     }
                     
                     try {

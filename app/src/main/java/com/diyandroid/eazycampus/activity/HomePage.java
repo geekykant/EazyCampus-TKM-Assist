@@ -108,11 +108,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
 
         // Default Mailing system for all_semesters (Add Intent Later)
-        if (FIRST_TIME) {
+//        if (FIRST_TIME) {
             //Ads dialogue display
             View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
             ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
             final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
+            adsDialogue.setCancelable(false);
+            adsDialogue.setCanceledOnTouchOutside(false);
             adsDialogue.setView(adsDialogueView);
 
             new android.os.Handler().postDelayed(
@@ -122,7 +124,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         }
                     }, 2000);
 
-            Button submitAdsBox = (Button) adsDialogueView.findViewById(R.id.submitAdsBox);
+            Button submitAdsBox = (Button) adsDialogueView.findViewById(R.id.contribute);
             submitAdsBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -132,7 +134,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
             FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
             FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-        }
+//        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -185,7 +187,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
 
         jsonCookies = getIntent().getStringExtra("COOKIES");
-        Toast.makeText(this, "Hompage: " + jsonCookies, Toast.LENGTH_SHORT).show();
 
         TextView welName = (TextView) findViewById(R.id.welName);
         welName.setText("Hi " + loginName + "!");

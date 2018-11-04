@@ -7,10 +7,10 @@
     android:theme="@style/RobotoTextViewStyle">
 
     <RelativeLayout
-        android:gravity="center"
-        android:paddingRight="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingRight="30dp">
 
         <ImageView
             android:id="@+id/graduationIcon"
@@ -21,12 +21,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
             android:layout_toRightOf="@id/graduationIcon"
-            android:layout_alignParentTop="true"
             android:padding="10dp"
-            android:text="Psst!"
+            android:text="Support this app!"
             android:textColor="#ff000000"
             android:textSize="18sp" />
 
@@ -36,34 +36,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:orientation="horizontal"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:orientation="horizontal">
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/ads_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="15sp"
             android:gravity="center"
+            android:text="@string/ads_dialog_message"
             android:textColor="@color/black"
-            android:text="@string/ads_dialog_message"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/submitAdsBox"
-        android:layout_width="130dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:background="@drawable/login_button"
-        android:fontFamily="sans-serif"
-        android:text="Yep"
-        android:textAllCaps="false"
-        android:textColor="#fff"
-        android:textSize="14sp" />
+        android:layout_marginTop="13dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/contribute"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:background="@drawable/login_button"
+            android:fontFamily="sans-serif"
+            android:text="Yep"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/naah"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:background="@drawable/login_button"
+            android:fontFamily="sans-serif"
+            android:text="Yep"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

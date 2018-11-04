@@ -15,6 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <ImageView
@@ -107,10 +109,11 @@
                 android:id="@+id/captchaImage"
                 android:layout_width="150dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="20dp"
                 android:layout_below="@id/rememberme"
-                android:scaleType="fitXY"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:scaleType="fitXY"
+                android:visibility="gone"
                 android:src="@drawable/drawer_button" />
 
             <android.support.design.widget.TextInputLayout
@@ -134,7 +137,7 @@
                     android:maxLength="6"
                     android:textAllCaps="false"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#d8103f" />
+                    android:textColor="#64b5f6" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -195,5 +198,10 @@
             android:visibility="invisible" />
     </RelativeLayout>
 
+    <WebView
+        android:id="@+id/webViewNotes"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
