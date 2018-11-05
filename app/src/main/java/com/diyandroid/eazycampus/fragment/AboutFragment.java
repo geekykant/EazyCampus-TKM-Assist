@@ -4,10 +4,12 @@ import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -115,18 +117,18 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
             case R.id.clickToDonate:
                 Uri UPI = new Uri.Builder()
-                                .scheme("upi")
-                                .authority("pay")
-                                .appendQueryParameter("pa", "eazycampusapp@paytm")
-                                .appendQueryParameter("pn", "SREEKANT S SHENOY")
-                                .appendQueryParameter("tn", "EazyCampus Development Support :)")
-                                .appendQueryParameter("cu", "INR")
-                                .build();
+                        .scheme("upi")
+                        .authority("pay")
+                        .appendQueryParameter("pa", "geekykant@oksbi")
+                        .appendQueryParameter("pn", "SREEKANT S SHENOY")
+                        .appendQueryParameter("tn", "EazyCampus Development Support :)")
+                        .appendQueryParameter("cu", "INR")
+                        .build();
 
                 intent = new Intent();
                 intent.setData(UPI);
                 Intent chooser = Intent.createChooser(intent, "Pay with...");
-                startActivityForResult(chooser, 1, null);
+                startActivityForResult(chooser, 1337, null);
                 break;
         }
     }
@@ -147,5 +149,12 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         } catch (PackageManager.NameNotFoundException e) {
             return FACEBOOK_URL; //normal web url
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        pref.edit().putInt("FIRST_COUNT", -1).apply();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

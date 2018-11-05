@@ -1,6 +1,7 @@
 package com.diyandroid.eazycampus.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -11,7 +12,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -41,6 +41,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.MyApplication;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.Story;
@@ -55,6 +56,10 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,6 +74,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -106,15 +112,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         String TODAY_DATE = pref.getString(PREF_TODAY_DATE, null);
 
         String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
-        int FIRST_TIME = pref.getInt("FIRST_RUN", 0);
+        final int FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
+        pref.edit().putInt("FIRST_COUNT", FIRST_COUNT + 1).apply();
 
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
         loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
 
         // Default Mailing system for all_semesters (Add Intent Later)
-        if (FIRST_TIME % 4 == 0) {
-            pref.edit().putInt("FIRST_RUN", FIRST_TIME + 1).apply();
-
+        if (FIRST_COUNT % 1 == 0) {
             //Ads dialogue display
             final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
             ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
@@ -131,7 +136,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         public void run() {
                             adsDialogue.show();
                         }
-                    }, 3000);
+                    }, 1500);
 
             contribute.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -230,12 +235,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         fetchStories();
     }
 
+    @SuppressLint("RestrictedApi")
     private void paywithUPI() {
         Uri UPI = new Uri.Builder()
                 .scheme("upi")
                 .authority("pay")
-                .appendQueryParameter("pa", "eazycampusapp@paytm")
-                .appendQueryParameter("pn", "SREEKANT S SHENOY")
+                .appendQueryParameter("pa", "geekykant@oksbi")
+                .appendQueryParameter("pn", "SREEKANT SHENOY")
                 .appendQueryParameter("tn", "EazyCampus Development Support :)")
                 .appendQueryParameter("cu", "INR")
                 .build();
@@ -243,8 +249,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         Intent intent = new Intent();
         intent.setData(UPI);
         Intent chooser = Intent.createChooser(intent, "Pay with...");
-        ActivityCompat.startActivityForResult(HomePage.this, chooser, 1337, null);
-        adsDialogue.hide();
+        startActivityForResult(chooser, 1337, null);
     }
 
     @Override
@@ -306,6 +311,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 Intent signoutIntent = new Intent(HomePage.this, LoginPage.class);
                 startActivity(signoutIntent);
                 finish();
+
+                new doLogout(this).execute();
 
                 pref.edit()
                         .remove("username")
@@ -528,6 +535,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         } else {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
+                new doLogout(this).execute();
                 return;
             }
 
@@ -546,65 +554,76 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setResult(resultCode, data);
+
         if (requestCode == OPEN_NEW_ACTIVITY) {
             navigationView.setCheckedItem(R.id.home);
             FrameLayout layout = (FrameLayout) findViewById(R.id.showFragment);
             layout.removeAllViewsInLayout();
 
         } else if (requestCode == 1337) {
-            if (data != null) {
-                Bundle bundle = data.getExtras();
-                String response = bundle.getString("response");
-                String responseValues[] = getKeyValueFromString(response, "&");
-                HashMap<String, String> keyValueOfResponse = new HashMap<>();
-                for (String responseValue : responseValues) {
-                    String[] keyValue = getKeyValueFromString(responseValue, "=");
-                    if (keyValue != null && keyValue.length > 1) {
-                        keyValueOfResponse.put(keyValue[0], keyValue[1]);
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Pleaseee contribute! Only if you want more updates ;_;", Toast.LENGTH_LONG).show();
+                pref.edit().putInt("FIRST_COUNT", -1).apply();
+            } else {
+                if (resultCode == RESULT_OK && data != null) {
+                    Bundle bundle = data.getExtras();
+                    String response = bundle.getString("response");
+                    String responseValues[] = getKeyValueFromString(response, "&");
+                    HashMap<String, String> keyValueOfResponse = new HashMap<>();
+                    for (String responseValue : responseValues) {
+                        String[] keyValue = getKeyValueFromString(responseValue, "=");
+                        if (keyValue != null && keyValue.length > 1) {
+                            keyValueOfResponse.put(keyValue[0], keyValue[1]);
+                        }
                     }
+                    String txnRef = keyValueOfResponse.get("txnRef");
+                    String responseCode = keyValueOfResponse.get("responseCode");
+                    String Status = keyValueOfResponse.get("Status");
+                    String txnId = keyValueOfResponse.get("txnId");
+
+                    View contributionView = LayoutInflater.from(this).inflate(R.layout.contribution_summary, null);
+
+                    final AlertDialog contriDialogue = new AlertDialog.Builder(this).create();
+                    contriDialogue.setCancelable(false);
+                    contriDialogue.setCanceledOnTouchOutside(false);
+                    contriDialogue.setView(contributionView);
+
+                    Button tryagain = (Button) contributionView.findViewById(R.id.tryagain);
+                    Button cont_later = (Button) contributionView.findViewById(R.id.cont_later);
+                    CircleImageView tick = (CircleImageView) contributionView.findViewById(R.id.tick);
+
+                    if (Status.equals("SUCCESS")) {
+                        tryagain.setVisibility(View.VISIBLE);
+                        ((TextView) contributionView.findViewById(R.id.contribution_title)).setText(R.string.thank_you);
+                        ((TextView) contributionView.findViewById(R.id.transaction_desc)).setText(R.string.contribution_sent_message);
+
+                        pref.edit().putInt("FIRST_COUNT", -1).apply();
+                    } else if (Status.equals("FAILURE")) {
+                        tick.setImageResource(R.drawable.ic_cross);
+                        ((TextView) contributionView.findViewById(R.id.contribution_title)).setText(R.string.transaction_failed);
+                    }
+
+                    contriDialogue.show();
+
+                    tryagain.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            contriDialogue.hide();
+                            paywithUPI();
+                        }
+                    });
+
+                    cont_later.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            contriDialogue.hide();
+
+                        }
+                    });
+
+                    Log.d("UPI RESULT: ", txnRef + " : " + responseCode + " : " + Status + " : " + txnId);
                 }
-                String txnRef = keyValueOfResponse.get("txnRef");
-                String responseCode = keyValueOfResponse.get("responseCode");
-                String Status = keyValueOfResponse.get("Status");
-                String txnId = keyValueOfResponse.get("txnId");
-
-                View contributionView = LayoutInflater.from(this).inflate(R.layout.contribution_summary, null);
-
-                final AlertDialog contriDialogue = new AlertDialog.Builder(this).create();
-                contriDialogue.setCancelable(false);
-                contriDialogue.setCanceledOnTouchOutside(false);
-                contriDialogue.setView(contributionView);
-
-                Button tryagain = (Button) contributionView.findViewById(R.id.tryagain);
-                Button later = (Button) contributionView.findViewById(R.id.cont_later);
-                CircleImageView tick = (CircleImageView) contributionView.findViewById(R.id.tick);
-
-                if (Status.equals("SUCCESS")) {
-                    tryagain.setVisibility(View.VISIBLE);
-                    ((TextView) contributionView.findViewById(R.id.contribution_title)).setText("Thank you!");
-                    ((TextView) contributionView.findViewById(R.id.transaction_desc)).setText("Your contribution has been sent to the developer.");
-
-                    pref.edit().putInt("FIRST_RUN", -1).apply();
-                } else if (Status.equals("FAILURE")) {
-                    tick.setImageResource(R.drawable.ic_cross);
-                    ((TextView) contributionView.findViewById(R.id.contribution_title)).setText("Transaction Failed!");
-                }
-
-                tryagain.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        contriDialogue.hide();
-                        paywithUPI();
-                    }
-                });
-
-                later.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        contriDialogue.hide();
-                    }
-                });
-                Log.d("UPI RESULT: ", txnRef + " : " + responseCode + " : " + Status + " : " + txnId);
             }
         }
 
@@ -635,8 +654,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 //    @Override
 //    public void onResume() {
 //        super.onResume();
-//        if (pref.getInt("FIRST_RUN", true)) {
-//            pref.edit().putBoolean("FIRST_RUN", false).apply();
+//        if (pref.getInt("FIRST_COUNT", true)) {
+//            pref.edit().putBoolean("FIRST_COUNT", false).apply();
 //        }
 //    }
 
@@ -650,5 +669,75 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public void doLogout() {
         startActivity(new Intent(HomePage.this, SplashLoading.class));
         finish();
+    }
+
+    private boolean parsingSuccessful;
+
+    private class doLogout extends ExceptionHandlingAsyncTask<String, Void, Element> {
+
+        Map<String, String> loginCookies = new Gson().fromJson(jsonCookies, new TypeToken<Map<String, String>>() {
+        }.getType());
+
+        Connection.Response response;
+
+        public doLogout(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            parsingSuccessful = true;
+            //Progress bar implementations
+        }
+
+        @Override
+        protected Element doInBackground2(String... strings) {
+            try {
+                Document evaluationPage = Jsoup.connect(getString(R.string.tkmce_home))
+                        .cookies(loginCookies)
+                        .referrer(getString(R.string.tkmce_index_url))
+                        .followRedirects(true)
+                        .userAgent("Mozilla")
+                        .method(Connection.Method.GET)
+                        .timeout(30 * 1000)
+                        .execute().parse();
+
+                response = Jsoup.connect(getString(R.string.tkmce_home))
+                        .cookies(loginCookies)
+                        .referrer(getString(R.string.tkmce_home))
+                        .data("__EVENTTARGET", "ctl00$lnkBtnLogout")
+                        .data("__EVENTARGUMENT", "")
+                        .data("__LASTFOCUS", "")
+                        .data("__VIEWSTATE", evaluationPage.getElementById("__VIEWSTATE").val())
+                        .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
+                        .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
+                        .data("ctl00$hdnisclose", "false")
+                        .data("ctl00$ContentPlaceHolder1$hdnIsMarkEntry", "NO")
+                        .data("ctl00$ContentPlaceHolder1$hdnSubjectValues", "")
+                        .data("ctl00$ContentPlaceHolder1$hdnValues", "")
+                        .data("ctl00$HiddenField1", "")
+                        .followRedirects(false)
+                        .method(Connection.Method.POST)
+                        .userAgent("Mozilla")
+                        .timeout(30 * 1000)
+                        .execute();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                parsingSuccessful = false;
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute2(Element element) {
+            if (parsingSuccessful && response.statusCode() == 200) {
+                Toast.makeText(HomePage.this, "Logged out Hehehe!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

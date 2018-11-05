@@ -64,4 +64,7 @@
     <string name="ktustudy_url">www.ktustudy.in</string>
     <string name="internal_marks">Internal Marks</string>
     <string name="sessional_marks">Sessional Marks</string>
+    <string name="thank_you">Thank you!</string>
+    <string name="contribution_sent_message">Your contribution has been sent to the developer.</string>
+    <string name="transaction_failed">Transaction Failed!</string>
 </resources>

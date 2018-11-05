@@ -3,6 +3,8 @@ package com.diyandroid.eazycampus.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -29,6 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.diyandroid.eazycampus.R;
 import com.google.gson.Gson;
 
@@ -38,7 +43,6 @@ import java.util.Map;
 public class LoginPage extends AppCompatActivity {
 
     private EditText username, password, captcha;
-    private Button login_button;
     private ProgressBar progressBar;
     private CheckBox checkBox;
     ImageView captchaImage;
@@ -58,6 +62,7 @@ public class LoginPage extends AppCompatActivity {
         setContentView(R.layout.activity_login_page);
 
         captchaImage = (ImageView) findViewById(R.id.captchaImage);
+        Button login_button = (Button) findViewById(R.id.login_button);
 
         //WebView
         mwebView = (WebView) findViewById(R.id.webViewNotes);
@@ -71,7 +76,18 @@ public class LoginPage extends AppCompatActivity {
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
 
-        mwebView.loadUrl(getString(R.string.tkmce_index_url));
+        if (isNetworkAvailable()) {
+            mwebView.loadUrl(getString(R.string.tkmce_index_url));
+        } else {
+            Toast.makeText(LoginPage.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
+        ((ImageView) findViewById(R.id.captchaReload)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mwebView.loadUrl(getString(R.string.tkmce_index_url));
+            }
+        });
 
         mwebView.setWebViewClient(new MyWebviewClient());
         mwebView.setWebChromeClient(new WebChromeClient() {
@@ -80,29 +96,27 @@ public class LoginPage extends AppCompatActivity {
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 if (url.equals(getString(R.string.tkmce_index_url)) || url.equals("http://210.212.227.210/tkmce/")) {
 
-                    Toast.makeText(LoginPage.this, "length: " + message.length(), Toast.LENGTH_SHORT).show();
+                    byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-                    byte[] imageByteArray = Base64.decode(message, Base64.DEFAULT);
-                    Glide.with(getApplicationContext())
-                            .asBitmap()
-                            .load(imageByteArray)
-                            .into(captchaImage);
+                    if (isNetworkAvailable()) {
+                        Glide.with(getApplicationContext())
+                                .asBitmap()
+                                .transition(new BitmapTransitionOptions().crossFade())
+                                .load(bitmap)
+                                .apply(new RequestOptions()
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true))
+                                .into(captchaImage);
 
-//                    byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
-//                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//
-//                    Glide.with(getApplicationContext())
-//                            .asBitmap()
-//                            .load(bitmap)
-//                            .apply(new RequestOptions()
-//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                    .skipMemoryCache(true))
-//                            .into(captchaImage);
-
-                    captchaImage.setVisibility(View.VISIBLE);
+                        captchaImage.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(LoginPage.this, "Network problem! Unable to load captcha.", Toast.LENGTH_LONG).show();
+                    }
 
                     if (message.contains("Another Active Logged")) {
                         mwebView.loadUrl(getString(R.string.tkmce_index_url));
+                        captcha.setText("");
                         Toast.makeText(LoginPage.this, "Message: " + message, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -129,7 +143,6 @@ public class LoginPage extends AppCompatActivity {
 
         });
 
-        login_button = (Button) findViewById(R.id.login_button);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         captcha = (EditText) findViewById(R.id.captchaInput);
@@ -191,7 +204,7 @@ public class LoginPage extends AppCompatActivity {
             mwebView.loadUrl("javascript:function getBase64Image(img) " +
                     "{ var canvas = document.createElement(\"canvas\"); canvas.width = img.width; " +
                     "canvas.height = img.height; var ctx = canvas.getContext(\"2d\"); ctx.drawImage(img, 0, 0); " +
-                    "var dataURL = canvas.toDataURL(\"image/png\"); return dataURL.replace(/^data:image\\/(png|jpg);base64,/, \"\"); }" +
+                    "var dataURL = canvas.toDataURL(\"image/jpeg\"); return dataURL.replace(/^data:image\\/(png|jpg|jpeg);base64,/, \"\"); }" +
                     " alert(getBase64Image(document.getElementById(\"ImgCaptcha\")))");
 
             if (url.equals(getString(R.string.tkmce_home))) {

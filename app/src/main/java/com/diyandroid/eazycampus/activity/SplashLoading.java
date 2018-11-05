@@ -19,6 +19,7 @@ public class SplashLoading extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(getApplicationContext(), LoginPage.class);
                 startActivity(intent);
+                finish();
             }
         },1000);
 

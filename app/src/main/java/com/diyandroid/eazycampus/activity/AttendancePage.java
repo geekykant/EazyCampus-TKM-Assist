@@ -73,8 +73,8 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new getAttendance(getApplicationContext()).execute();
-                new getDatewiseAttendance(getApplicationContext()).execute();
+                new getAttendance(getApplicationContext()).execute();
+//                new getDatewiseAttendance(getApplicationContext()).execute();
             }
         });
     }
