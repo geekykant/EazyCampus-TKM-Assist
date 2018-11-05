@@ -201,16 +201,10 @@ public class LoginPage extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            mwebView.loadUrl("javascript:function getBase64Image(img) " +
-                    "{ var canvas = document.createElement(\"canvas\"); canvas.width = img.width; " +
-                    "canvas.height = img.height; var ctx = canvas.getContext(\"2d\"); ctx.drawImage(img, 0, 0); " +
-                    "var dataURL = canvas.toDataURL(\"image/jpeg\"); return dataURL.replace(/^data:image\\/(png|jpg|jpeg);base64,/, \"\"); }" +
-                    " alert(getBase64Image(document.getElementById(\"ImgCaptcha\")))");
+            mwebView.loadUrl(getString(R.string.get_base64_js));
 
             if (url.equals(getString(R.string.tkmce_home))) {
-                mwebView.loadUrl("javascript:(function() { alert(" +
-                        "\'WELCOME\' + document.getElementById('ctl00_lblFirstName').innerHTML);" +
-                        "})()");
+                mwebView.loadUrl(getString(R.string.welcome_name_js));
             }
 
             progressBar.setVisibility(View.GONE);

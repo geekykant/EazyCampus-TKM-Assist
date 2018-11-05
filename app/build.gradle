@@ -7,8 +7,8 @@ android {
         applicationId "com.diyandroid.eazycampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 13
-        versionName '1.0.1'
+        versionCode 14
+        versionName '1.0.2'
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -31,7 +31,6 @@ android {
 }
 
 dependencies {
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'

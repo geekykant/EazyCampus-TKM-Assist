@@ -67,4 +67,6 @@
     <string name="thank_you">Thank you!</string>
     <string name="contribution_sent_message">Your contribution has been sent to the developer.</string>
     <string name="transaction_failed">Transaction Failed!</string>
+    <string name="get_base64_js">javascript:function getBase64Image(img) { var canvas = document.createElement(\"canvas\"); canvas.width = img.width; canvas.height = img.height; var ctx = canvas.getContext(\"2d\"); ctx.drawImage(img, 0, 0); var dataURL = canvas.toDataURL(\"image/jpeg\"); return dataURL.replace(/^data:image\\/(png|jpg|jpeg);base64,/, \"\"); } alert(getBase64Image(document.getElementById(\"ImgCaptcha\")))</string>
+    <string name="welcome_name_js">javascript:(function() { alert(\'WELCOME\' + document.getElementById(\'ctl00_lblFirstName\').innerHTML);})()</string>
 </resources>
