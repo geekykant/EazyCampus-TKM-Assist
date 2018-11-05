@@ -113,13 +113,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
         final int FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
-        pref.edit().putInt("FIRST_COUNT", FIRST_COUNT + 1).apply();
+        boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
         loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
 
         // Default Mailing system for all_semesters (Add Intent Later)
-        if (FIRST_COUNT % 1 == 0) {
+        if (FIRST_COUNT % 3 == 0) {
             //Ads dialogue display
             final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
             ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
@@ -151,9 +151,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     adsDialogue.hide();
                 }
             });
+        }
 
+        if (FIRST_COUNT >= 0) {
+            pref.edit().putInt("FIRST_COUNT", FIRST_COUNT + 1).apply();
+        }
+
+        if (FIRST_RUN) {
             FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
             FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+            pref.edit().putBoolean("FIRST_RUN", false).apply();
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -563,7 +570,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         } else if (requestCode == 1337) {
             if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Pleaseee contribute! Only if you want more updates ;_;", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Pleaseee contribute! ;_;", Toast.LENGTH_LONG).show();
                 pref.edit().putInt("FIRST_COUNT", -1).apply();
             } else {
                 if (resultCode == RESULT_OK && data != null) {
@@ -651,13 +658,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     };
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (pref.getInt("FIRST_COUNT", true)) {
-//            pref.edit().putBoolean("FIRST_COUNT", false).apply();
-//        }
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (pref.getBoolean("FIRST_RUN", true)) {
+            pref.edit().putBoolean("FIRST_RUN", false).apply();
+        }
+    }
 
     @Override
     protected void onStart() {
