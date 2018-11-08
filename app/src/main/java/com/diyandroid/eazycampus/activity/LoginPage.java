@@ -1,8 +1,10 @@
 package com.diyandroid.eazycampus.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -10,10 +12,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JsResult;
@@ -34,8 +39,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +59,10 @@ public class LoginPage extends AppCompatActivity {
     ImageView captchaImage;
     private WebView mwebView;
 
+    Map<String, String> LOGIN_IDS;
     private String loginName = "Godaddy", jsonCookie;
+
+    public static final String VERSION_CODE_KEY = "VERSION_CODE_KEY";
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -56,10 +70,49 @@ public class LoginPage extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
+    private int getCurrentVersionCode() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        mFirebaseRemoteConfig.fetch(0)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            mFirebaseRemoteConfig.activateFetched();
+
+                            String LOGIN_ID_JSON = mFirebaseRemoteConfig.getString("LOGIN_PAGE_IDS");
+                            Toast.makeText(LoginPage.this, "Dude!! its " + LOGIN_ID_JSON, Toast.LENGTH_SHORT).show();
+
+                            Log.d("LoginPage", "Fetched value: " + mFirebaseRemoteConfig.getString(VERSION_CODE_KEY));
+                            checkForUpdate();
+
+                            LOGIN_IDS = new Gson().fromJson(LOGIN_ID_JSON, new TypeToken<Map<String, String>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(LoginPage.this, "Some problem occurred!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
         captchaImage = (ImageView) findViewById(R.id.captchaImage);
         Button login_button = (Button) findViewById(R.id.login_button);
@@ -119,15 +172,18 @@ public class LoginPage extends AppCompatActivity {
                         captcha.setText("");
                         Toast.makeText(LoginPage.this, "Message: " + message, Toast.LENGTH_SHORT).show();
                     }
-                }
+                } else if (url.equals(getString(R.string.tkmce_home))) {
 
-                if (url.equals(getString(R.string.tkmce_home))) {
+                    if (message.contains("only view reports")) {
+                        result.confirm();
+                        return true;
+                    }
+
                     loginName = message.replace("WELCOME", "");
 
                     Intent intent = new Intent(LoginPage.this, HomePage.class);
                     intent.putExtra("COOKIES", jsonCookie);  //send cookies
                     intent.putExtra("LOGIN_NAME", loginName);
-                    intent.putExtra("USER_ID", username.getText().toString().trim());
                     startActivity(intent);
                     finish();
 
@@ -137,6 +193,7 @@ public class LoginPage extends AppCompatActivity {
                                 .putString("password", password.getText().toString().trim()).apply();
                     }
                 }
+
                 result.confirm();
                 return true;
             }
@@ -209,6 +266,24 @@ public class LoginPage extends AppCompatActivity {
 
             progressBar.setVisibility(View.GONE);
         }
+
+    }
+
+    private void checkForUpdate() {
+        int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY);
+        if (latestAppVersion > getCurrentVersionCode()) {
+            new AlertDialog.Builder(this).setTitle("Please Update the App")
+                    .setMessage("A new version of this app is available. Please update it").setPositiveButton(
+                    "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(LoginPage.this, "Take user to Google Play Store", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }).setCancelable(false).show();
+        } else {
+            Toast.makeText(this, "This app is already upto date", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void doLogin() {
@@ -224,10 +299,10 @@ public class LoginPage extends AppCompatActivity {
             } else {
                 mwebView.loadUrl(
                         "javascript:(function() { " +
-                                "document.getElementById('txtUserName').value = '" + username.getText() + "';" +
-                                "document.getElementById('txtPassword').value = '" + password.getText() + "';" +
-                                "document.getElementById('txtInput').value = '" + captcha.getText() + "';" +
-                                "document.getElementById('btnLogin').click()" +
+                                "document.getElementById('" + LOGIN_IDS.get("LOGIN_USERNAME_ID") + "').value = '" + username.getText() + "';" +
+                                "document.getElementById('" + LOGIN_IDS.get("LOGIN_PASSWORD_ID") + "').value = '" + password.getText() + "';" +
+                                "document.getElementById('" + LOGIN_IDS.get("CAPTCHA_INPUT_ID") + "').value = '" + captcha.getText() + "';" +
+                                "document.getElementById('" + LOGIN_IDS.get("LOGIN_BTN") + "').click()" +
                                 "})()");
                 progressBar.setVisibility(View.VISIBLE);
             }

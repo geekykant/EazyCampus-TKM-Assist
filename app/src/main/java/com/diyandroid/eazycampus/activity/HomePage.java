@@ -144,7 +144,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     paywithUPI();
                 }
             });
-
             later.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

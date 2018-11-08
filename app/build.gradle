@@ -38,9 +38,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile 'com.android.support:design:27.1.1'
-    compile 'org.jsoup:jsoup:1.10.3'
-    implementation 'com.google.code.gson:gson:2.8.1'
-    compile 'com.google.firebase:firebase-messaging:15.0.2'
+    compile 'org.jsoup:jsoup:1.11.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    compile 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.android.support:cardview-v7:27.1.1'
     // recycler view
     implementation 'com.android.support:recyclerview-v7:27.1.1'
@@ -49,11 +49,13 @@ dependencies {
     // volley http library
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.4'
     implementation 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     // Check for v11.4.2 or higher
-    implementation 'com.google.firebase:firebase-core:15.0.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
+
+    implementation 'com.google.firebase:firebase-config:16.1.0'
 }
 
 

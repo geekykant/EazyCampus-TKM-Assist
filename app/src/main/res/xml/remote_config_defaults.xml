@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>LOGIN_PAGE_IDS</key>
+        <value>{"LOGIN_USERNAME_ID":"txtUserNameStudent","LOGIN_PASSWORD_ID":"txtPassword","IMAGE_CAPTCHA_ID":"ImgCaptcha","CAPTCHA_INPUT_ID":"txtInput","LOGIN_BTN":"btnLogin"}</value>
+    </entry>
+</defaultsMap>
