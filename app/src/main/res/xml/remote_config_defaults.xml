@@ -2,6 +2,12 @@
 <defaultsMap>
     <entry>
         <key>LOGIN_PAGE_IDS</key>
-        <value>{"LOGIN_USERNAME_ID":"txtUserNameStudent","LOGIN_PASSWORD_ID":"txtPassword","IMAGE_CAPTCHA_ID":"ImgCaptcha","CAPTCHA_INPUT_ID":"txtInput","LOGIN_BTN":"btnLogin"}</value>
+        <value>
+            {"LOGIN_USERNAME_ID":"txtUserNameStudent","LOGIN_PASSWORD_ID":"txtPassword","IMAGE_CAPTCHA_ID":"ImgCaptcha","CAPTCHA_INPUT_ID":"txtInput","LOGIN_BTN":"btnLogin"}
+        </value>
+    </entry>
+    <entry>
+        <key>VERSION_CODE_KEY</key>
+        <value>16</value>
     </entry>
 </defaultsMap>

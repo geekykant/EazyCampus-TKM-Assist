@@ -1,7 +1,6 @@
 package com.diyandroid.eazycampus.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JsResult;
@@ -91,23 +91,19 @@ public class LoginPage extends AppCompatActivity {
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
-        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         mFirebaseRemoteConfig.fetch(0)
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             mFirebaseRemoteConfig.activateFetched();
-
                             String LOGIN_ID_JSON = mFirebaseRemoteConfig.getString("LOGIN_PAGE_IDS");
-                            Toast.makeText(LoginPage.this, "Dude!! its " + LOGIN_ID_JSON, Toast.LENGTH_SHORT).show();
-
-                            Log.d("LoginPage", "Fetched value: " + mFirebaseRemoteConfig.getString(VERSION_CODE_KEY));
-                            checkForUpdate();
-
                             LOGIN_IDS = new Gson().fromJson(LOGIN_ID_JSON, new TypeToken<Map<String, String>>() {
                             }.getType());
+
+                            checkForUpdate();
                         } else {
                             Toast.makeText(LoginPage.this, "Some problem occurred!", Toast.LENGTH_SHORT).show();
                         }
@@ -118,7 +114,7 @@ public class LoginPage extends AppCompatActivity {
         Button login_button = (Button) findViewById(R.id.login_button);
 
         //WebView
-        mwebView = (WebView) findViewById(R.id.webViewNotes);
+        mwebView = (WebView) findViewById(R.id.webView);
         WebSettings webSettings = mwebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         //improve webView performance
@@ -271,18 +267,34 @@ public class LoginPage extends AppCompatActivity {
 
     private void checkForUpdate() {
         int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY);
+
+        Log.d("LoginActivity", "LatestAppVersion: " + latestAppVersion + " currentversion: " + getCurrentVersionCode());
+
         if (latestAppVersion > getCurrentVersionCode()) {
-            new AlertDialog.Builder(this).setTitle("Please Update the App")
-                    .setMessage("A new version of this app is available. Please update it").setPositiveButton(
-                    "OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(LoginPage.this, "Take user to Google Play Store", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    }).setCancelable(false).show();
-        } else {
-            Toast.makeText(this, "This app is already upto date", Toast.LENGTH_SHORT).show();
+
+            View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
+            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("New Update available! Please update on playstore.");
+            final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
+            adsDialogue.setView(adsDialogueView);
+
+            ((TextView) adsDialogueView.findViewById(R.id.headingDialogue)).setText("UPDATE AVAILABLE!");
+            ((Button) adsDialogueView.findViewById(R.id.contribute)).setVisibility(View.GONE);
+            Button update = (Button) adsDialogueView.findViewById(R.id.later);
+            update.setText("UPDATE");
+            adsDialogue.show();
+
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
+            });
+
         }
     }
 

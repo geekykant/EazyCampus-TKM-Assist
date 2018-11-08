@@ -19,6 +19,7 @@
             android:src="@drawable/ic_graduation" />
 
         <TextView
+            android:id="@+id/headingDialogue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -65,8 +66,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            android:backgroundTint="@color/cpb_red"
             android:background="@drawable/login_button"
+            android:backgroundTint="@color/cpb_red"
             android:fontFamily="sans-serif"
             android:text="Yes! Support."
             android:textAllCaps="false"
@@ -80,8 +81,8 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:background="@drawable/login_button"
-            android:fontFamily="sans-serif"
             android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif"
             android:text="Later(3)"
             android:textAllCaps="false"
             android:textColor="#fff"
