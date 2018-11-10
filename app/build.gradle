@@ -7,8 +7,8 @@ android {
         applicationId "com.diyandroid.eazycampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 14
-        versionName '1.0.2'
+        versionCode 15
+        versionName '1.0.3'
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,7 +54,6 @@ dependencies {
     // Check for v11.4.2 or higher
     implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
-
     implementation 'com.google.firebase:firebase-config:16.1.0'
 }
 

@@ -13,12 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.SubjectAttendance;
 import com.diyandroid.eazycampus.adapter.AttendanceDatewiseListAdapter;
 import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
 import com.diyandroid.eazycampus.app.LogOutTimerUtil;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -43,10 +46,30 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
     ListView mListView;
     ArrayList<SubjectAttendance> peopleList;
 
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance_page);
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+//        mFirebaseRemoteConfig.fetch(0)
+//                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            mFirebaseRemoteConfig.activateFetched();
+//                        }
+//                    }
+//                });
 
         Toolbar toolbar = findViewById(R.id.toolbarAttendance);
         setSupportActionBar(toolbar);
@@ -125,16 +148,17 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
                         .data("ctl00$hdnisclose", "false")
                         .data("ctl00$ContentPlaceHolder1$txtFromdate", start_date)
                         .data("ctl00$ContentPlaceHolder1$txtToDate", end_date)
-                        .data("ctl00$ContentPlaceHolder1$rbnView", "Subjectwise")
+                        .data("ctl00$ContentPlaceHolder1$rbnView", mFirebaseRemoteConfig.getString("ATTENDANCE_CONTENT_PLACEHOLDER"))
                         .data("ctl00$HiddenField1", "")
-                        .data("__EVENTTARGET", "ctl00$ContentPlaceHolder1$rbnView$0")
+                        .data("__EVENTTARGET", mFirebaseRemoteConfig.getString("ATTENDANCE_EVENTTARGET"))
                         .data("__EVENTARGUMENT", "")
                         .data("__LASTFOCUS", "")
                         .data("__VIEWSTATE", evaluationPage.getElementById("__VIEWSTATE").val())
                         .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
                         .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
+//                        .data(mFirebaseRemoteConfig.getString("ATTENDANCE_EXTRA_FIELD1"), mFirebaseRemoteConfig.getString("ATTENDANCE_EXTRA_FIELD2"))
                         .data("__ASYNCPOST", "true")
-                        .data("ctl00$ContentPlaceHolder1$btnSearch", "View")
+                        .data("ctl00$ContentPlaceHolder1$btnSearch", mFirebaseRemoteConfig.getString("ATTENDANCE_BTN_SEARCH"))
                         .followRedirects(false)
                         .method(Connection.Method.POST)
                         .userAgent("Mozilla")
@@ -288,7 +312,7 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
                 }
 
                 //TODO: Create new multi-string class for date-wise attendance
-                
+
                 for (int i = 4; i < row.size(); i++) {
                     details = row.get(i).getElementsByTag("td");
                     peopleList.add(new SubjectAttendance(details.get(0).text(), details.get(1).text(), details.get(2).text(), details.get(3).text()));

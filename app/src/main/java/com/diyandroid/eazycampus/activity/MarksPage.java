@@ -15,11 +15,14 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.Marks;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.MarksListAdapter;
 import com.diyandroid.eazycampus.app.LogOutTimerUtil;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -43,10 +46,30 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
     ListView mListView;
     ArrayList<Marks> peopleList;
 
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marks_page);
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+//        mFirebaseRemoteConfig.fetch(0)
+//                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            mFirebaseRemoteConfig.activateFetched();
+//                        }
+//                    }
+//                });
 
         Button submit = findViewById(R.id.submitMarks);
 
@@ -134,7 +157,6 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
                         .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
                         .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
                         .data("ctl00$hdnisclose", evaluationPage.getElementById("ctl00_hdnisclose").val())
-//                         .data("ctl00$ContentPlaceHolder1$ddlClass", "1723")
                         .data("ctl00$ContentPlaceHolder1$rbtnReportType", "1")
                         .data("ctl00$ContentPlaceHolder1$btnView", "View")
                         .data("ctl00$HiddenField1", evaluationPage.getElementById("ctl00_HiddenField1").val())
@@ -145,7 +167,7 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
                         .execute();
 
                 evaluationPage = response.parse();
-                markTable = evaluationPage.getElementById("ctl00_ContentPlaceHolder1_tblStudentMarks");
+                markTable = evaluationPage.getElementById(mFirebaseRemoteConfig.getString("MARKS_CONTENT_PLACEHOLDER"));
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -277,9 +299,9 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
                         .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
                         .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
                         .data("ctl00$hdnisclose", evaluationPage.getElementById("ctl00_hdnisclose").val())
-                        // .data("ctl00$ContentPlaceHolder1$ddlClass", "1723")
-                        .data("ctl00$ContentPlaceHolder1$rbtnReportType", "0")
-                        .data("ctl00$ContentPlaceHolder1$btnView", "View")
+                        .data(mFirebaseRemoteConfig.getString("MARKS_REPORT_TYPE"), mFirebaseRemoteConfig.getString("MARKS_REPORT_TYPE_VALUE"))
+                        .data(mFirebaseRemoteConfig.getString("MARKS_PLACEHOLDER_BTN_VIEW"), mFirebaseRemoteConfig.getString("MARKS_PLACEHOLDER_BTN_VIEW_VALUE"))
+//                        .data(mFirebaseRemoteConfig.getString("MARKS_EXTRA_FIELD1"), mFirebaseRemoteConfig.getString("MARKS_EXTRA_FIELD2"))
                         .data("ctl00$HiddenField1", evaluationPage.getElementById("ctl00_HiddenField1").val())
                         .followRedirects(true)
                         .data("Upgrade-Insecure-Requests", "1")
@@ -288,7 +310,7 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
                         .execute();
 
                 evaluationPage = response.parse();
-                markTable = evaluationPage.getElementById("ctl00_ContentPlaceHolder1_tblStudentMarks");
+                markTable = evaluationPage.getElementById(mFirebaseRemoteConfig.getString("MARKS_CONTENT_PLACEHOLDER"));
 
             } catch (IOException ex) {
                 ex.printStackTrace();

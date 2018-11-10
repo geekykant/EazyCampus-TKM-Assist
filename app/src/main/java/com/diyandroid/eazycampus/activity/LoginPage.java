@@ -46,7 +46,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +58,6 @@ public class LoginPage extends AppCompatActivity {
     ImageView captchaImage;
     private WebView mwebView;
 
-    Map<String, String> LOGIN_IDS;
     private String loginName = "Godaddy", jsonCookie;
 
     public static final String VERSION_CODE_KEY = "VERSION_CODE_KEY";
@@ -90,19 +88,16 @@ public class LoginPage extends AppCompatActivity {
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
-        mFirebaseRemoteConfig.setConfigSettings(configSettings);
 
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-        mFirebaseRemoteConfig.fetch(0)
+
+        mFirebaseRemoteConfig.fetch(60 * 60)
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             mFirebaseRemoteConfig.activateFetched();
-                            String LOGIN_ID_JSON = mFirebaseRemoteConfig.getString("LOGIN_PAGE_IDS");
-                            LOGIN_IDS = new Gson().fromJson(LOGIN_ID_JSON, new TypeToken<Map<String, String>>() {
-                            }.getType());
-
                             checkForUpdate();
                         } else {
                             Toast.makeText(LoginPage.this, "Some problem occurred!", Toast.LENGTH_SHORT).show();
@@ -143,7 +138,7 @@ public class LoginPage extends AppCompatActivity {
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                if (url.equals(getString(R.string.tkmce_index_url)) || url.equals("http://210.212.227.210/tkmce/")) {
+                if (url.equals(getString(R.string.tkmce_index_url)) || url.equals(getString(R.string.tkmce_slash))) {
 
                     byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -164,11 +159,13 @@ public class LoginPage extends AppCompatActivity {
                     }
 
                     if (message.contains("Another Active Logged")) {
-                        mwebView.loadUrl(getString(R.string.tkmce_index_url));
+//                        mwebView.loadUrl(getString(R.string.tkmce_index_url));
                         captcha.setText("");
                         Toast.makeText(LoginPage.this, "Message: " + message, Toast.LENGTH_SHORT).show();
                     }
-                } else if (url.equals(getString(R.string.tkmce_home))) {
+                }
+
+                if (url.equals(getString(R.string.tkmce_home))) {
 
                     if (message.contains("only view reports")) {
                         result.confirm();
@@ -189,7 +186,6 @@ public class LoginPage extends AppCompatActivity {
                                 .putString("password", password.getText().toString().trim()).apply();
                     }
                 }
-
                 result.confirm();
                 return true;
             }
@@ -257,7 +253,11 @@ public class LoginPage extends AppCompatActivity {
             mwebView.loadUrl(getString(R.string.get_base64_js));
 
             if (url.equals(getString(R.string.tkmce_home))) {
-                mwebView.loadUrl(getString(R.string.welcome_name_js));
+                mwebView.loadUrl(
+                        "javascript:(function() { " +
+                                "alert(document.getElementById('" + mFirebaseRemoteConfig.getString("LOGIN_FIRST_NAME") + "').innerHTML);" +
+                                "})()");
+
             }
 
             progressBar.setVisibility(View.GONE);
@@ -273,14 +273,14 @@ public class LoginPage extends AppCompatActivity {
         if (latestAppVersion > getCurrentVersionCode()) {
 
             View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
-            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("New Update available! Please update on playstore.");
+            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText(R.string.update_description);
             final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
             adsDialogue.setView(adsDialogueView);
 
-            ((TextView) adsDialogueView.findViewById(R.id.headingDialogue)).setText("UPDATE AVAILABLE!");
+            ((TextView) adsDialogueView.findViewById(R.id.headingDialogue)).setText(R.string.update_available);
             ((Button) adsDialogueView.findViewById(R.id.contribute)).setVisibility(View.GONE);
             Button update = (Button) adsDialogueView.findViewById(R.id.later);
-            update.setText("UPDATE");
+            update.setText(R.string.update_button_title);
             adsDialogue.show();
 
             update.setOnClickListener(new View.OnClickListener() {
@@ -311,10 +311,10 @@ public class LoginPage extends AppCompatActivity {
             } else {
                 mwebView.loadUrl(
                         "javascript:(function() { " +
-                                "document.getElementById('" + LOGIN_IDS.get("LOGIN_USERNAME_ID") + "').value = '" + username.getText() + "';" +
-                                "document.getElementById('" + LOGIN_IDS.get("LOGIN_PASSWORD_ID") + "').value = '" + password.getText() + "';" +
-                                "document.getElementById('" + LOGIN_IDS.get("CAPTCHA_INPUT_ID") + "').value = '" + captcha.getText() + "';" +
-                                "document.getElementById('" + LOGIN_IDS.get("LOGIN_BTN") + "').click()" +
+                                "document.getElementById('" + mFirebaseRemoteConfig.getString("LOGIN_USERNAME_ID") + "').value = '" + username.getText() + "';" +
+                                "document.getElementById('" + mFirebaseRemoteConfig.getString("LOGIN_PASSWORD_ID") + "').value = '" + password.getText() + "';" +
+                                "document.getElementById('" + mFirebaseRemoteConfig.getString("CAPTCHA_INPUT_ID") + "').value = '" + captcha.getText() + "';" +
+                                "document.getElementById('" + mFirebaseRemoteConfig.getString("LOGIN_BTN") + "').click()" +
                                 "})()");
                 progressBar.setVisibility(View.VISIBLE);
             }
