@@ -120,6 +120,8 @@ public class LoginPage extends AppCompatActivity {
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
 
+        webSettings.setUserAgentString("Mozilla");
+
         if (isNetworkAvailable()) {
             mwebView.loadUrl(getString(R.string.tkmce_index_url));
         } else {
