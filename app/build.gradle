@@ -2,13 +2,21 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'Indomania6'
+            storeFile file('/Users/sreekant/EazyCampus_key')
+            storePassword 'Indomania6'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.diyandroid.eazycampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 16
-        versionName '1.0.4'
+        versionCode 18
+        versionName '1.0.5'
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
