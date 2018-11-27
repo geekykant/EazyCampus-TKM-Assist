@@ -1,4 +1,4 @@
-# EazyCampus-TKM-Assist
+# EazyCampus (No captcha mode)
 🔥🎓 Eazy Campus- A Campus app for TKM College of Engineering Kollam students that eases the process of browsing website with some amazing extra features.
 
 ## Features trying to add
