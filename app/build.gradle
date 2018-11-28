@@ -65,6 +65,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:16.1.0'
 
     compile 'com.ss.bannerslider:bannerslider:2.0.0'
+    implementation 'com.google.android.gms:play-services-ads:17.1.1'
 }
 
 
