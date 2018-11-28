@@ -15,8 +15,8 @@ android {
         applicationId "com.diyandroid.eazycampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 18
-        versionName '1.0.5'
+        versionCode 19
+        versionName '1.0.6'
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -63,6 +63,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
     implementation 'com.google.firebase:firebase-config:16.1.0'
+
+    compile 'com.ss.bannerslider:bannerslider:2.0.0'
 }
 
 

@@ -313,10 +313,109 @@
             </android.support.v7.widget.CardView>
 
             <LinearLayout
-                android:id="@+id/quoteBox"
+                android:id="@+id/cgpuBanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cardView"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/raleway"
+                    android:text="CGPU UPDATES"
+                    android:textAllCaps="true"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="122dp"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/cpb_blue_dark" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:clickable="false"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/cpb_white"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="3dp">
+
+                    <ImageView
+                        android:id="@+id/cgpuPlaceholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/horizontal_stack"
+                        android:tint="#3b000000" />
+
+                    <ss.com.bannerslider.Slider
+                        android:id="@+id/banner_slider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:visibility="gone"
+                        app:slider_animateIndicators="true"
+                        app:slider_defaultBanner="1"
+                        app:slider_indicatorSize="3dp"
+                        app:slider_interval="4300"
+                        app:slider_loopSlides="true"
+                        app:slider_selectedSlideIndicator="@drawable/indicator_circle_selected"
+                        app:slider_unselectedSlideIndicator="@drawable/indicator_circle_unselected" />
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/stackTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cgpuBanner"
+                android:layout_marginStart="14dp"
+                android:fontFamily="@font/raleway"
+                android:text="@string/campus_stories"
+                android:textAllCaps="true"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/stackBar"
+                android:layout_width="118dp"
+                android:layout_height="1dp"
+                android:layout_below="@id/stackTitle"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/cpb_blue_dark"
+                tools:ignore="RtlHardcoded" />
+
+
+            <include
+                android:id="@+id/campusstory"
+                layout="@layout/campus_stories" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@android:color/transparent"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                tools:ignore="RtlHardcoded" />
+
+            <LinearLayout
+                android:id="@+id/quoteBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/campusstory"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -380,44 +479,6 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/stackTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/quoteBox"
-                android:layout_marginStart="14dp"
-                android:fontFamily="@font/raleway"
-                android:text="@string/campus_stories"
-                android:textAllCaps="true"
-                android:textSize="16sp" />
-
-
-            <View
-                android:id="@+id/stackBar"
-                android:layout_width="118dp"
-                android:layout_height="1dp"
-                android:layout_below="@id/stackTitle"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/cpb_blue_dark"
-                tools:ignore="RtlHardcoded" />
-
-
-            <include layout="@layout/campus_stories" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@android:color/transparent"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>
     </ScrollView>

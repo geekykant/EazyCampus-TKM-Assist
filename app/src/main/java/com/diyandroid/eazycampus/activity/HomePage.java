@@ -45,10 +45,12 @@ import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.MyApplication;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.Story;
+import com.diyandroid.eazycampus.adapter.MainSliderAdapter;
 import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.fragment.HelpSupportFragment;
+import com.diyandroid.eazycampus.service.PicassoImageLoadingService;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -79,6 +81,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ss.com.bannerslider.Slider;
 
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         LogOutTimerUtil.LogOutListener {
@@ -99,11 +102,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     private AlertDialog adsDialogue;
 
+    private Slider slider;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
+
+        Slider.init(new PicassoImageLoadingService(this));
+        fetchCGPUStories();
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -742,8 +750,46 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected void onPostExecute2(Element element) {
             if (parsingSuccessful && response.statusCode() == 200) {
-                Toast.makeText(HomePage.this, "Logged out Hehehe!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomePage.this, "Logged out!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void fetchCGPUStories() {
+        final ArrayList<String> bannerList = new ArrayList<>();
+        slider = findViewById(R.id.banner_slider1);
+
+        JsonArrayRequest request = new JsonArrayRequest("https://eazycampus-80ef8.firebaseio.com/Notifications/CGPU.json",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response == null) {
+                            return;
+                        }
+
+                        Log.d("Yayaya", "Response: " + response.toString());
+
+                        List<String> items = new Gson().fromJson(response.toString(), new TypeToken<List<String>>() {
+                        }.getType());
+
+                        // adding contacts to contacts list
+                        bannerList.clear();
+                        bannerList.addAll(items);
+
+                        slider.setAdapter(new MainSliderAdapter(bannerList));
+                        slider.setSelectedSlide(0);
+                        ((ImageView)findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
+                        slider.setVisibility(View.VISIBLE);
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // error in getting json
+                Log.e("HomePage", "Error: " + error.getMessage());
+            }
+        });
+        MyApplication.getInstance().addToRequestQueue(request);
     }
 }
