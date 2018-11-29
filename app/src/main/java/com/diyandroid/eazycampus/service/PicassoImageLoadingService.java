@@ -23,7 +23,7 @@ public class PicassoImageLoadingService implements ImageLoadingService {
         Glide.with(context)
                 .load(url)
                 .apply(new RequestOptions().placeholder(R.drawable.horizontal_stack))
-                .transition(DrawableTransitionOptions.withCrossFade(1000))
+                .transition(DrawableTransitionOptions.withCrossFade(600))
                 .into(imageView);
     }
 
@@ -33,7 +33,7 @@ public class PicassoImageLoadingService implements ImageLoadingService {
         Glide.with(context)
                 .load(resource)
                 .apply(new RequestOptions().placeholder(R.drawable.horizontal_stack))
-                .transition(DrawableTransitionOptions.withCrossFade(1000))
+                .transition(DrawableTransitionOptions.withCrossFade(600))
                 .into(imageView);
     }
 
@@ -43,8 +43,7 @@ public class PicassoImageLoadingService implements ImageLoadingService {
         Glide.with(context)
                 .load(url)
                 .apply(new RequestOptions().placeholder(R.drawable.horizontal_stack))
-                .transition(DrawableTransitionOptions.withCrossFade(1000))
+                .transition(DrawableTransitionOptions.withCrossFade(600))
                 .into(imageView);
-
     }
 }

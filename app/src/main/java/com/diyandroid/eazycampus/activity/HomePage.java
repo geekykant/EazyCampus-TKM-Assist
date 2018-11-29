@@ -123,6 +123,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         final int FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
         boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
+        boolean ONE_TIME_POPUP = pref.getBoolean("ONE_TIME_POPUP", true);
+
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
         loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
 
@@ -144,7 +146,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         public void run() {
                             adsDialogue.show();
                         }
-                    }, 1500);
+                    }, 1100);
 
             contribute.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -158,6 +160,36 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     adsDialogue.hide();
                 }
             });
+        }
+
+        if (ONE_TIME_POPUP) {
+            View cgpuDialogueView = LayoutInflater.from(this).inflate(R.layout.cgpu_enroll, null);
+            final AlertDialog cgpuDialogue = new AlertDialog.Builder(this).create();
+            cgpuDialogue.setCancelable(false);
+            cgpuDialogue.setCanceledOnTouchOutside(false);
+            cgpuDialogue.setView(cgpuDialogueView);
+            cgpuDialogue.show();
+
+            Button okay = (Button) cgpuDialogueView.findViewById(R.id.okay_cgpu);
+            Button subscribe = (Button) cgpuDialogueView.findViewById(R.id.subscribe);
+            okay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cgpuDialogue.hide();
+                }
+            });
+
+            subscribe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FirebaseMessaging.getInstance().subscribeToTopic("cgpu");
+                    pref.edit().putBoolean("CGPU_NOTIF_ENABLED", true).apply();
+                    Toast.makeText(HomePage.this, "Subscribed to CGPU Notifications!", Toast.LENGTH_SHORT).show();
+                    cgpuDialogue.hide();
+                }
+            });
+
+            pref.edit().putBoolean("ONE_TIME_POPUP", false).apply();
         }
 
         if (FIRST_COUNT >= 0) {
@@ -633,6 +665,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         public void onClick(View view) {
                             contriDialogue.hide();
 
+
                         }
                     });
 
@@ -759,15 +792,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         final ArrayList<String> bannerList = new ArrayList<>();
         slider = findViewById(R.id.banner_slider1);
 
-        JsonArrayRequest request = new JsonArrayRequest("https://eazycampus-80ef8.firebaseio.com/Notifications/CGPU.json",
+        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.cgpu_stories_url),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         if (response == null) {
                             return;
                         }
-
-                        Log.d("Yayaya", "Response: " + response.toString());
 
                         List<String> items = new Gson().fromJson(response.toString(), new TypeToken<List<String>>() {
                         }.getType());
@@ -778,8 +809,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
                         slider.setAdapter(new MainSliderAdapter(bannerList));
                         slider.setSelectedSlide(0);
-                        ((ImageView)findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
-                        slider.setVisibility(View.VISIBLE);
+
+                        new android.os.Handler().postDelayed(
+                                new Runnable() {
+                                    public void run() {
+                                        ((ImageView) findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
+                                        slider.setVisibility(View.VISIBLE);
+                                    }
+                                }, 1000);
 
 
                     }

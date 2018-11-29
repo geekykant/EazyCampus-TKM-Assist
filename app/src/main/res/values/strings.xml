@@ -73,4 +73,6 @@
     <string name="update_description">New Update available! Please update on playstore.</string>
     <string name="update_available">UPDATE AVAILABLE!</string>
     <string name="update_button_title">UPDATE</string>
+    <string name="cgpu_stories_url">https://eazycampus-80ef8.firebaseio.com/Notifications/CGPU.json</string>
+    <string name="cgpu_description_text">Start receiving notifications and updates on TKMCE placements. \nDon\'t worry you can change it later in the settings.</string>
 </resources>

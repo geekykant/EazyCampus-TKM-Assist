@@ -173,7 +173,9 @@ public class LoginPage extends AppCompatActivity {
                         return true;
                     }
 
-                    loginName = "Sreekant" ; //message.replace("WELCOME", "");
+                    Log.d("log", "TOL: " + message);
+
+                    loginName = message.replace("WELCOME", "");
 
                     Log.d("log", "LOL: " + loginName);
                     Intent intent = new Intent(LoginPage.this, HomePage.class);
@@ -257,12 +259,12 @@ public class LoginPage extends AppCompatActivity {
             if (url.equals(getString(R.string.tkmce_home))) {
                 mwebView.loadUrl(
                         "javascript:(function() { " +
-                                "alert(document.getElementById('" + mFirebaseRemoteConfig.getString("LOGIN_FIRST_NAME") + "').innerHTML);" +
+//                                "alert(document.getElementById('" + mFirebaseRemoteConfig.getString("LOGIN_FIRST_NAME") + "').innerHTML);" +
+                                "alert(document.querySelector('#" + mFirebaseRemoteConfig.getString("LOGIN_FIRST_NAME") + " > font').innerHTML);" +
                                 "})()");
             }
             progressBar.setVisibility(View.GONE);
         }
-
     }
 
     private void checkForUpdate() {

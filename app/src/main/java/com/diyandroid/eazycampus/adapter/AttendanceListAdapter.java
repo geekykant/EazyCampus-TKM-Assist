@@ -62,7 +62,7 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
         //May crash if integer not received
         if (position != 0) {
             holder.bunksub.setText(getPFAttendance(Integer.parseInt(person.getTotalAttended()), Integer.parseInt(person.getTotalClasses())));
-        }else{
+        } else {
             holder.bunksub.setText("");
         }
 
@@ -70,11 +70,19 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
     }
 
     String getPFAttendance(int classesAttended, int classesTotal) {
+
+        if (classesTotal == 0) {
+            holder.bunksub.setTextColor(Color.GRAY);
+            return "(0)";
+        }
+
         float percentAttendance = ((classesAttended * 100.0f) / classesTotal);
 
         int flag = 0;
         float percent;
-        if (percentAttendance >= 75) {
+        if (percentAttendance == 0) {
+            return "(0)";
+        } else if (percentAttendance >= 75) {
             do {
                 flag += 1;
                 percent = ((classesAttended) * 100.0f) / (classesTotal + flag);

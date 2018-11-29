@@ -15,5 +15,11 @@
             android:key="key_notification_semester"
             android:summary="Select your semester"
             android:title="Notification Semester" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="key_cgpu_notification_receive"
+            android:summary="Updates on TKMCE placements and upcoming events"
+            android:title="Enable CGPU Notifications" />
     </PreferenceCategory>
 </PreferenceScreen>

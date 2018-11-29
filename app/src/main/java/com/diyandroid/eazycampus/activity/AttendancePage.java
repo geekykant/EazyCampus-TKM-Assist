@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -60,16 +62,6 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
 
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
-//        mFirebaseRemoteConfig.fetch(0)
-//                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            mFirebaseRemoteConfig.activateFetched();
-//                        }
-//                    }
-//                });
 
         Toolbar toolbar = findViewById(R.id.toolbarAttendance);
         setSupportActionBar(toolbar);
@@ -327,6 +319,21 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.attendance_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mBoostMenu:
+                startActivity(new Intent(AttendancePage.this, BoosterAttendance.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     //Closing Activity with back button
     @Override
