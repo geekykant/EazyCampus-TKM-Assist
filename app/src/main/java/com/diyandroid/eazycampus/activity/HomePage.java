@@ -168,7 +168,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             cgpuDialogue.setCancelable(false);
             cgpuDialogue.setCanceledOnTouchOutside(false);
             cgpuDialogue.setView(cgpuDialogueView);
-            cgpuDialogue.show();
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            cgpuDialogue.show();
+                        }
+                    }, 2000);
 
             Button okay = (Button) cgpuDialogueView.findViewById(R.id.okay_cgpu);
             Button subscribe = (Button) cgpuDialogueView.findViewById(R.id.subscribe);
@@ -664,8 +669,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         @Override
                         public void onClick(View view) {
                             contriDialogue.hide();
-
-
                         }
                     });
 

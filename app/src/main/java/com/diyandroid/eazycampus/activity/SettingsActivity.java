@@ -1,6 +1,5 @@
 package com.diyandroid.eazycampus.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -20,16 +19,13 @@ import java.util.Objects;
 public class SettingsActivity extends AppCompatPreferenceActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
-    Boolean enabled;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new GeneralPreferenceFragment()).commit();
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        enabled = pref.getBoolean("CGPU_NOTIF_ENABLED", true);
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("CGPU_NOTIF_ENABLED", true).apply();
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragment {
@@ -39,7 +35,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_main);
 
             bindPreferenceSummaryToValue(findPreference("key_notification_semester"));
-            bindPreferenceSummaryToValue(findPreference("key_cgpu_notification_receive"));
 
             Preference pref = findPreference("key_cgpu_notification_receive");
 
