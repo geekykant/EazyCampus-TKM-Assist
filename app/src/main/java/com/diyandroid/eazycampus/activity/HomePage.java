@@ -141,7 +141,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
         FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
-        boolean ONE_TIME_POPUP = pref.getBoolean("ONE_TIME_POPUP", true);
+//        boolean ONE_TIME_POPUP = pref.getBoolean("ONE_TIME_POPUP", true);
 
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
         loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
@@ -181,41 +181,41 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             });
         }
 
-        if (ONE_TIME_POPUP) {
-            View cgpuDialogueView = LayoutInflater.from(this).inflate(R.layout.cgpu_enroll, null);
-            cgpuDialogueView.setElevation(5);
-            final AlertDialog cgpuDialogue = new AlertDialog.Builder(this).create();
-            cgpuDialogue.setCancelable(false);
-            cgpuDialogue.setCanceledOnTouchOutside(false);
-            cgpuDialogue.setView(cgpuDialogueView);
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            cgpuDialogue.show();
-                        }
-                    }, 2000);
-
-            Button okay = (Button) cgpuDialogueView.findViewById(R.id.okay_cgpu);
-            Button subscribe = (Button) cgpuDialogueView.findViewById(R.id.subscribe);
-            okay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cgpuDialogue.hide();
-                }
-            });
-
-            subscribe.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FirebaseMessaging.getInstance().subscribeToTopic("cgpu");
-                    pref.edit().putBoolean("CGPU_NOTIF_ENABLED", true).apply();
-                    Toast.makeText(HomePage.this, "Subscribed to CGPU Notifications!", Toast.LENGTH_SHORT).show();
-                    cgpuDialogue.hide();
-                }
-            });
-
-            pref.edit().putBoolean("ONE_TIME_POPUP", false).apply();
-        }
+//        if (ONE_TIME_POPUP) {
+//            View cgpuDialogueView = LayoutInflater.from(this).inflate(R.layout.cgpu_enroll, null);
+//            cgpuDialogueView.setElevation(5);
+//            final AlertDialog cgpuDialogue = new AlertDialog.Builder(this).create();
+//            cgpuDialogue.setCancelable(false);
+//            cgpuDialogue.setCanceledOnTouchOutside(false);
+//            cgpuDialogue.setView(cgpuDialogueView);
+//            new android.os.Handler().postDelayed(
+//                    new Runnable() {
+//                        public void run() {
+//                            cgpuDialogue.show();
+//                        }
+//                    }, 2000);
+//
+//            Button okay = (Button) cgpuDialogueView.findViewById(R.id.okay_cgpu);
+//            Button subscribe = (Button) cgpuDialogueView.findViewById(R.id.subscribe);
+//            okay.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    cgpuDialogue.hide();
+//                }
+//            });
+//
+//            subscribe.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    FirebaseMessaging.getInstance().subscribeToTopic("cgpu");
+//                    pref.edit().putBoolean("CGPU_NOTIF_ENABLED", true).apply();
+//                    Toast.makeText(HomePage.this, "Subscribed to CGPU Notifications!", Toast.LENGTH_SHORT).show();
+//                    cgpuDialogue.hide();
+//                }
+//            });
+//
+//            pref.edit().putBoolean("ONE_TIME_POPUP", false).apply();
+//        }
 
         if (FIRST_COUNT >= 0) {
             pref.edit().putInt("FIRST_COUNT", FIRST_COUNT + 1).apply();
@@ -776,7 +776,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         }
 
                         Log.d("LoginPage", "Contribution status: " + user.hasPaid());
-                    } else {
+                    } else if (!FIRST_RUN) {
                         showAds();
                     }
                 }
@@ -909,7 +909,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                                         ((ImageView) findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
                                         slider.setVisibility(View.VISIBLE);
                                     }
-                                }, 5000);
+                                }, 1000);
 
 
                     }
