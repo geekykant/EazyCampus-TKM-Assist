@@ -379,9 +379,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 break;
 
             case R.id.signout:
-                if (!user.hasPaid() && !FIRST_RUN) {
-                    mInterstitialAd = new InterstitialAd(getApplicationContext());
-                    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+                if (user != null) {
+                    if (!user.hasPaid() && !FIRST_RUN) {
+                        mInterstitialAd = new InterstitialAd(getApplicationContext());
+                        mInterstitialAd.setAdUnitId("ca-app-pub-9024346977117639/3816312153");
+                        showAds();
+                    }
+                } else {
                     showAds();
                 }
 
@@ -763,7 +767,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     mInterstitialAd = new InterstitialAd(getApplicationContext());
-                    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+                    mInterstitialAd.setAdUnitId("ca-app-pub-9024346977117639/4642524265");
 
                     if (dataSnapshot.exists()) {
                         user = dataSnapshot.getValue(UserStatus.class);
@@ -773,6 +777,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
                         if (user.hasPaid()) {
                             pref.edit().putInt("FIRST_COUNT", -1).apply();
+                        } else {
+                            pref.edit().putInt("FIRST_COUNT", 0).apply();
                         }
 
                         Log.d("LoginPage", "Contribution status: " + user.hasPaid());

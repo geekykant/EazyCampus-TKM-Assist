@@ -18,7 +18,8 @@
     <string name="support_eazycampus_development">Support EazyCampus development</string>
     <!--<string name="ads_dialog_message">Sorry for enabling ads! But as a student it fills up my coffee and beer mug! I will remove ads with graduation! Pinky Promise!</string>-->
     <!--<string name="ads_dialog_message"> I am Sreekant, the app developer. It really motivates me if you could appreciate my app and give it a 5⭐ rating. Cheers!</string>-->
-    <string name="ads_dialog_message"> As a student, Developing this app requires a lot of effort and time. Contributing a few bucks would help support faster app development.</string>
+    <!--<string name="ads_dialog_message"> As a student, Developing this app requires a lot of effort and time. Contributing a few bucks would help support faster app development.</string>-->
+    <string name="ads_dialog_message"> As a student, Developing this app requires a lot of effort and time. Contributing a few bucks would help support faster app development. I will also remove ads.</string>
     <string name="privacy_policy_text">By clicking on login,\nYou agree to our <u>Privacy Policy</u>.</string>
     <string name="hi_sreekant">Hi Sreekant!</string>
     <string name="directory">Directory</string>
