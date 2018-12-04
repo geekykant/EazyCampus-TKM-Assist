@@ -6,9 +6,7 @@
     </entry>
     <entry>
         <key>LOGIN_USERNAME_ID</key>
-        <value>
-            txtUserNameStudent
-        </value>
+        <value>txtUserName</value>
     </entry>
     <entry>
         <key>LOGIN_PASSWORD_ID</key>
@@ -79,5 +77,19 @@
         <key>MARKS_PLACEHOLDER_BTN_VIEW_VALUE</key>
         <value>View</value>
     </entry>
+
+    <entry>
+        <key>CAPTCHA_ENABLED</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>DISABLE_CAPTCHA_INPUT</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>SPECIAL_MODE</key>
+        <value>false</value>
+    </entry>
+
 
 </defaultsMap>

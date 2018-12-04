@@ -288,7 +288,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/circular_std"
-                                        android:text="1.0.6"
+                                        android:text="@string/app_version"
                                         android:textColor="@color/cpb_white"
                                         android:textSize="10sp" />
 

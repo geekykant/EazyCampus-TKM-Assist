@@ -363,8 +363,7 @@
                         app:slider_animateIndicators="true"
                         app:slider_defaultBanner="1"
                         app:slider_indicatorSize="3dp"
-                        app:slider_interval="3300"
-                        app:slider_loopSlides="true"
+                        app:slider_interval="0"
                         app:slider_selectedSlideIndicator="@drawable/indicator_circle_selected"
                         app:slider_unselectedSlideIndicator="@drawable/indicator_circle_unselected" />
 

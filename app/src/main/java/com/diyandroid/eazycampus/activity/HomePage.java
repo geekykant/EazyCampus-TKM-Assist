@@ -813,6 +813,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         slider.setAdapter(new MainSliderAdapter(bannerList));
                         slider.setSelectedSlide(0);
 
+                        if (bannerList.size() != 1) {
+                            slider.setLoopSlides(true);
+                            slider.setInterval(3300);
+                        }
+
                         new android.os.Handler().postDelayed(
                                 new Runnable() {
                                     public void run() {
