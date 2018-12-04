@@ -2,6 +2,7 @@ package com.diyandroid.eazycampus.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,7 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
     }
 
     String getPFAttendance(int classesAttended, int classesTotal) {
+        int ATTENDANCE_PERCENT = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("ATTENDANCE_PERCENT", 75);
 
         if (classesTotal == 0) {
             holder.bunksub.setTextColor(Color.GRAY);
@@ -82,11 +84,11 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
         float percent;
         if (percentAttendance == 0) {
             return "(0)";
-        } else if (percentAttendance >= 75) {
+        } else if (percentAttendance >= ATTENDANCE_PERCENT) {
             do {
                 flag += 1;
                 percent = ((classesAttended) * 100.0f) / (classesTotal + flag);
-            } while (percent >= 75);
+            } while (percent >= ATTENDANCE_PERCENT);
 
 //            return "You are already ahead by " + (flag - 1) + " classes. You are good!";
             holder.bunksub.setTextColor(Color.parseColor("#33CC66"));
@@ -95,7 +97,7 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
             do {
                 flag += 1;
                 percent = ((classesAttended + flag) * 100.0f) / (classesTotal + flag);
-            } while (percent < 75);
+            } while (percent < ATTENDANCE_PERCENT);
 
 //            return "You've to sit in " + flag + " more classes to be eligible to write exams!";
             holder.bunksub.setTextColor(Color.RED);

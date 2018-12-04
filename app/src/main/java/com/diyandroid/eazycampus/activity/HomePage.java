@@ -22,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,6 +52,15 @@ import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.fragment.HelpSupportFragment;
 import com.diyandroid.eazycampus.service.PicassoImageLoadingService;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -101,14 +111,22 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private ActionBarDrawerToggle mToggle;
 
     private AlertDialog adsDialogue;
-
     private Slider slider;
+
+    private InterstitialAd mInterstitialAd;
+
+    private UserStatus user;
+    private boolean FIRST_RUN;
+    int FIRST_COUNT;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
+
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
         Slider.init(new PicassoImageLoadingService(this));
         fetchCGPUStories();
@@ -120,8 +138,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         String TODAY_DATE = pref.getString(PREF_TODAY_DATE, null);
 
         String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
-        final int FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
-        boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
+        FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
+        FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
         boolean ONE_TIME_POPUP = pref.getBoolean("ONE_TIME_POPUP", true);
 
@@ -132,6 +150,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         if (FIRST_COUNT % 3 == 0) {
             //Ads dialogue display
             final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
+            adsDialogueView.setElevation(10);
             ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
             adsDialogue = new AlertDialog.Builder(this).create();
             adsDialogue.setCancelable(false);
@@ -146,7 +165,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         public void run() {
                             adsDialogue.show();
                         }
-                    }, 1100);
+                    }, 1000);
 
             contribute.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,6 +183,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         if (ONE_TIME_POPUP) {
             View cgpuDialogueView = LayoutInflater.from(this).inflate(R.layout.cgpu_enroll, null);
+            cgpuDialogueView.setElevation(5);
             final AlertDialog cgpuDialogue = new AlertDialog.Builder(this).create();
             cgpuDialogue.setCancelable(false);
             cgpuDialogue.setCanceledOnTouchOutside(false);
@@ -359,6 +379,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 break;
 
             case R.id.signout:
+                if (!user.hasPaid() && !FIRST_RUN) {
+                    mInterstitialAd = new InterstitialAd(getApplicationContext());
+                    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+                    showAds();
+                }
+
                 Intent signoutIntent = new Intent(HomePage.this, LoginPage.class);
                 startActivity(signoutIntent);
                 finish();
@@ -613,9 +639,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             layout.removeAllViewsInLayout();
 
         } else if (requestCode == 1337) {
+
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Pleaseee contribute! ;_;", Toast.LENGTH_LONG).show();
-                pref.edit().putInt("FIRST_COUNT", -1).apply();
             } else {
                 if (resultCode == RESULT_OK && data != null) {
                     Bundle bundle = data.getExtras();
@@ -709,10 +735,69 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    private static class UserStatus {
+        public Boolean paid;
+
+        public UserStatus() {
+            //firebase
+        }
+
+        public Boolean hasPaid() {
+            return paid;
+        }
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         LogOutTimerUtil.startLogoutTimer(this, this);
+
+        String intent_username = getIntent().getStringExtra("LOGIN_USERNAME");
+
+        if (!TextUtils.isEmpty(intent_username)) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+            DatabaseReference query = ref.child("Payments").child(intent_username);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    mInterstitialAd = new InterstitialAd(getApplicationContext());
+                    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+                    if (dataSnapshot.exists()) {
+                        user = dataSnapshot.getValue(UserStatus.class);
+                        if (!user.hasPaid() && !FIRST_RUN) {
+                            showAds();
+                        }
+
+                        if (user.hasPaid()) {
+                            pref.edit().putInt("FIRST_COUNT", -1).apply();
+                        }
+
+                        Log.d("LoginPage", "Contribution status: " + user.hasPaid());
+                    } else {
+                        showAds();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+
+    }
+
+    private void showAds() {
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mInterstitialAd.show();
+            }
+        });
     }
 
     @Override
@@ -824,7 +909,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                                         ((ImageView) findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
                                         slider.setVisibility(View.VISIBLE);
                                     }
-                                }, 1000);
+                                }, 5000);
 
 
                     }

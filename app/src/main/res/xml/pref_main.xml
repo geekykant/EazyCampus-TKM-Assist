@@ -22,4 +22,17 @@
             android:summary="Updates on TKMCE placements and upcoming events"
             android:title="Enable CGPU Notifications" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="General Course Details">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Choose minimum attendance percentage"
+            android:entries="@array/pref_upload_quality_entries1"
+            android:entryValues="@array/pref_upload_quality_values2"
+            android:key="key_course_selection"
+            android:summary="Choose minimum attendance percentage"
+            android:title="Attendance Percentage" />
+
+    </PreferenceCategory>
 </PreferenceScreen>

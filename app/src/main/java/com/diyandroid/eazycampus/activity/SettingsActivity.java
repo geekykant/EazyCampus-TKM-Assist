@@ -24,8 +24,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new GeneralPreferenceFragment()).commit();
-
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("CGPU_NOTIF_ENABLED", true).apply();
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragment {
@@ -35,8 +33,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_main);
 
             bindPreferenceSummaryToValue(findPreference("key_notification_semester"));
+            bindPreferenceSummaryToValue(findPreference("key_course_selection"));
 
-            Preference pref = findPreference("key_cgpu_notification_receive");
+//            findPreference("key_cgpu_notification_receive").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//                @Override
+//                public boolean onPreferenceChange(Preference preference, Object o) {
+//
+//                    Toast.makeText(getActivity(), "You are here: 1", Toast.LENGTH_SHORT).show();
+//
+//                    if (preference instanceof SwitchPreference) {
+//                        if (preference.getKey().equals("key_cgpu_notification_receive")) {
+//                            if (preference.getExtras().getBoolean("CGPU_NOTIF_ENABLED", false)) {
+//                                ((SwitchPreference) preference).setChecked(true);
+//                                Toast.makeText(getActivity(), "You are here: 2", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                ((SwitchPreference) preference).setChecked(false);
+//                            }
+//                        }
+//                    }
+//                    return true;
+//                }
+//            });
+
+            final Preference pref = findPreference("key_cgpu_notification_receive");
 
             pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -44,8 +63,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     if (preference.getKey().equals("key_cgpu_notification_receive")) {
                         if (!((SwitchPreference) preference).isChecked()) {
                             FirebaseMessaging.getInstance().subscribeToTopic("cgpu");
+                            preference.getEditor().putBoolean("CGPU_NOTIF_ENABLED", true).apply();
                         } else {
                             FirebaseMessaging.getInstance().unsubscribeFromTopic("cgpu");
+                            preference.getEditor().putBoolean("CGPU_NOTIF_ENABLED", false).apply();
                         }
                     }
                     return true;
@@ -135,6 +156,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
                         Log.d(TAG, "Subscribed to: all_semesters");
                     }
+                } else if (preference.getKey().equals("key_course_selection")) {
+                    ListPreference listPreference = (ListPreference) preference;
+                    int index = listPreference.findIndexOfValue(summaryValue);
+
+                    switch (index) {
+                        case 0:
+                            preference.getEditor().putInt("ATTENDANCE_PERCENT", 75).apply();
+                            break;
+                        case 1:
+                            preference.getEditor().putInt("ATTENDANCE_PERCENT", 85).apply();
+                            break;
+                        default:
+                            preference.getEditor().putInt("ATTENDANCE_PERCENT", 85).apply();
+                    }
+
+                    Log.d(TAG, "Summary: " + listPreference.getEntries()[index].toString());
+                    preference.setSummary(index >= 0 ? listPreference.getEntries()[index].toString() : null);
                 }
             }
             return true;

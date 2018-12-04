@@ -174,6 +174,7 @@ public class LoginPage extends AppCompatActivity {
                         Intent intent = new Intent(LoginPage.this, HomePage.class);
                         intent.putExtra("COOKIES", jsonCookie);  //send cookies
                         intent.putExtra("LOGIN_NAME", loginName);
+                        intent.putExtra("LOGIN_USERNAME", username.getText().toString().trim());
                         startActivity(intent);
                         finish();
 
@@ -421,6 +422,7 @@ public class LoginPage extends AppCompatActivity {
 
                 intent.putExtra("COOKIES", jsonCookie);  //send cookies
                 intent.putExtra("LOGIN_NAME", LoginName);
+                intent.putExtra("LOGIN_USERNAME", username.getText().toString());
                 startActivity(intent);
                 finish();
 

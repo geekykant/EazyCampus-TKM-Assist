@@ -40,10 +40,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.diyandroid.eazycampus.activity.LoginPage.VERSION_CODE_KEY;
-import static java.lang.Thread.sleep;
 
 public class SplashLoading extends AppCompatActivity {
-    
+
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private SharedPreferences pref;
 
@@ -78,17 +77,11 @@ public class SplashLoading extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-
-                        try {
-                            sleep(1000); //Delay of 1 seconds
-                        } catch (Exception e) {
-                        } finally {
-                            if (task.isSuccessful()) {
-                                mFirebaseRemoteConfig.activateFetched();
-                                checkForCaptcha();
-                            } else {
-                                Toast.makeText(SplashLoading.this, "Please restart app to work!", Toast.LENGTH_SHORT).show();
-                            }
+                        if (task.isSuccessful()) {
+                            mFirebaseRemoteConfig.activateFetched();
+                            checkForCaptcha();
+                        } else {
+                            Toast.makeText(SplashLoading.this, "Please restart app to work!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -213,6 +206,7 @@ public class SplashLoading extends AppCompatActivity {
                 Intent intent = new Intent(SplashLoading.this, HomePage.class);
                 intent.putExtra("COOKIES", jsonCookie);  //send cookies
                 intent.putExtra("LOGIN_NAME", LoginName);
+                intent.putExtra("LOGIN_USERNAME", LOGIN_USERNAME);
                 startActivity(intent);
                 finish();
 

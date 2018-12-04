@@ -3,6 +3,7 @@ package com.diyandroid.eazycampus.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -68,6 +69,8 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Subjectwise Attendance");
+
+        ((TextView)findViewById(R.id.minimum_attendance)).append("" + PreferenceManager.getDefaultSharedPreferences(this).getInt("ATTENDANCE_PERCENT",75));
 
         jsonCookies = getIntent().getStringExtra("COOKIES");
         loginCookies = new Gson().fromJson(jsonCookies, new TypeToken<Map<String, String>>() {
