@@ -52,6 +52,7 @@ import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.fragment.HelpSupportFragment;
 import com.diyandroid.eazycampus.service.PicassoImageLoadingService;
+import com.diyandroid.eazycampus.UserStatus;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -737,19 +738,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         if (pref.getBoolean("FIRST_RUN", true)) {
             pref.edit().putBoolean("FIRST_RUN", false).apply();
         }
-    }
-
-    private static class UserStatus {
-        public Boolean paid;
-
-        public UserStatus() {
-            //firebase
-        }
-
-        public Boolean hasPaid() {
-            return paid;
-        }
-
     }
 
     @Override

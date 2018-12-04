@@ -15,7 +15,7 @@ android {
         applicationId "com.diyandroid.eazycampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 20
+        versionCode 21
         versionName '1.0.7'
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,12 +27,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-//        debug {
-//            minifyEnabled true
-//            useProguard true
-//            shrinkResources true
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//        }
+        debug {
+            minifyEnabled true
+            useProguard true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
     productFlavors {
     }
