@@ -72,15 +72,6 @@ public class LoginPage extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
-//    private int getCurrentVersionCode() {
-//        try {
-//            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return -1;
-//    }
-
     FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     @Override
@@ -275,39 +266,6 @@ public class LoginPage extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
         }
     }
-
-//    private void checkForUpdate() {
-//        int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY);
-//
-//        Log.d("LoginActivity", "LatestAppVersion: " + latestAppVersion + " currentversion: " + getCurrentVersionCode());
-//
-//        if (latestAppVersion > getCurrentVersionCode()) {
-//
-//            View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
-//            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText(R.string.update_description);
-//            final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
-//            adsDialogue.setView(adsDialogueView);
-//
-//            ((TextView) adsDialogueView.findViewById(R.id.headingDialogue)).setText(R.string.update_available);
-//            ((Button) adsDialogueView.findViewById(R.id.contribute)).setVisibility(View.GONE);
-//            Button update = (Button) adsDialogueView.findViewById(R.id.later);
-//            update.setText(R.string.update_button_title);
-//            adsDialogue.show();
-//
-//            update.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
-//                    try {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-//                    } catch (android.content.ActivityNotFoundException anfe) {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-//                    }
-//                }
-//            });
-//
-//        }
-//    }
 
     private void doLogin() {
         if (isNetworkAvailable()) {

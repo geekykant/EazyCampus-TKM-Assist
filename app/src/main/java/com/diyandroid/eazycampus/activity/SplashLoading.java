@@ -43,9 +43,7 @@ import static com.diyandroid.eazycampus.activity.LoginPage.VERSION_CODE_KEY;
 import static java.lang.Thread.sleep;
 
 public class SplashLoading extends AppCompatActivity {
-
-    //mFirebaseRemoteConfig.getString("CAPTCHA_VERSION")
-
+    
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private SharedPreferences pref;
 
