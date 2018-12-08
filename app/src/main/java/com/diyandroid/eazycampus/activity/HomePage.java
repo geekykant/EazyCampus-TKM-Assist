@@ -765,8 +765,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
                         if (user.hasPaid()) {
                             pref.edit().putInt("FIRST_COUNT", -1).apply();
-                        } else {
-                            pref.edit().putInt("FIRST_COUNT", 0).apply();
                         }
 
                         Log.d("LoginPage", "Contribution status: " + user.hasPaid());
