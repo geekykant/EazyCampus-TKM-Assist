@@ -4,6 +4,7 @@
 ## Features to be added
 - Theme change (Material Colors + Flat Look)
 - Captcha solving via ML
+- Datewise attendance
 
 ## Features
 - Grab attendance and marks report in less than 8 seconds
@@ -29,8 +30,3 @@
 <center><img src="https://i.imgur.com/zdyO5Ka.jpg" height="400px" weight="800px"></center>
 
 <img src="https://i.imgur.com/8eF58RZ.png" height="400px" weight="800px">
-
-## Features to be added
-- Datewise attendance
-- Bunk manager
-- Events & Workshops daily notification
