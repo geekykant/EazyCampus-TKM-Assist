@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -17,7 +18,6 @@ import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.SubjectAttendance;
-import com.diyandroid.eazycampus.adapter.AttendanceDatewiseListAdapter;
 import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
 import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -60,16 +60,6 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
 
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
-//        mFirebaseRemoteConfig.fetch(0)
-//                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            mFirebaseRemoteConfig.activateFetched();
-//                        }
-//                    }
-//                });
 
         Toolbar toolbar = findViewById(R.id.toolbarAttendance);
         setSupportActionBar(toolbar);
@@ -128,45 +118,47 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
         @Override
         protected Element doInBackground2(String... strings) {
             try {
-                Document evaluationPage = Jsoup.connect(getString(R.string.tkmce_attendance_url))
-                        .cookies(loginCookies)
-                        .referrer(getString(R.string.tkmce_index_url))
-                        .followRedirects(true)
-                        .userAgent("Mozilla")
-                        .method(Connection.Method.GET)
-                        .timeout(30 * 1000)
-                        .execute().parse();
+//                Document  homePage = Jsoup.connect("https://tkmce.linways.com/student/student.php?menu=home")
+//                        .data("studentAccount", "170907")
+//                        .data("studentPassword", "170907")
+//                        .data("btnLogin", "Login")
+//                        .userAgent("Mozilla")
+//                        .followRedirects(true)
+//                        .referrer("https://tkmce.linways.com/student/index.php")
+//                        .cookies(loginCookies)
+//                        .method(Connection.Method.POST)
+//                        .timeout(120 * 1000)
+//                        .execute().parse();
 
-                response = Jsoup.connect(getString(R.string.tkmce_attendance_subjectwise_url))
+
+//                //todo: date change later!!
+                response = Jsoup.connect("https://tkmce.linways.com/student/attendance/ajax/ajax_subjectwise_attendance.php?action=GET_REPORT&" +
+                        "fromDate=" +
+                        "2019-01-01" +
+                        "&toDate=" +
+                        "2019-04-03"
+                )
+                        .header("x-requested-with", "XMLHttpRequest")
+                        .header("content-encoding", "br")
+                        .header("content-type", "text/html; charset=UTF-8")
                         .cookies(loginCookies)
-                        .referrer(getString(R.string.tkmce_attendance_subjectwise_url))
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .header("X-MicrosoftAjax", "Delta=true")
-                        .header("Cache-Control", "no-cache")
-                        .header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
-                        .data("ctl00$ScriptManager1", "ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$btnSearch")
-                        .data("ctl00$hdnisclose", "false")
-                        .data("ctl00$ContentPlaceHolder1$txtFromdate", start_date)
-                        .data("ctl00$ContentPlaceHolder1$txtToDate", end_date)
-                        .data("ctl00$ContentPlaceHolder1$rbnView", mFirebaseRemoteConfig.getString("ATTENDANCE_CONTENT_PLACEHOLDER"))
-                        .data("ctl00$HiddenField1", "")
-                        .data("__EVENTTARGET", mFirebaseRemoteConfig.getString("ATTENDANCE_EVENTTARGET"))
-                        .data("__EVENTARGUMENT", "")
-                        .data("__LASTFOCUS", "")
-                        .data("__VIEWSTATE", evaluationPage.getElementById("__VIEWSTATE").val())
-                        .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
-                        .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
-//                        .data(mFirebaseRemoteConfig.getString("ATTENDANCE_EXTRA_FIELD1"), mFirebaseRemoteConfig.getString("ATTENDANCE_EXTRA_FIELD2"))
-                        .data("__ASYNCPOST", "true")
-                        .data("ctl00$ContentPlaceHolder1$btnSearch", mFirebaseRemoteConfig.getString("ATTENDANCE_BTN_SEARCH"))
-                        .followRedirects(false)
-                        .method(Connection.Method.POST)
+                        .referrer("https://tkmce.linways.com/student/student.php?menu=attendance&action=subjectwise")
+//                        .data("ctl00$ContentPlaceHolder1$btnSearch", mFirebaseRemoteConfig.getString("ATTENDANCE_BTN_SEARCH"))
+                        .method(Connection.Method.GET)
                         .userAgent("Mozilla")
                         .timeout(30 * 1000)
                         .execute();
 
                 llPage = response.parse();
-                table = llPage.getElementById(getString(R.string.attendance_table_id)).getElementsByTag("table").get(2);
+                Log.i("Umm1", llPage + "");
+
+//                String tab_string = llPage.select("tbody").first().toString().replaceAll("\\\\n", "").replaceAll("\\\\", "");
+//                Log.i("Umm2", tab_string);
+//
+//                table = Jsoup.parse(tab_string).select("table").first();
+//                Log.i("Umm2", Html.fromHtml(tab_string) + " ypp");
+
+                table = null;
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -194,7 +186,7 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
                 Elements row = table.getElementsByTag("tr");
                 Elements details;
 
-                for (int i = 0; i < row.size(); i++) {
+                for (int i = 0; i < row.size() - 1; i++) {
                     details = row.get(i).getElementsByTag("td");
                     peopleList.add(new SubjectAttendance(details.get(0).text(), details.get(1).text(), details.get(2).text(), details.get(3).text()));
                 }
@@ -209,123 +201,123 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
     }
 
 
-    private class getDatewiseAttendance extends ExceptionHandlingAsyncTask<String, Void, Element> {
-
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressAttendance);
-        Element table;
-        Document llPage;
-
-        Connection.Response response;
-        int row, column;
-
-        public getDatewiseAttendance(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            parsingSuccessful = true;
-            //Progress bar implementations
-
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Element doInBackground2(String... strings) {
-            try {
-                Document evaluationPage = Jsoup.connect(getString(R.string.tkmce_attendance_url))
-                        .cookies(loginCookies)
-                        .referrer(getString(R.string.tkmce_index_url))
-                        .followRedirects(true)
-                        .userAgent("Mozilla")
-                        .method(Connection.Method.GET)
-                        .timeout(30 * 1000)
-                        .execute().parse();
-
-                response = Jsoup.connect(getString(R.string.tkmce_attendance_subjectwise_url))
-                        .cookies(loginCookies)
-                        .referrer(getString(R.string.tkmce_attendance_subjectwise_url))
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .header("X-MicrosoftAjax", "Delta=true")
-                        .header("Cache-Control", "no-cache")
-                        .header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
-                        .data("ctl00$ScriptManager1", "ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$btnSearch")
-                        .data("ctl00$hdnisclose", "false")
-                        .data("ctl00$ContentPlaceHolder1$txtFromdate", start_date)
-                        .data("ctl00$ContentPlaceHolder1$txtToDate", end_date)
-                        .data("ctl00$ContentPlaceHolder1$rbnView", "Datewise")
-                        .data("ctl00$HiddenField1", "")
-                        .data("__EVENTTARGET", "ctl00$ContentPlaceHolder1$rbnView$0")
-                        .data("__EVENTARGUMENT", "")
-                        .data("__LASTFOCUS", "")
-                        .data("__VIEWSTATE", evaluationPage.getElementById("__VIEWSTATE").val())
-                        .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
-                        .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
-                        .data("__ASYNCPOST", "true")
-                        .data("ctl00$ContentPlaceHolder1$btnSearch", "View")
-                        .followRedirects(false)
-                        .method(Connection.Method.POST)
-                        .userAgent("Mozilla")
-                        .timeout(30 * 1000)
-                        .execute();
-
-                llPage = response.parse();
-                table = llPage.getElementById(getString(R.string.attendance_table_id)).getElementsByTag("table").get(2);
-                System.out.print(table);
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                parsingSuccessful = false;
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            }
-            return table;
-        }
-
-        @Override
-        protected void onPostExecute2(Element element) {
-            progressBar.setVisibility(View.GONE);
-
-            if (parsingSuccessful && table != null && response.statusCode() == 200) {
-                mListView = findViewById(R.id.listAtendance);
-
-                Elements row = table.getElementsByTag("tr");
-                column = row.get(0).getElementsByTag("td").size();
-
-                CardView cardView = findViewById(R.id.cardView4);
-                cardView.setVisibility(View.VISIBLE);
-                Elements details = null;
-
-                //Add the SubjectAttendance objects to an ArrayList
-                peopleList = new ArrayList<>();
-
-                Elements details1 = row.get(0).getElementsByTag("td");
-                Elements details2 = row.get(1).getElementsByTag("td");
-                Elements details3 = row.get(2).getElementsByTag("td");
-                Elements details4 = row.get(3).getElementsByTag("td");
-
-                ArrayList<String> heading = null;
-
-                for (int i = 0; i < column; i++) {
-                    heading.add(details3.get(i).text() + "/" + details2.get(i).text() + "/" + details1.get(i).text() + "\n(" + details4.get(i).text() + " Period)");
-                }
-
-                //TODO: Create new multi-string class for date-wise attendance
-
-                for (int i = 4; i < row.size(); i++) {
-                    details = row.get(i).getElementsByTag("td");
-                    peopleList.add(new SubjectAttendance(details.get(0).text(), details.get(1).text(), details.get(2).text(), details.get(3).text()));
-                }
-
-                AttendanceDatewiseListAdapter adapter = new AttendanceDatewiseListAdapter(AttendancePage.this, R.layout.adapter_attendance_datewise, peopleList);
-                mListView.setAdapter(adapter);
-
-            } else {
-                Toast.makeText(AttendancePage.this, "Failed retrieving data! ", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    private class getDatewiseAttendance extends ExceptionHandlingAsyncTask<String, Void, Element> {
+//
+//        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressAttendance);
+//        Element table;
+//        Document llPage;
+//
+//        Connection.Response response;
+//        int row, column;
+//
+//        public getDatewiseAttendance(Context context) {
+//            super(context);
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            parsingSuccessful = true;
+//            //Progress bar implementations
+//
+//            progressBar.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected Element doInBackground2(String... strings) {
+//            try {
+//                Document evaluationPage = Jsoup.connect(getString(R.string.tkmce_attendance_url))
+//                        .cookies(loginCookies)
+//                        .referrer(getString(R.string.tkmce_index_url))
+//                        .followRedirects(true)
+//                        .userAgent("Mozilla")
+//                        .method(Connection.Method.GET)
+//                        .timeout(30 * 1000)
+//                        .execute().parse();
+//
+//                response = Jsoup.connect(getString(R.string.tkmce_attendance_subjectwise_url))
+//                        .cookies(loginCookies)
+//                        .referrer(getString(R.string.tkmce_attendance_subjectwise_url))
+//                        .header("X-Requested-With", "XMLHttpRequest")
+//                        .header("X-MicrosoftAjax", "Delta=true")
+//                        .header("Cache-Control", "no-cache")
+//                        .header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
+//                        .data("ctl00$ScriptManager1", "ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$btnSearch")
+//                        .data("ctl00$hdnisclose", "false")
+//                        .data("ctl00$ContentPlaceHolder1$txtFromdate", start_date)
+//                        .data("ctl00$ContentPlaceHolder1$txtToDate", end_date)
+//                        .data("ctl00$ContentPlaceHolder1$rbnView", "Datewise")
+//                        .data("ctl00$HiddenField1", "")
+//                        .data("__EVENTTARGET", "ctl00$ContentPlaceHolder1$rbnView$0")
+//                        .data("__EVENTARGUMENT", "")
+//                        .data("__LASTFOCUS", "")
+//                        .data("__VIEWSTATE", evaluationPage.getElementById("__VIEWSTATE").val())
+//                        .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
+//                        .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
+//                        .data("__ASYNCPOST", "true")
+//                        .data("ctl00$ContentPlaceHolder1$btnSearch", "View")
+//                        .followRedirects(false)
+//                        .method(Connection.Method.POST)
+//                        .userAgent("Mozilla")
+//                        .timeout(30 * 1000)
+//                        .execute();
+//
+//                llPage = response.parse();
+//                table = llPage.getElementById(getString(R.string.attendance_table_id)).getElementsByTag("table").get(2);
+//                System.out.print(table);
+//
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//                parsingSuccessful = false;
+//            } catch (RuntimeException ex) {
+//                ex.printStackTrace();
+//            }
+//            return table;
+//        }
+//
+//        @Override
+//        protected void onPostExecute2(Element element) {
+//            progressBar.setVisibility(View.GONE);
+//
+//            if (parsingSuccessful && table != null && response.statusCode() == 200) {
+//                mListView = findViewById(R.id.listAtendance);
+//
+//                Elements row = table.getElementsByTag("tr");
+//                column = row.get(0).getElementsByTag("td").size();
+//
+//                CardView cardView = findViewById(R.id.cardView4);
+//                cardView.setVisibility(View.VISIBLE);
+//                Elements details = null;
+//
+//                //Add the SubjectAttendance objects to an ArrayList
+//                peopleList = new ArrayList<>();
+//
+//                Elements details1 = row.get(0).getElementsByTag("td");
+//                Elements details2 = row.get(1).getElementsByTag("td");
+//                Elements details3 = row.get(2).getElementsByTag("td");
+//                Elements details4 = row.get(3).getElementsByTag("td");
+//
+//                ArrayList<String> heading = null;
+//
+//                for (int i = 0; i < column; i++) {
+//                    heading.add(details3.get(i).text() + "/" + details2.get(i).text() + "/" + details1.get(i).text() + "\n(" + details4.get(i).text() + " Period)");
+//                }
+//
+//                //TODO: Create new multi-string class for date-wise attendance
+//
+//                for (int i = 4; i < row.size(); i++) {
+//                    details = row.get(i).getElementsByTag("td");
+//                    peopleList.add(new SubjectAttendance(details.get(0).text(), details.get(1).text(), details.get(2).text(), details.get(3).text()));
+//                }
+//
+//                AttendanceDatewiseListAdapter adapter = new AttendanceDatewiseListAdapter(AttendancePage.this, R.layout.adapter_attendance_datewise, peopleList);
+//                mListView.setAdapter(adapter);
+//
+//            } else {
+//                Toast.makeText(AttendancePage.this, "Failed retrieving data! ", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
 
     //Closing Activity with back button

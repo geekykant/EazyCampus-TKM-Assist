@@ -17,11 +17,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,7 +36,6 @@ import com.google.gson.Gson;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -50,8 +47,6 @@ public class LoginPage extends AppCompatActivity {
     private EditText username, password, captcha;
     private ProgressBar progressBar;
     private CheckBox checkBox;
-    ImageView captchaImage;
-    private WebView mwebView;
 
     Button login_button;
 
@@ -103,7 +98,7 @@ public class LoginPage extends AppCompatActivity {
                 });
 //
 //        captchaImage = (ImageView) findViewById(R.id.captchaImage);
-         login_button = (Button) findViewById(R.id.login_button);
+        login_button = (Button) findViewById(R.id.login_button);
 //
 //        //WebView
 //        mwebView = (WebView) findViewById(R.id.webView);
@@ -252,44 +247,36 @@ public class LoginPage extends AppCompatActivity {
             try {
                 final String userAgent = "Firefox";
 
-                Connection.Response loginForm = Jsoup.connect(getString(R.string.tkmce_index_url))
+                Connection.Response loginForm = Jsoup.connect("https://tkmce.linways.com/student/index.php")
                         .method(Connection.Method.GET)
                         .userAgent(userAgent)
                         .execute();
 
                 Log.d("FacultyDirectory", "Scraped Login Page!");
 
-                Document loginPage = loginForm.parse(); //Same
+//                Document loginPage = loginForm.parse(); //Same
                 loginCookies = loginForm.cookies(); //Grabs all cookies
 
-                homePage = Jsoup.connect(getString(R.string.tkmce_index_url))
-                        .data("__LASTFOCUS", "")
-                        .data("__EVENTTARGET", "")
-                        .data("__EVENTARGUMENT", "")
-                        .data("__VIEWSTATEGENERATOR", loginPage.getElementById("__VIEWSTATEGENERATOR").val())
-                        .data("__VIEWSTATE", loginPage.getElementById("__VIEWSTATE").val())
-                        .data("__EVENTVALIDATION", loginPage.getElementById("__EVENTVALIDATION").val())
-                        .data("hdnstatus", "0")
-                        .data("hdnstatus0", "0")
-                        .data("txtUserName", username.getText().toString().trim())
-                        .data("txtPassword", password.getText().toString().trim())
+                homePage = Jsoup.connect("https://tkmce.linways.com/student/index.php")
+                        .data("studentAccount", "170907")
+                        .data("studentPassword", "170907")
                         .data("btnLogin", "Login")
                         .userAgent(userAgent)
                         .followRedirects(true)
-                        .referrer("http://210.212.227.210/tkmce/index.aspx")
+                        .referrer("https://tkmce.linways.com/student/index.php")
                         .cookies(loginCookies)
                         .method(Connection.Method.POST)
                         .timeout(120 * 1000)
                         .execute();
 
-                LoginName = homePage.parse().select("span#ctl00_lblFirstName").text();
-                // Evaluator = homePage.parse().select("table#ctl00_ContentPlaceHolder1_dlAlertLIst_dlAlertDisplay").toString();
+                LoginName = "Dummy";
+//                LoginName = homePage.parse().select("div.panel-heading(1)").html();
 
             } catch (IOException | RuntimeException ex) {
                 ex.printStackTrace();
             }
 
-            if (homePage.url().toExternalForm().equals(getString(R.string.tkmce_home))) {
+            if (homePage.statusCode() == 200) {
                 loginCheck = true;
                 Log.d("FacultyDirectory", "Logged In!");
             } else {
