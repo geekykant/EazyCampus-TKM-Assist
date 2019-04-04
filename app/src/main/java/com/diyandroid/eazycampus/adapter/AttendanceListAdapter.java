@@ -1,6 +1,8 @@
 package com.diyandroid.eazycampus.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,7 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
     private int mResource;
 
     private static class ViewHolder {
-        TextView subjectName, totalClasses, totalAttended, attendancePerct;
+        TextView subjectName, totalClasses, totalAttended, attendancePerct, bunksub;
     }
 
     public AttendanceListAdapter(Context context, int resource, ArrayList<SubjectAttendance> objects) {
@@ -30,13 +32,13 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
         mResource = resource;
     }
 
+    private ViewHolder holder;
+
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //Create the person object with the information
         SubjectAttendance person = getItem(position);
-
-        ViewHolder holder;
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(mResource, parent, false);
@@ -46,6 +48,7 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
             holder.totalClasses = (TextView) convertView.findViewById(R.id.totalsub);
             holder.totalAttended = (TextView) convertView.findViewById(R.id.attdsub);
             holder.attendancePerct = (TextView) convertView.findViewById(R.id.percentageattnd);
+            holder.bunksub = (TextView) convertView.findViewById(R.id.bunksub);
 
             convertView.setTag(holder);
         } else {
@@ -57,7 +60,49 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
         holder.totalAttended.setText(person.getTotalAttended());
         holder.attendancePerct.setText(person.getAttendancePercent());
 
+        //May crash if integer not received
+        if (position != 0) {
+            holder.bunksub.setText(getPFAttendance(Integer.parseInt(person.getTotalAttended()), Integer.parseInt(person.getTotalClasses())));
+        } else {
+            holder.bunksub.setText("");
+        }
+
         return convertView;
+    }
+
+    String getPFAttendance(int classesAttended, int classesTotal) {
+        int ATTENDANCE_PERCENT = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("ATTENDANCE_PERCENT", 75);
+
+        if (classesTotal == 0) {
+            holder.bunksub.setTextColor(Color.GRAY);
+            return "(0)";
+        }
+
+        float percentAttendance = ((classesAttended * 100.0f) / classesTotal);
+
+        int flag = 0;
+        float percent;
+        if (percentAttendance == 0) {
+            return "(0)";
+        } else if (percentAttendance >= ATTENDANCE_PERCENT) {
+            do {
+                flag += 1;
+                percent = ((classesAttended) * 100.0f) / (classesTotal + flag);
+            } while (percent >= ATTENDANCE_PERCENT);
+
+//            return "You are already ahead by " + (flag - 1) + " classes. You are good!";
+            holder.bunksub.setTextColor(Color.parseColor("#33CC66"));
+            return "(+" + (flag - 1) + ")";
+        } else {
+            do {
+                flag += 1;
+                percent = ((classesAttended + flag) * 100.0f) / (classesTotal + flag);
+            } while (percent < ATTENDANCE_PERCENT);
+
+//            return "You've to sit in " + flag + " more classes to be eligible to write exams!";
+            holder.bunksub.setTextColor(Color.RED);
+            return "(-" + flag + ")";
+        }
     }
 }
 

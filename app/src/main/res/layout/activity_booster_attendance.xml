@@ -34,12 +34,23 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/boosterTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text="Attendance Booster"
                 android:textColor="@color/black"
                 android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/minimum_attendance_booster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/boosterTitle"
+                android:text="Minimum attendance is: "
+                android:textColor="@color/cpb_red"
+                android:textSize="13sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,15 +76,15 @@
                         android:textColor="@color/black"
                         android:textSize="17sp" />
 
-                        <EditText
-                            android:id="@+id/classesAttended"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:maxLength="3"
-                            android:hint="0"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="20sp" />
+                    <EditText
+                        android:id="@+id/classesAttended"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="0"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20sp" />
 
 
                 </LinearLayout>
@@ -96,15 +107,15 @@
                         tools:ignore="RtlSymmetry" />
 
 
-                        <EditText
-                            android:id="@+id/totalClasses"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:hint="0"
-                            android:maxLength="3"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="20sp" />
+                    <EditText
+                        android:id="@+id/totalClasses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="0"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 

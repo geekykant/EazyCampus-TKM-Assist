@@ -1,161 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrolllogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2e2d2d">
+    android:background="#2e2d2d"
+    android:overScrollMode="never"
+    android:scrollbars="none">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/eazylogo"
+            android:layout_width="350dp"
+            android:layout_height="130dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/eazycampus_logo" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/usrbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_below="@id/eazylogo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:hint="Username"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:textColorHint="#ffffff">
 
-            <ImageView
-                android:id="@+id/eazylogo"
-                android:layout_width="350dp"
-                android:layout_height="140dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/eazycampus_logo" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/usrbox"
+            <EditText
+                android:id="@+id/username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/eazylogo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="30dp"
-                android:hint="Username"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
-                android:textColorHint="#ffffff">
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:inputType="number"
+                android:maxLength="7"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#d810a7" />
+        </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:ems="10"
-                    android:fontFamily="sans-serif"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#d810a7" />
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/passbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usrbox"
+            android:layout_centerHorizontal="true"
+            android:hint="Password"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:textColorHint="#ffffff"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="#ffffff">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/passbox"
+            <EditText
+                android:id="@+id/password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/usrbox"
-                android:layout_centerHorizontal="true"
-                android:hint="Password"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
-                android:textColorHint="#ffffff"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="#ffffff">
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:textAllCaps="false"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#d810a7" />
 
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:ems="10"
-                    android:fontFamily="sans-serif"
-                    android:inputType="textPassword"
-                    android:maxLength="20"
-                    android:textAllCaps="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#d810a7" />
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+        <LinearLayout
+            android:id="@+id/rememberme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/passbox"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:gravity="right">
 
-            <LinearLayout
-                android:id="@+id/rememberme"
+            <CheckBox
+                android:id="@+id/rememberCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/passbox"
-                android:layout_marginEnd="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="5dp"
-                android:gravity="right">
-
-                <CheckBox
-                    android:id="@+id/rememberCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Remember Me"
-                    android:textColor="@color/cpb_white" />
-
-            </LinearLayout>
-
-
-            <Button
-                android:id="@+id/login_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rememberme"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/login_button"
-                android:fontFamily="sans-serif"
-                android:text="Login"
-                android:textAllCaps="false"
-                android:textColor="@color/cpb_white" />
+                android:checked="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/login_button"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:fontFamily="sans-serif"
-                android:text="Contact developer in case you aren't able to login."
-                android:textColor="@color/cpb_white"
-                android:textSize="13sp" />
+                android:text="Remember Me"
+                android:textColor="@color/cpb_white" />
+        </LinearLayout>
 
-        </RelativeLayout>
-    </ScrollView>
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/rememberme"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/login_button"
+            android:fontFamily="sans-serif"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="@color/cpb_white" />
 
-    <TextView
-        android:id="@+id/privacy_policy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:fontFamily="sans-serif"
-        android:padding="10dp"
-        android:layout_alignParentBottom="true"
-        android:text="@string/privacy_policy_text"
-        android:textColor="@color/cpb_white"
-        android:textSize="13sp" />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
-
-        <ProgressBar
-            android:id="@+id/progressbar"
+        <TextView
+            android:id="@+id/contact_developer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible" />
+            android:layout_below="@id/login_button"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/contact_developer"
+            android:textColor="@color/cpb_white"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/privacy_policy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_developer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/privacy_policy_text"
+            android:textColor="@color/cpb_white"
+            android:textSize="13sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+
+</ScrollView>

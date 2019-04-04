@@ -1,6 +1,7 @@
 package com.diyandroid.eazycampus.activity;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.widget.TextView;
 
 import com.diyandroid.eazycampus.R;
 
-public class BoosterAttendance extends AppCompatActivity{
+public class BoosterAttendance extends AppCompatActivity {
 
     private int classesTotal, classesAttended;
     private TextView totalClasses, attendedClasses, perAtteda;
     private float percentAttendance;
+
+    private int ATTENDANCE_PERCENT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,9 @@ public class BoosterAttendance extends AppCompatActivity{
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
+
+        ATTENDANCE_PERCENT = PreferenceManager.getDefaultSharedPreferences(this).getInt("ATTENDANCE_PERCENT", 75);
+        ((TextView) findViewById(R.id.minimum_attendance_booster)).append("" + ATTENDANCE_PERCENT);
 
         Button submit = (Button) findViewById(R.id.submitAttendanceBooster);
         attendedClasses = (TextView) findViewById(R.id.classesAttended);
@@ -46,7 +52,7 @@ public class BoosterAttendance extends AppCompatActivity{
                     if (percentAttendance <= 100) {
                         perAtteda.setText(String.valueOf(Math.round(percentAttendance)));
 
-                        if (percentAttendance == 75) {
+                        if (percentAttendance == ATTENDANCE_PERCENT) {
                             decisionBooster.setText(R.string.border_line_attendance);
                         } else {
                             decisionBooster.setText(getPFAttendance(classesAttended, classesTotal, percentAttendance));
@@ -61,18 +67,18 @@ public class BoosterAttendance extends AppCompatActivity{
     String getPFAttendance(int classesAttended, int classesTotal, float percentAttendance) {
         int flag = 0;
         float percent;
-        if (percentAttendance >= 75) {
+        if (percentAttendance >= ATTENDANCE_PERCENT) {
             do {
                 flag += 1;
                 percent = ((classesAttended) * 100.0f) / (classesTotal + flag);
-            } while (percent >= 75);
+            } while (percent >= ATTENDANCE_PERCENT);
 
             return "You are already ahead by " + (flag - 1) + " classes. You are good!";
         } else {
             do {
                 flag += 1;
                 percent = ((classesAttended + flag) * 100.0f) / (classesTotal + flag);
-            } while (percent < 75);
+            } while (percent < ATTENDANCE_PERCENT);
 
             return "You've to sit in " + flag + " more classes to be eligible to write exams!";
         }

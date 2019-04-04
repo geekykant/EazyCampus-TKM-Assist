@@ -48,9 +48,17 @@
                 android:id="@+id/checkbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="50dp"
                 android:orientation="vertical"
                 android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/minimum_attendance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Minimum attendance is : "
+                    android:textColor="@color/cpb_white" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -90,10 +98,10 @@
                                 android:id="@+id/fromAttendance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:editable="false"
+                                android:inputType="date"
                                 android:focusable="false"
                                 android:gravity="center_vertical"
-                                android:text="01/01/2018"
+                                android:text="01/01/2019"
                                 android:textColor="#494949"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -118,9 +126,8 @@
                                 android:id="@+id/toAttendance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:editable="false"
                                 android:focusable="false"
-                                android:inputType="none"
+                                android:inputType="date"
                                 android:text="03/05/2018"
                                 android:textColor="#494949"
                                 android:textSize="14sp" />

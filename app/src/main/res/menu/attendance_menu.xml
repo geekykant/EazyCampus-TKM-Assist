@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.FacultyDirectory">
     <item
-        android:id="@+id/limitNotification"
-        android:icon="@drawable/ic_filter_notif"
-        android:title="Filter Notification"
-        app:showAsAction="always" />
+        android:id="@+id/mBoostMenu"
+        android:icon="@drawable/ic_booster_menu"
+        android:title="Attendance Booster"
+        app:showAsAction="always"/>
 </menu>

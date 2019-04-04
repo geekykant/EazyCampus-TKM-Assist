@@ -1,7 +1,6 @@
 package com.diyandroid.eazycampus.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -22,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,14 +41,15 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.MyApplication;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.Story;
+import com.diyandroid.eazycampus.adapter.MainSliderAdapter;
 import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.fragment.HelpSupportFragment;
+import com.diyandroid.eazycampus.service.PicassoImageLoadingService;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -56,10 +57,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,11 +71,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ss.com.bannerslider.Slider;
 
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         LogOutTimerUtil.LogOutListener {
@@ -97,13 +94,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
-    private AlertDialog adsDialogue;
+    private Slider slider;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
+
+        Slider.init(new PicassoImageLoadingService(this));
+        fetchCGPUStories();
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -112,49 +112,44 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         String TODAY_DATE = pref.getString(PREF_TODAY_DATE, null);
 
         String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
-        final int FIRST_COUNT = pref.getInt("FIRST_COUNT", 0);
         boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
-        loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
 
         // Default Mailing system for all_semesters (Add Intent Later)
-        if (FIRST_COUNT % 3 == 0) {
-            //Ads dialogue display
-            final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
-            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
-            adsDialogue = new AlertDialog.Builder(this).create();
-            adsDialogue.setCancelable(false);
-            adsDialogue.setCanceledOnTouchOutside(false);
-            adsDialogue.setView(adsDialogueView);
-
-            Button contribute = (Button) adsDialogueView.findViewById(R.id.contribute);
-            Button later = (Button) adsDialogueView.findViewById(R.id.later);
-
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            adsDialogue.show();
-                        }
-                    }, 1500);
-
-            contribute.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    paywithUPI();
-                }
-            });
-            later.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    adsDialogue.hide();
-                }
-            });
-        }
-
-        if (FIRST_COUNT >= 0) {
-            pref.edit().putInt("FIRST_COUNT", FIRST_COUNT + 1).apply();
-        }
+//        if (FIRST_COUNT % 3 == 0) {
+//            //Ads dialogue display
+//            final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
+//            adsDialogueView.setElevation(10);
+//            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
+//            adsDialogue = new AlertDialog.Builder(this).create();
+//            adsDialogue.setCancelable(false);
+//            adsDialogue.setCanceledOnTouchOutside(false);
+//            adsDialogue.setView(adsDialogueView);
+//
+//            Button contribute = (Button) adsDialogueView.findViewById(R.id.contribute);
+//            Button later = (Button) adsDialogueView.findViewById(R.id.later);
+//
+//            new android.os.Handler().postDelayed(
+//                    new Runnable() {
+//                        public void run() {
+//                            adsDialogue.show();
+//                        }
+//                    }, 1000);
+//
+//            contribute.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    paywithUPI();
+//                }
+//            });
+//            later.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    adsDialogue.hide();
+//                }
+//            });
+//        }
 
         if (FIRST_RUN) {
             FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
@@ -215,8 +210,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         jsonCookies = getIntent().getStringExtra("COOKIES");
 
         TextView welName = (TextView) findViewById(R.id.welName);
-        welName.setText("Hi " + loginName + "!");
-        drawerName.setText(loginName);
+        if (!TextUtils.isEmpty(loginName)) {
+            loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
+            welName.setText("Hi " + loginName + "!");
+            drawerName.setText(loginName);
+        }
 
         int[] profile_ids = {
                 R.id.profile_ic_1,
@@ -318,7 +316,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 startActivity(signoutIntent);
                 finish();
 
-                new doLogout(this).execute();
+//                new doLogout(this).execute();
 
                 pref.edit()
                         .remove("username")
@@ -541,7 +539,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         } else {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
-                new doLogout(this).execute();
+//                new doLogout(this).execute();
                 return;
             }
 
@@ -568,9 +566,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             layout.removeAllViewsInLayout();
 
         } else if (requestCode == 1337) {
+
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Pleaseee contribute! ;_;", Toast.LENGTH_LONG).show();
-                pref.edit().putInt("FIRST_COUNT", -1).apply();
             } else {
                 if (resultCode == RESULT_OK && data != null) {
                     Bundle bundle = data.getExtras();
@@ -624,7 +622,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         @Override
                         public void onClick(View view) {
                             contriDialogue.hide();
-
                         }
                     });
 
@@ -677,73 +674,51 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         finish();
     }
 
-    private boolean parsingSuccessful;
 
-    private class doLogout extends ExceptionHandlingAsyncTask<String, Void, Element> {
+    private void fetchCGPUStories() {
+        final ArrayList<String> bannerList = new ArrayList<>();
+        slider = findViewById(R.id.banner_slider1);
 
-        Map<String, String> loginCookies = new Gson().fromJson(jsonCookies, new TypeToken<Map<String, String>>() {
-        }.getType());
+        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.cgpu_stories_url),
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response == null) {
+                            return;
+                        }
 
-        Connection.Response response;
+                        List<String> items = new Gson().fromJson(response.toString(), new TypeToken<List<String>>() {
+                        }.getType());
 
-        public doLogout(Context context) {
-            super(context);
-        }
+                        // adding contacts to contacts list
+                        bannerList.clear();
+                        bannerList.addAll(items);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            parsingSuccessful = true;
-            //Progress bar implementations
-        }
+                        slider.setAdapter(new MainSliderAdapter(bannerList));
+                        slider.setSelectedSlide(0);
 
-        @Override
-        protected Element doInBackground2(String... strings) {
-            try {
-                Document evaluationPage = Jsoup.connect(getString(R.string.tkmce_home))
-                        .cookies(loginCookies)
-                        .referrer(getString(R.string.tkmce_index_url))
-                        .followRedirects(true)
-                        .userAgent("Mozilla")
-                        .method(Connection.Method.GET)
-                        .timeout(30 * 1000)
-                        .execute().parse();
+                        if (bannerList.size() != 1) {
+                            slider.setLoopSlides(true);
+                            slider.setInterval(3300);
+                        }
 
-                response = Jsoup.connect(getString(R.string.tkmce_home))
-                        .cookies(loginCookies)
-                        .referrer(getString(R.string.tkmce_home))
-                        .data("__EVENTTARGET", "ctl00$lnkBtnLogout")
-                        .data("__EVENTARGUMENT", "")
-                        .data("__LASTFOCUS", "")
-                        .data("__VIEWSTATE", evaluationPage.getElementById("__VIEWSTATE").val())
-                        .data("__VIEWSTATEGENERATOR", evaluationPage.getElementById("__VIEWSTATEGENERATOR").val())
-                        .data("__EVENTVALIDATION", evaluationPage.getElementById("__EVENTVALIDATION").val())
-                        .data("ctl00$hdnisclose", "false")
-                        .data("ctl00$ContentPlaceHolder1$hdnIsMarkEntry", "NO")
-                        .data("ctl00$ContentPlaceHolder1$hdnSubjectValues", "")
-                        .data("ctl00$ContentPlaceHolder1$hdnValues", "")
-                        .data("ctl00$HiddenField1", "")
-                        .followRedirects(false)
-                        .method(Connection.Method.POST)
-                        .userAgent("Mozilla")
-                        .timeout(30 * 1000)
-                        .execute();
+                        new android.os.Handler().postDelayed(
+                                new Runnable() {
+                                    public void run() {
+                                        ((ImageView) findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
+                                        slider.setVisibility(View.VISIBLE);
+                                    }
+                                }, 1000);
 
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                parsingSuccessful = false;
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // error in getting json
+                Log.e("HomePage", "Error: " + error.getMessage());
             }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute2(Element element) {
-            if (parsingSuccessful && response.statusCode() == 200) {
-                Toast.makeText(HomePage.this, "Logged out Hehehe!", Toast.LENGTH_SHORT).show();
-            }
-        }
+        });
+        MyApplication.getInstance().addToRequestQueue(request);
     }
 }

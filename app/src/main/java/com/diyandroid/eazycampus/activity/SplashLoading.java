@@ -6,14 +6,29 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
+import com.google.gson.Gson;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SplashLoading extends AppCompatActivity {
     private SharedPreferences pref;
+
+    String USR_NAME, PASS_NAME;
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -26,6 +41,9 @@ public class SplashLoading extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_loading);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         Thread welcomeThread = new Thread() {
             @Override
             public void run() {
@@ -35,14 +53,19 @@ public class SplashLoading extends AppCompatActivity {
                 } catch (Exception e) {
                 } finally {
                     pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    boolean FIRST_TIME = pref.getBoolean("FIRST_RUN", true);
 
-//                    if (!FIRST_TIME) {
-//                        new getWebsite(getApplicationContext()).execute();
-//                    } else {
+                    boolean FIRST_TIME = pref.getBoolean("FIRST_RUN", true);
+                    if (!FIRST_TIME) {
+                        USR_NAME = pref.getString("username", null);
+                        PASS_NAME = pref.getString("password", null);
+
+                        if (!TextUtils.isEmpty(USR_NAME) && !TextUtils.isEmpty(PASS_NAME)) {
+                            new getWebsite(getApplicationContext()).execute();
+                        }
+                    } else {
                         startActivity(new Intent(SplashLoading.this, LoginPage.class));
                         finish();
-//                    }
+                    }
                 }
             }
         };
@@ -66,98 +89,98 @@ public class SplashLoading extends AppCompatActivity {
 
     private boolean parsingSuccessful;
 
-//    private class getWebsite extends ExceptionHandlingAsyncTask<String, Void, Element> {
-//
-//        private boolean loginCheck = false;
-//        private Map<String, String> loginCookies = new HashMap<>();
-//        private String LoginName = "";
-//        private Connection.Response homePage = null;
-//
-//        String LOGIN_USERNAME = pref.getString("username", null);
-//        String LOGIN_PASSWORD = pref.getString("password", null);
-//
-//        public getWebsite(Context context) {
-//            super(context);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            //Progress bar implementations
-//        }
-//
-//        @Override
-//        protected Element doInBackground2(String... strings) {
-//            try {
-//                final String userAgent = "Firefox";
-//
-//                Connection.Response loginForm = Jsoup.connect(getString(R.string.tkmce_index_url))
-//                        .method(Connection.Method.GET)
-//                        .userAgent(userAgent)
-//                        .execute();
-//
-//                Log.d("SplashScreen", "Scraped Login Page!");
-//
+    private class getWebsite extends ExceptionHandlingAsyncTask<String, Void, Element> {
+
+        private boolean loginCheck = false;
+        private Map<String, String> loginCookies = new HashMap<>();
+        private String LoginName = "";
+        private Connection.Response homePage, getName;
+
+        public getWebsite(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            parsingSuccessful = true;
+            //Progress bar implementations
+        }
+
+        @Override
+        protected Element doInBackground2(String... strings) {
+            try {
+                final String userAgent = "Firefox";
+
+                Connection.Response loginForm = Jsoup.connect("https://tkmce.linways.com/student/index.php")
+                        .method(Connection.Method.GET)
+                        .userAgent(userAgent)
+                        .execute();
+
+                Log.d("FacultyDirectory", "Scraped Login Page!");
+
 //                Document loginPage = loginForm.parse(); //Same
-//                loginCookies = loginForm.cookies(); //Grabs all cookies
-//
-//                homePage = Jsoup.connect(getString(R.string.tkmce_index_url))
-//                        .data("__LASTFOCUS", "")
-//                        .data("__EVENTTARGET", "")
-//                        .data("__EVENTARGUMENT", "")
-//                        .data("__VIEWSTATEGENERATOR", loginPage.getElementById("__VIEWSTATEGENERATOR").val())
-//                        .data("__VIEWSTATE", loginPage.getElementById("__VIEWSTATE").val())
-//                        .data("__EVENTVALIDATION", loginPage.getElementById("__EVENTVALIDATION").val())
-//                        .data("hdnstatus", "0")
-//                        .data("hdnstatus0", "0")
-//                        .data("txtUserName", LOGIN_USERNAME)
-//                        .data("txtPassword", LOGIN_PASSWORD)
-//                        .data("btnLogin", "Login")
-//                        .userAgent(userAgent)
-//                        .followRedirects(true)
-//                        .referrer(getString(R.string.tkmce_index_url))
-//                        .cookies(loginCookies)
-//                        .method(Connection.Method.POST)
-//                        .timeout(120 * 1000)
-//                        .execute();
-//
-//                LoginName = homePage.parse().select("span#ctl00_lblFirstName").text();
-//                // Evaluator = homePage.parse().select("table#ctl00_ContentPlaceHolder1_dlAlertLIst_dlAlertDisplay").toString();
-//
-//                parsingSuccessful = true;
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                parsingSuccessful = false;
-//            }
-//
-//            if (homePage.url().toExternalForm().equals(getString(R.string.tkmce_home))) {
-//                loginCheck = true;
-//                Log.d("FacultyDirectory", "Logged In!");
-//            } else {
-//                Log.d("FacultyDirectory", "Not Logged In!");
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute2(Element element) {
-//
-//            if (loginCheck && parsingSuccessful) {
-//                String jsonCookie = new Gson().toJson(loginCookies);
-//
-//                Intent intent = new Intent(SplashLoading.this, HomePage.class);
-//                intent.putExtra("COOKIES", jsonCookie);  //send cookies
-//                intent.putExtra("LOGIN_NAME", LoginName);
-//                startActivity(intent);
-//                finish();
-//
-//                overridePendingTransition(R.anim.load_up_anim, 0);
-//
-//            } else {
-//                startActivity(new Intent(SplashLoading.this, LoginPage.class));
-//                finish();
-//            }
-//        }
-//    }
+                loginCookies = loginForm.cookies(); //Grabs all cookies
+
+                homePage = Jsoup.connect("https://tkmce.linways.com/student/index.php")
+                        .data("studentAccount", USR_NAME)
+                        .data("studentPassword", PASS_NAME)
+                        .data("btnLogin", "Login")
+                        .userAgent(userAgent)
+                        .followRedirects(true)
+                        .referrer("https://tkmce.linways.com/student/index.php")
+                        .cookies(loginCookies)
+                        .method(Connection.Method.POST)
+                        .timeout(120 * 1000)
+                        .execute();
+
+                getName = Jsoup.connect("https://tkmce.linways.com/student/student.php?menu=student_details&action=frm_edit")
+                        .userAgent(userAgent)
+                        .referrer("https://tkmce.linways.com/student/index.php")
+                        .cookies(loginCookies)
+                        .followRedirects(true)
+                        .method(Connection.Method.GET)
+                        .timeout(120 * 1000)
+                        .execute();
+
+//                LoginName = getName.select("table").first().select("tr").get(4).select("td").get(1).text();
+                LoginName = getName.parse().select("table").first().select("tr").get(5).select("td").get(1).text().split(" ")[0];
+                Log.i("gummi", "doInBackground2: " + LoginName);
+
+            } catch (IOException | RuntimeException ex) {
+                ex.printStackTrace();
+                parsingSuccessful = false;
+            }
+
+
+            if (!TextUtils.isEmpty(LoginName)) {
+                loginCheck = true;
+                Log.d("FacultyDirectory", "Logged In!");
+            } else {
+                Log.d("FacultyDirectory", "Not Logged In!");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute2(Element element) {
+            if (loginCheck && parsingSuccessful) {
+                Intent intent = new Intent(SplashLoading.this, HomePage.class);
+
+                String jsonCookie = new Gson().toJson(loginCookies);
+
+                intent.putExtra("COOKIES", jsonCookie);  //send cookies
+                intent.putExtra("LOGIN_NAME", LoginName);
+                startActivity(intent);
+                finish();
+
+                overridePendingTransition(R.anim.load_up_anim, 0);
+
+            } else {
+                startActivity(new Intent(SplashLoading.this, LoginPage.class));
+                finish();
+            }
+        }
+    }
 }

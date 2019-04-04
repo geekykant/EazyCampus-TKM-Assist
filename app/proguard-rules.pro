@@ -43,3 +43,4 @@
 -keep class com.diyandroid.eazycampus.activity.HomePage.Story{ *; }
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class com.zl.reik.dilatingdotsprogressbar.DilatingDotDrawable { *; }
+-dontwarn ss.com.**

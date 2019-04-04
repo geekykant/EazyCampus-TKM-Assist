@@ -44,7 +44,7 @@ public abstract class ExceptionHandlingAsyncTask<Params, Progress, Result> exten
     protected abstract void onPostExecute2(Result result);
 
     protected void onPostException(Exception exception) {
-        Toast.makeText(context, "Network Problem! Please try after few minutes.", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Network Timed out! Please login again..", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(context, LoginPage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);

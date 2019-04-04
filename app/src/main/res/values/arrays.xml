@@ -23,4 +23,14 @@
         <item>7</item>
         <item>8</item>
     </string-array>
+
+    <string-array name="pref_upload_quality_entries1">
+        <item>75</item>
+        <item>85</item>
+    </string-array>
+
+    <string-array name="pref_upload_quality_values2">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
 </resources>
