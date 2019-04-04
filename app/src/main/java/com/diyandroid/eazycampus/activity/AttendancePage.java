@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,6 +22,8 @@ import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.jsoup.Connection;
@@ -138,9 +139,7 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
                         "&toDate=" +
                         "2019-04-03"
                 )
-                        .header("x-requested-with", "XMLHttpRequest")
-                        .header("content-encoding", "br")
-                        .header("content-type", "text/html; charset=UTF-8")
+                        .ignoreContentType(true)
                         .cookies(loginCookies)
                         .referrer("https://tkmce.linways.com/student/student.php?menu=attendance&action=subjectwise")
 //                        .data("ctl00$ContentPlaceHolder1$btnSearch", mFirebaseRemoteConfig.getString("ATTENDANCE_BTN_SEARCH"))
@@ -149,16 +148,14 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
                         .timeout(30 * 1000)
                         .execute();
 
-                llPage = response.parse();
-                Log.i("Umm1", llPage + "");
+                JsonElement element = new Gson().fromJson(response.body(), JsonElement.class);
+                JsonObject jsonObj = element.getAsJsonObject();
 
-//                String tab_string = llPage.select("tbody").first().toString().replaceAll("\\\\n", "").replaceAll("\\\\", "");
-//                Log.i("Umm2", tab_string);
-//
-//                table = Jsoup.parse(tab_string).select("table").first();
-//                Log.i("Umm2", Html.fromHtml(tab_string) + " ypp");
+                if (jsonObj.get("success").toString().equals("true")) {
+                    String raw_table = jsonObj.get("data").toString().replaceAll("\\\\n", "").replaceAll("\\\\", "");
 
-                table = null;
+                    table = Jsoup.parse(raw_table).select("tbody").first();
+                }
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -186,9 +183,11 @@ public class AttendancePage extends AppCompatActivity implements LogOutTimerUtil
                 Elements row = table.getElementsByTag("tr");
                 Elements details;
 
-                for (int i = 0; i < row.size() - 1; i++) {
+                peopleList.add(new SubjectAttendance("Subject Name", "Attended", "Total Classes", "% Attendance"));
+
+                for (int i = 0; i < row.size(); i++) {
                     details = row.get(i).getElementsByTag("td");
-                    peopleList.add(new SubjectAttendance(details.get(0).text(), details.get(1).text(), details.get(2).text(), details.get(3).text()));
+                    peopleList.add(new SubjectAttendance(details.get(1).text(), details.get(2).text(), details.get(3).text(), details.get(4).text()));
                 }
 
                 AttendanceListAdapter adapter = new AttendanceListAdapter(AttendancePage.this, R.layout.adapter_attendance, peopleList);
