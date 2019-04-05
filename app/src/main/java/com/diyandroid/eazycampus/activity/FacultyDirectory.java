@@ -1,11 +1,15 @@
 package com.diyandroid.eazycampus.activity;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -113,6 +117,62 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
         MyApplication.getInstance().addToRequestQueue(request);
     }
 
+    private static final int REQUEST_SEND_SMS = 110, REQUEST_CALL_PHONE = 111;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            //request permission
+
+            boolean hasPermissionSms = (ContextCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED);
+            if (!hasPermissionSms) {
+                ActivityCompat.requestPermissions(FacultyDirectory.this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        REQUEST_SEND_SMS);
+            }
+
+            boolean hasPermissionPhone = (ContextCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED);
+            if (!hasPermissionPhone) {
+                ActivityCompat.requestPermissions(FacultyDirectory.this,
+                        new String[]{Manifest.permission.CALL_PHONE},
+                        REQUEST_CALL_PHONE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_SEND_SMS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(FacultyDirectory.this, "Permission granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(FacultyDirectory.this, "Permission denied. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+            break;
+
+            case REQUEST_CALL_PHONE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(FacultyDirectory.this, "Permission granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(FacultyDirectory.this, "Permission denied. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+            break;
+
+        }
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -180,7 +240,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
     @Override
     public void onContactSelected(Contact contact) {
-        String jsonContact =  new Gson().toJson(contact);
+        String jsonContact = new Gson().toJson(contact);
 
         Intent intent = new Intent(FacultyDirectory.this, FacultyProfile.class);
         intent.putExtra("SELECTED_FACULTY", jsonContact);

@@ -1,19 +1,33 @@
 package com.diyandroid.eazycampus.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -25,8 +39,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class SplashLoading extends AppCompatActivity {
     private SharedPreferences pref;
+
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     String USR_NAME, PASS_NAME;
 
@@ -44,31 +61,41 @@ public class SplashLoading extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        Thread welcomeThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    super.run();
-                    sleep(500);  //Delay of 1 seconds
-                } catch (Exception e) {
-                } finally {
-                    pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
 
-                    boolean FIRST_TIME = pref.getBoolean("FIRST_RUN", true);
-                    if (!FIRST_TIME) {
-                        USR_NAME = pref.getString("username", null);
-                        PASS_NAME = pref.getString("password", null);
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
-                        if (!TextUtils.isEmpty(USR_NAME) && !TextUtils.isEmpty(PASS_NAME)) {
-                            new getWebsite(getApplicationContext()).execute();
+        mFirebaseRemoteConfig.fetch(60 * 25)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            mFirebaseRemoteConfig.activateFetched();
+                            if (!checkForUpdate()) {
+                                pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                                boolean FIRST_TIME = pref.getBoolean("FIRST_RUN", true);
+                                if (!FIRST_TIME) {
+                                    USR_NAME = pref.getString("username", null);
+                                    PASS_NAME = pref.getString("password", null);
+
+                                    if (!TextUtils.isEmpty(USR_NAME) && !TextUtils.isEmpty(PASS_NAME)) {
+                                        new getWebsite(getApplicationContext()).execute();
+                                    }
+                                } else {
+                                    startActivity(new Intent(SplashLoading.this, LoginPage.class));
+                                    finish();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(SplashLoading.this, "Please restart app to work!", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        startActivity(new Intent(SplashLoading.this, LoginPage.class));
-                        finish();
                     }
-                }
-            }
-        };
+                });
 
         //Force closing app after Exception to LoginPage Close..
         if (getIntent().getBooleanExtra("EXIT", false)) {
@@ -76,11 +103,10 @@ public class SplashLoading extends AppCompatActivity {
         }
 
         if (isNetworkAvailable()) {
-            welcomeThread.start();
+//            welcomeThread.start();
 
             DilatingDotsProgressBar progress = (DilatingDotsProgressBar) findViewById(R.id.progress);
             progress.showNow();
-
         } else {
             startActivity(new Intent(SplashLoading.this, LoginPage.class));
             finish();
@@ -183,4 +209,49 @@ public class SplashLoading extends AppCompatActivity {
             }
         }
     }
+
+    private int getCurrentVersionCode() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    private boolean checkForUpdate() {
+        int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble("VERSION_CODE_KEY");
+
+        Log.d("SplashLoading", "LatestAppVersion: " + latestAppVersion + " currentversion: " + getCurrentVersionCode());
+
+        if (latestAppVersion > getCurrentVersionCode()) {
+
+            View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
+            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText(R.string.update_description);
+            final AlertDialog adsDialogue = new AlertDialog.Builder(this).create();
+            adsDialogue.setCanceledOnTouchOutside(false);
+            adsDialogue.setView(adsDialogueView);
+
+            ((TextView) adsDialogueView.findViewById(R.id.headingDialogue)).setText(R.string.update_available);
+            ((Button) adsDialogueView.findViewById(R.id.contribute)).setVisibility(View.GONE);
+            Button update = (Button) adsDialogueView.findViewById(R.id.later);
+            update.setText(R.string.update_button_title);
+            adsDialogue.show();
+
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+
 }
