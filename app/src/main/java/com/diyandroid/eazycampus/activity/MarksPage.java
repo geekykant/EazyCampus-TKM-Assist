@@ -53,6 +53,8 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marks_page);
 
+        Toast.makeText(this, "Marks feature aren't added to this version yet!", Toast.LENGTH_LONG).show();
+
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
@@ -91,7 +93,7 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
         internalMaks.setOnClickListener(this);
         sessionalMarks.setOnClickListener(this);
 
-        new getInternalMarks(this).execute();
+//        new getInternalMarks(this).execute();
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

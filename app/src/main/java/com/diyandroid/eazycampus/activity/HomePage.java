@@ -351,7 +351,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 break;
 
             case R.id.marks:
-                Toast.makeText(this, "Marks feature aren't added to this version yet!", Toast.LENGTH_LONG).show();
                 Intent IntentMarks = new Intent(HomePage.this, MarksPage.class);
                 IntentMarks.putExtra("COOKIES", jsonCookies);
                 startActivity(IntentMarks);
