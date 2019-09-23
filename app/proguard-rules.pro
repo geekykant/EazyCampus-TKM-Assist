@@ -40,7 +40,17 @@
 #    public *;
 #}
 
--keep class com.diyandroid.eazycampus.activity.HomePage.Story{ *; }
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class com.zl.reik.dilatingdotsprogressbar.DilatingDotDrawable { *; }
 -dontwarn ss.com.**
+-dontwarn com.
+-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+-keep class com.firebase.** { *; }
+-keep class org.apache.** { *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+-keepnames class javax.servlet.** { *; }
+-keepnames class org.ietf.jgss.** { *; }
+-dontwarn org.w3c.dom.**
+-dontwarn org.joda.time.**
+-dontwarn org.shaded.apache.**
+-dontwarn org.ietf.jgss.**

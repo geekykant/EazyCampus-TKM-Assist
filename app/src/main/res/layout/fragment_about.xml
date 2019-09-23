@@ -1,358 +1,350 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cpb_white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:focusable="true"
-    tools:context="com.diyandroid.eazycampus.fragment.AboutFragment">
+    android:overScrollMode="never"
+    android:scrollbars="none">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:paddingLeft="20dp"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/topContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:fontFamily="@font/circular_std"
+                    android:padding="17dp"
+                    android:text="@string/about_description"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/developer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topContent"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView4"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="false">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/gradient_bg"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/developerHeading"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="7"
+                                android:orientation="vertical"
+                                android:paddingTop="3dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="14dp"
+                                    android:layout_marginBottom="7dp"
+                                    android:gravity="left">
+
+                                    <Button
+                                        android:id="@+id/facebook"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:background="@drawable/ic_facebook"
+                                        android:backgroundTint="#fff" />
+
+                                    <Button
+                                        android:id="@+id/youtube"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:background="@drawable/ic_youtube"
+                                        android:backgroundTint="#fff" />
+
+                                    <Button
+                                        android:id="@+id/linkedin"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:background="@drawable/ic_linkedin"
+                                        android:backgroundTint="#fff" />
+
+                                    <Button
+                                        android:id="@+id/instagram"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:background="@drawable/ic_instagram"
+                                        android:backgroundTint="#fff" />
+
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:text="TKM College of Engineering"
+                                    android:textColor="#fff"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:gravity="left"
+                                    android:text="Android Developer | Python | Video Producer"
+                                    android:textColor="#fff"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:gravity="left"
+                                    android:padding="5dp"
+                                    android:text="Sreekant Shenoy"
+                                    android:textColor="#fff"
+                                    android:textSize="22sp" />
+                            </LinearLayout>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/profile_image"
+                                android:layout_width="0dp"
+                                android:layout_height="126dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="3"
+                                android:src="@drawable/contact"
+                                app:civ_border_color="@color/cpb_white"
+                                app:civ_border_width="2dp" />
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/developerHeading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:elevation="1dp"
+                            android:fontFamily="@font/circular_std"
+                            android:text="Developer:"
+                            android:textColor="@color/cpb_white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/license"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/developer"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="false">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/gradient_bg"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/licenseHeading"
+                            android:orientation="vertical"
+                            android:padding="3dp">
+
+                            <LinearLayout
+                                android:id="@+id/licenseClick"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:text="Open source licences"
+                                    android:textColor="@color/cpb_white"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:text="Licene details for open source softwares"
+                                    android:textColor="@color/cpb_white"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:text="Version"
+                                    android:textColor="@color/cpb_white"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/circular_std"
+                                    android:text="@string/app_version"
+                                    android:textColor="@color/cpb_white"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/licenseHeading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:elevation="1dp"
+                            android:fontFamily="@font/circular_std"
+                            android:paddingBottom="3dp"
+                            android:text="Others:"
+                            android:textColor="@color/cpb_white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
+                android:layout_below="@id/donation"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
                 android:fontFamily="@font/circular_std"
-                android:padding="20dp"
-                android:text="About"
-                android:textColor="@color/black"
-                android:textSize="26sp" />
+                android:text="Made with 😍 for coding"
+                android:textSize="12sp" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/fragToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@android:color/transparent"
-                android:minHeight="?attr/actionBarSize"
-                app:theme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="" />
-
-            <RelativeLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/donation"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="?attr/actionBarSize">
+                android:layout_below="@id/license"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:clickable="false">
 
-                <LinearLayout
-                    android:id="@+id/topContent"
+                <RelativeLayout
+                    android:id="@+id/clickToDonate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@drawable/gradient_bg"
+                    android:backgroundTint="#ffeb3b"
+                    android:backgroundTintMode="src_over"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/donateLogo"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:padding="2dp"
+
+                        android:src="@drawable/ic_donate"
+                        android:tint="@color/black" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/donateLogo"
                         android:fontFamily="@font/circular_std"
-                        android:padding="20dp"
-                        android:text="@string/about_description"
-                        android:textColor="@color/black"
-                        android:textSize="17sp" />
-                </LinearLayout>
+                        android:paddingLeft="10dp"
+                        android:text="@string/support_eazycampus_development"
+                        android:textColor="@color/black" />
 
-                <LinearLayout
-                    android:id="@+id/developer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/topContent"
-                    android:orientation="vertical">
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:clickable="false"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="5dp">
-
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/gradient_bg"
-                            android:padding="20dp">
-
-                            <TextView
-                                android:id="@+id/developerHeading"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:elevation="1dp"
-                                android:fontFamily="@font/circular_std"
-                                android:text="Developer:"
-                                android:textColor="@color/cpb_white"
-                                android:textSize="20sp"
-                                android:textStyle="bold" />
-
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/developerHeading"
-                                android:orientation="horizontal">
-
-                                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    android:id="@+id/profile_image"
-                                    android:layout_width="0dp"
-                                    android:layout_height="126dp"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="3"
-                                    android:src="@drawable/contact"
-                                    app:civ_border_color="@color/cpb_white"
-                                    app:civ_border_width="2dp" />
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="7"
-                                    android:orientation="vertical"
-                                    android:paddingTop="10dp">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:gravity="right"
-                                        android:padding="5dp"
-                                        android:text="Sreekant Shenoy"
-                                        android:textColor="#fff"
-                                        android:textSize="22sp" />
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:gravity="right"
-                                        android:text="TKM College of Engineering"
-                                        android:textColor="#fff"
-                                        android:textSize="14sp" />
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:gravity="end"
-                                        android:text="Android Developer | Python | Video Producer"
-                                        android:textColor="#fff"
-                                        android:textSize="12sp" />
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginTop="14dp"
-                                        android:gravity="end">
-
-                                        <Button
-                                            android:id="@+id/facebook"
-                                            android:layout_width="40dp"
-                                            android:layout_height="40dp"
-                                            android:layout_marginEnd="4dp"
-                                            android:background="@drawable/ic_facebook"
-                                            android:backgroundTint="#fff" />
-
-                                        <Button
-                                            android:id="@+id/youtube"
-                                            android:layout_width="40dp"
-                                            android:layout_height="40dp"
-                                            android:layout_marginEnd="4dp"
-                                            android:background="@drawable/ic_youtube"
-                                            android:backgroundTint="#fff" />
-
-                                        <Button
-                                            android:id="@+id/linkedin"
-                                            android:layout_width="40dp"
-                                            android:layout_height="40dp"
-                                            android:layout_marginEnd="4dp"
-                                            android:background="@drawable/ic_linkedin"
-                                            android:backgroundTint="#fff" />
-
-                                        <Button
-                                            android:id="@+id/instagram"
-                                            android:layout_width="40dp"
-                                            android:layout_height="40dp"
-                                            android:layout_marginEnd="4dp"
-                                            android:background="@drawable/ic_instagram"
-                                            android:backgroundTint="#fff" />
-
-
-                                    </LinearLayout>
-                                </LinearLayout>
-                            </LinearLayout>
-                        </RelativeLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/license"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/developer"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:clickable="false"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="5dp">
-
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/gradient_bg"
-                            android:padding="20dp">
-
-                            <TextView
-                                android:id="@+id/licenseHeading"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:elevation="1dp"
-                                android:fontFamily="@font/circular_std"
-                                android:paddingBottom="3dp"
-                                android:text="Others:"
-                                android:textColor="@color/cpb_white"
-                                android:textSize="20sp"
-                                android:textStyle="bold" />
-
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/licenseHeading"
-                                android:orientation="vertical"
-                                android:padding="3dp">
-
-                                <LinearLayout
-                                    android:id="@+id/licenseClick"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="10dp"
-                                    android:layout_marginTop="10dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:text="Open source licences"
-                                        android:textColor="@color/cpb_white"
-                                        android:textSize="16sp" />
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:text="Licene details for open source softwares"
-                                        android:textColor="@color/cpb_white"
-                                        android:textSize="10sp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="10dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:text="Version"
-                                        android:textColor="@color/cpb_white"
-                                        android:textSize="16sp" />
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:fontFamily="@font/circular_std"
-                                        android:text="@string/app_version"
-                                        android:textColor="@color/cpb_white"
-                                        android:textSize="10sp" />
-
-                                </LinearLayout>
-                            </LinearLayout>
-                        </RelativeLayout>
-                    </android.support.v7.widget.CardView>
-                </LinearLayout>
-
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/donation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/license"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:clickable="false"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="5dp">
-
-                    <RelativeLayout
-                        android:id="@+id/clickToDonate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/gradient_bg"
-                        android:backgroundTint="#ffeb3b"
-                        android:backgroundTintMode="src_over"
-                        android:padding="20dp">
-
-                        <ImageView
-                            android:id="@+id/donateLogo"
-                            android:layout_width="32dp"
-                            android:padding="2dp"
-                            android:tint="@color/black"
-
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_donate" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:paddingLeft="10dp"
-                            android:layout_toEndOf="@id/donateLogo"
-                            android:fontFamily="@font/circular_std"
-                            android:text="@string/support_eazycampus_development"
-                            android:textColor="@color/black" />
-
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/donation"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="10dp"
-                    android:fontFamily="@font/circular_std"
-                    android:text="Made with 😍 for coding"
-                    android:textSize="12sp" />
-
-            </RelativeLayout>
         </RelativeLayout>
-    </ScrollView>
-</RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/circular_std"
+            android:padding="20dp"
+            android:text="About"
+            android:textColor="@color/black"
+            android:textSize="26sp" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/fragToolbar"
+            app:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:title=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:minHeight="?attr/actionBarSize" />
+    </RelativeLayout>
+</ScrollView>

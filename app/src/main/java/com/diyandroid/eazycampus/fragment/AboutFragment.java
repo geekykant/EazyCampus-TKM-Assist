@@ -10,9 +10,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +17,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.activity.CreditsPage;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 //open navigation drawer when click navigation back button
                 ((FrameLayout) getActivity().findViewById(R.id.showFragment)).removeAllViewsInLayout();
+                ((ScrollView) getActivity().findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
                 ((NavigationView) getActivity().findViewById(R.id.navigationview)).setCheckedItem(R.id.home);
             }
         });
@@ -116,25 +120,13 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.clickToDonate:
-                Uri UPI = new Uri.Builder()
-                        .scheme("upi")
-                        .authority("pay")
-                        .appendQueryParameter("pa", "geekykant@oksbi")
-                        .appendQueryParameter("pn", "SREEKANT S SHENOY")
-                        .appendQueryParameter("tn", "EazyCampus Development Support :)")
-                        .appendQueryParameter("cu", "INR")
-                        .build();
-
-                intent = new Intent();
-                intent.setData(UPI);
-                Intent chooser = Intent.createChooser(intent, "Pay with...");
-                startActivityForResult(chooser, 1337, null);
+                Toast.makeText(getActivity(), "Please UPI to geekykant@oksbi", Toast.LENGTH_LONG).show();
                 break;
         }
     }
 
-    public static String FACEBOOK_URL = "https://www.facebook.com/iamsreekantshenoy";
-    public static String FACEBOOK_PAGE_ID = "iamsreekantshenoy";
+    private static String FACEBOOK_URL = "https://www.facebook.com/iamsreekantshenoy";
+    private static String FACEBOOK_PAGE_ID = "iamsreekantshenoy";
 
     //method to get the right URL to use in the intent
     public String getFacebookPageURL(Context context) {

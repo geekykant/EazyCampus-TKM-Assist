@@ -8,8 +8,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,15 +19,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.R;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -55,6 +58,8 @@ public class LoginPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("chat1");
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
@@ -109,6 +114,7 @@ public class LoginPage extends AppCompatActivity {
             if (TextUtils.isEmpty(username.getText().toString()) && TextUtils.isEmpty(password.getText().toString())) {
                 username.setError("Username incorrect");
                 password.setError("Password incorrect");
+
                 return;
             }
 
@@ -180,7 +186,6 @@ public class LoginPage extends AppCompatActivity {
                 homePage = Jsoup.connect("https://tkmce.linways.com/student/index.php")
                         .data("studentAccount", username.getText().toString())
                         .data("studentPassword", password.getText().toString())
-                        .data("btnLogin", "Login")
                         .userAgent(userAgent)
                         .followRedirects(true)
                         .referrer("https://tkmce.linways.com/student/index.php")
@@ -198,9 +203,25 @@ public class LoginPage extends AppCompatActivity {
                         .timeout(120 * 1000)
                         .execute();
 
-//                LoginName = getName.select("table").first().select("tr").get(4).select("td").get(1).text();
-                LoginName = getName.parse().select("table").first().select("tr").get(5).select("td").get(1).text().split(" ")[0];
-                Log.i("gummi", "doInBackground2: " + LoginName);
+                Document parsed = getName.parse();
+
+                if (parsed.getElementById("userName") != null) {
+                    LoginName = parsed.getElementById("userName").val().split(" ")[0];
+                }
+
+                Log.e("gummi", "Before: " + LoginName);
+
+                if (TextUtils.isEmpty(LoginName)) {
+
+                    try {
+                        Log.e("gummi", "Noww4: " + parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1));
+                        LoginName = parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1).text().split(" ")[0];
+                    } catch (NullPointerException ex) {
+                        Log.e("gummi", "doInBackground2: Null expception in LoginPage");
+                    }
+                }
+
+                Log.i("gummi", "After: " + LoginName);
 
             } catch (IOException | RuntimeException ex) {
                 ex.printStackTrace();
@@ -209,9 +230,9 @@ public class LoginPage extends AppCompatActivity {
 
             if (!TextUtils.isEmpty(LoginName)) {
                 loginCheck = true;
-                Log.d("FacultyDirectory", "Logged In!");
+                Log.d("LoginPage", "Logged In!");
             } else {
-                Log.d("FacultyDirectory", "Not Logged In!");
+                Log.d("LoginPage", "Not Logged In!");
             }
 
             return null;

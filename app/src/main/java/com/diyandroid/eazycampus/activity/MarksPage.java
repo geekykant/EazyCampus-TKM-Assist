@@ -3,11 +3,7 @@ package com.diyandroid.eazycampus.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -15,12 +11,15 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
 import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
 import com.diyandroid.eazycampus.Marks;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.MarksListAdapter;
-import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
@@ -36,7 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MarksPage extends AppCompatActivity implements View.OnClickListener, LogOutTimerUtil.LogOutListener {
+public class MarksPage extends AppCompatActivity implements View.OnClickListener {
 
     RadioButton internalMaks, sessionalMarks;
     Map<String, String> loginCookies;
@@ -239,25 +238,6 @@ public class MarksPage extends AppCompatActivity implements View.OnClickListener
         finish();
         return true;
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LogOutTimerUtil.startLogoutTimer(this, this);
-    }
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        LogOutTimerUtil.startLogoutTimer(this, this);
-    }
-
-    @Override
-    public void doLogout() {
-        startActivity(new Intent(MarksPage.this, SplashLoading.class));
-        finish();
-    }
-
 
     private class getInternalMarks extends ExceptionHandlingAsyncTask<String, Void, Element> {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressMarks);

@@ -11,8 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +18,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
@@ -33,6 +34,7 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -151,7 +153,6 @@ public class SplashLoading extends AppCompatActivity {
                 homePage = Jsoup.connect("https://tkmce.linways.com/student/index.php")
                         .data("studentAccount", USR_NAME)
                         .data("studentPassword", PASS_NAME)
-                        .data("btnLogin", "Login")
                         .userAgent(userAgent)
                         .followRedirects(true)
                         .referrer("https://tkmce.linways.com/student/index.php")
@@ -169,9 +170,25 @@ public class SplashLoading extends AppCompatActivity {
                         .timeout(120 * 1000)
                         .execute();
 
-//                LoginName = getName.select("table").first().select("tr").get(4).select("td").get(1).text();
-                LoginName = getName.parse().select("table").first().select("tr").get(5).select("td").get(1).text().split(" ")[0];
-                Log.i("gummi", "doInBackground2: " + LoginName);
+                Document parsed = getName.parse();
+
+                if (parsed.getElementById("userName") != null) {
+                    LoginName = parsed.getElementById("userName").val().split(" ")[0];
+                }
+
+                Log.e("gummi", "Before: " + LoginName);
+
+                if (TextUtils.isEmpty(LoginName)) {
+
+                    try {
+                        Log.e("gummi", "Noww4: " + parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1));
+                        LoginName = parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1).text().split(" ")[0];
+                    } catch (NullPointerException ex) {
+                        Log.e("gummi", "doInBackground2: Null expception in LoginPage");
+                    }
+                }
+
+                Log.i("gummi", "After: " + LoginName);
 
             } catch (IOException | RuntimeException ex) {
                 ex.printStackTrace();
@@ -181,9 +198,9 @@ public class SplashLoading extends AppCompatActivity {
 
             if (!TextUtils.isEmpty(LoginName)) {
                 loginCheck = true;
-                Log.d("FacultyDirectory", "Logged In!");
+                Log.d("SplashLoading", "Logged In!");
             } else {
-                Log.d("FacultyDirectory", "Not Logged In!");
+                Log.d("SplashLoading", "Not Logged In!");
             }
 
             return null;

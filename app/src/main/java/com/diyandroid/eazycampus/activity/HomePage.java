@@ -3,24 +3,10 @@ package com.diyandroid.eazycampus.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,126 +16,61 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-import com.diyandroid.eazycampus.MyApplication;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.diyandroid.eazycampus.R;
-import com.diyandroid.eazycampus.Story;
-import com.diyandroid.eazycampus.adapter.MainSliderAdapter;
+import com.diyandroid.eazycampus.SubjectAttendance;
+import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
 import com.diyandroid.eazycampus.app.Config;
-import com.diyandroid.eazycampus.app.LogOutTimerUtil;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
-import com.diyandroid.eazycampus.fragment.HelpSupportFragment;
-import com.diyandroid.eazycampus.service.PicassoImageLoadingService;
+import com.diyandroid.eazycampus.util.AttendanceGrabber;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ss.com.bannerslider.Slider;
 
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        LogOutTimerUtil.LogOutListener {
+        AttendanceGrabber.AsyncResponse {
 
-    private CircleImageView profile_image;
-    private AlertDialog profileDialog;
-
+    private static final String TAG = "HomePage";
     private SharedPreferences pref;
 
     private NavigationView navigationView;
-    private String jsonCookies, today;
-    private String PREF_QUOTE_AUTHOR = "quoteAuthor", PREF_QUOTE_TEXT = "quoteText", PREF_TODAY_DATE = "today";
-
+    private String jsonCookies;
     public static final int OPEN_NEW_ACTIVITY = 6588;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
-
-    private Slider slider;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
-
-        Slider.init(new PicassoImageLoadingService(this));
-        fetchCGPUStories();
-
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String QUOTE_AUTHOR = pref.getString(PREF_QUOTE_AUTHOR, null);
-        String QUOTE_TEXT = pref.getString(PREF_QUOTE_TEXT, null);
-        String TODAY_DATE = pref.getString(PREF_TODAY_DATE, null);
-
-        String PREF_PROFILE_IMG = pref.getString("PREF_PROFILE_IMG", null);
         boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
         String loginName = getIntent().getStringExtra("LOGIN_NAME");
-
-        // Default Mailing system for all_semesters (Add Intent Later)
-//        if (FIRST_COUNT % 3 == 0) {
-//            //Ads dialogue display
-//            final View adsDialogueView = LayoutInflater.from(this).inflate(R.layout.ads_dialoguebox, null);
-//            adsDialogueView.setElevation(10);
-//            ((TextView) adsDialogueView.findViewById(R.id.ads_description)).setText("Hey " + loginName + "! " + getText(R.string.ads_dialog_message));
-//            adsDialogue = new AlertDialog.Builder(this).create();
-//            adsDialogue.setCancelable(false);
-//            adsDialogue.setCanceledOnTouchOutside(false);
-//            adsDialogue.setView(adsDialogueView);
-//
-//            Button contribute = (Button) adsDialogueView.findViewById(R.id.contribute);
-//            Button later = (Button) adsDialogueView.findViewById(R.id.later);
-//
-//            new android.os.Handler().postDelayed(
-//                    new Runnable() {
-//                        public void run() {
-//                            adsDialogue.show();
-//                        }
-//                    }, 1000);
-//
-//            contribute.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    paywithUPI();
-//                }
-//            });
-//            later.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    adsDialogue.hide();
-//                }
-//            });
-//        }
 
         if (FIRST_RUN) {
             FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
@@ -166,7 +87,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.drawer_button); //back button change
+//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.drawer_button); //back button change
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(null);
 
@@ -175,39 +96,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         final View headView = navigationView.getHeaderView(0);
         TextView drawerName = headView.findViewById(R.id.drawerName);
 
-        profile_image = headView.findViewById(R.id.profile_image);
-
-        //Change profile picture dialogue
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View profileChange = layoutInflater.inflate(R.layout.profile_image_change, null);
-        profileDialog = new AlertDialog.Builder(this).create();
-        profileDialog.setView(profileChange);
-
-        if (PREF_PROFILE_IMG != null) {
-            profile_image.setImageDrawable(getResources().getDrawable(Integer.parseInt(PREF_PROFILE_IMG)));
-        }
-        profile_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                profileDialog.show();
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-            }
-        });
-
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.home);
 
-        today = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-
-        if (Objects.equals(TODAY_DATE, today)) {
-            //Set saved quote for day
-            ((TextView) findViewById(R.id.quoteWritten)).setText(QUOTE_TEXT);
-            ((TextView) findViewById(R.id.quoteBy)).setText(QUOTE_AUTHOR);
-        } else {
-            new getQuote().execute();
-        }
-
         jsonCookies = getIntent().getStringExtra("COOKIES");
+
+
+        new AttendanceGrabber(this, this).execute(jsonCookies);
+
 
         TextView welName = (TextView) findViewById(R.id.welName);
         if (!TextUtils.isEmpty(loginName)) {
@@ -216,27 +112,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             drawerName.setText(loginName);
         }
 
-        int[] profile_ids = {
-                R.id.profile_ic_1,
-                R.id.profile_ic_2,
-                R.id.profile_ic_3,
-                R.id.profile_ic_4
-        };
-
-        for (int i = 0; i < profile_ids.length; i++) {
-            ((ImageView) profileChange.findViewById(profile_ids[i])).setOnClickListener(btnClickListener);
-            ((ImageView) profileChange.findViewById(profile_ids[i])).setTag(i + 1);
-        }
-
         int[] intentIds = {
-                R.id.calendar, R.id.booster, R.id.attendance, R.id.marks, R.id.directory, R.id.evaluation, R.id.notes, R.id.updates
+                R.id.booster, R.id.calendar, R.id.marks, R.id.directory
         };
 
         for (int intentId : intentIds) {
             ((LinearLayout) findViewById(intentId)).setOnClickListener(this);
         }
-
-        fetchStories();
     }
 
     @SuppressLint("RestrictedApi")
@@ -269,18 +151,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             return true;
         } else {
             switch (item.getItemId()) {
-                case R.id.app_send:
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
-                    sendIntent.setType("text/plain");
-                    startActivity(sendIntent);
-                    return true;
-
+//                case R.id.app_send:
+//                    Intent sendIntent = new Intent();
+//                    sendIntent.setAction(Intent.ACTION_SEND);
+//                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
+//                    sendIntent.setType("text/plain");
+//                    startActivity(sendIntent);
+//                    return true;
                 case R.id.app_notification:
-                    Intent intent = new Intent(HomePage.this, EventsActivity.class);
+                    Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
+                    String remoteURL = "https://ktu.edu.in/eu/core/announcements.htm";
+                    intent.putExtra("INTENT_URL", remoteURL);
+                    intent.putExtra("IS_CALENDAR", false);
                     startActivity(intent);
-                    return true;
+                    break;
             }
         }
         return super.onOptionsItemSelected(item);
@@ -297,10 +181,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 layout.removeAllViewsInLayout();
                 break;
 
-            case R.id.feedback:
-                fragment = new HelpSupportFragment();
-                break;
-
             case R.id.settings:
                 getSupportFragmentManager().popBackStack();
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -315,8 +195,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 Intent signoutIntent = new Intent(HomePage.this, LoginPage.class);
                 startActivity(signoutIntent);
                 finish();
-
-//                new doLogout(this).execute();
 
                 pref.edit()
                         .remove("username")
@@ -335,6 +213,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             ft.addToBackStack(null);
             getSupportFragmentManager().popBackStack();
             ft.commit();
+            ((ScrollView) findViewById(R.id.scroll_home)).setVisibility(View.INVISIBLE);
+        }else{
+            ((ScrollView) findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -344,12 +225,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.attendance:
-                Intent IntentAttendance = new Intent(HomePage.this, AttendancePage.class);
-                IntentAttendance.putExtra("COOKIES", jsonCookies);
-                startActivity(IntentAttendance);
-                break;
-
             case R.id.marks:
                 Intent IntentMarks = new Intent(HomePage.this, MarksPage.class);
                 IntentMarks.putExtra("COOKIES", jsonCookies);
@@ -362,28 +237,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 startActivity(intentPhonDirect);
                 break;
 
-            case R.id.evaluation:
-                Intent intentEval = new Intent(HomePage.this, StaffEvaluation.class);
-                intentEval.putExtra("COOKIES", jsonCookies);
-                startActivity(intentEval);
-                break;
-
             case R.id.calendar:
                 Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
                 String remoteURL = getString(R.string.academic_calendar_url);
                 intent.putExtra("INTENT_URL", remoteURL);
                 intent.putExtra("IS_CALENDAR", true);
                 startActivity(intent);
-                break;
-
-            case R.id.notes:
-                intent = new Intent(HomePage.this, ReferenceActivity.class);
-                intent.putExtra("INTENT_URL", getString(R.string.ktustudy_blog_url));
-                startActivity(intent);
-                break;
-
-            case R.id.updates:
-                startActivity(new Intent(HomePage.this, EventsActivity.class));
                 break;
 
             case R.id.booster:
@@ -393,144 +252,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     }
 
-    private class getQuote extends AsyncTask<Void, Void, Void> {
-        String data = "";
-        String quoteAuthor, quoteText;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                URL url = new URL(getString(R.string.quotes_firebase_url));
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String line = "";
-                while (line != null) {
-                    line = bufferedReader.readLine();
-                    data = data + line;
-                }
-
-                final int random = new Random().nextInt(797);
-
-                JSONArray JA = new JSONArray(data);
-                JSONObject JO = (JSONObject) JA.get(random);
-
-                quoteAuthor = "-" + JO.get("quoteAuthor").toString();
-                quoteText = "“" + JO.get("quoteText").toString() + "”";
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            ((TextView) findViewById(R.id.quoteWritten)).setText(quoteText);
-            ((TextView) findViewById(R.id.quoteBy)).setText(quoteAuthor);
-
-            pref.edit()
-                    .putString(PREF_QUOTE_AUTHOR, quoteAuthor)
-                    .putString(PREF_QUOTE_TEXT, quoteText)
-                    .putString(PREF_TODAY_DATE, today)
-                    .apply();
-        }
-    }
-
-    private void fetchStories() {
-        final ArrayList<Story> campusStories = new ArrayList<>();
-
-        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.stories_firebase_url),
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response == null) {
-                            return;
-                        }
-
-                        List<Story> items = new Gson().fromJson(response.toString(), new TypeToken<List<Story>>() {
-                        }.getType());
-
-                        // adding contacts to contacts list
-                        campusStories.clear();
-                        campusStories.addAll(items);
-
-                        int ids[] = {
-                                R.id.storyCard1,
-                                R.id.storyCard2,
-                                R.id.storyCard3,
-                                R.id.storyCard4,
-                                R.id.storyCard5,
-                        };
-
-                        int text_ids[] = {
-                                R.id.stackTitle1,
-                                R.id.stackTitle2,
-                                R.id.stackTitle3,
-                                R.id.stackTitle4,
-                                R.id.stackTitle5,
-                        };
-
-                        int image_ids[] = {
-                                R.id.stackImage1,
-                                R.id.stackImage2,
-                                R.id.stackImage3,
-                                R.id.stackImage4,
-                                R.id.stackImage5
-                        };
-
-                        if (campusStories.size() != 0) {
-                            for (int i = 0; i < 5; i++) {
-                                Story story1 = campusStories.get(i);
-                                if (story1.isIs_present()) {
-                                    ((CardView) findViewById(ids[i])).setVisibility(View.VISIBLE);
-                                    final int finalI = i;
-
-                                    ((TextView) findViewById(text_ids[i])).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Intent i = new Intent(Intent.ACTION_VIEW);
-                                            i.setData(Uri.parse(campusStories.get(finalI).getIntentURL()));
-                                            startActivity(i);
-
-                                        }
-                                    });
-
-                                    if (story1.getTitle().length() > 37) {
-                                        ((TextView) findViewById(text_ids[i])).setText(story1.getTitle().substring(0, 37) + "...");
-                                    }
-                                    Glide.with(getApplicationContext())
-                                            .load(story1.getImageURL())
-                                            .apply(new RequestOptions().placeholder(R.drawable.horizontal_stack))
-                                            .transition(DrawableTransitionOptions.withCrossFade(1000))
-                                            .into((ImageView) findViewById(image_ids[i]));
-                                } else {
-                                    ((CardView) findViewById(ids[i])).setVisibility(View.GONE);
-                                }
-                            }
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // error in getting json
-                Log.e("HomePage", "Error: " + error.getMessage());
-            }
-        });
-        MyApplication.getInstance().addToRequestQueue(request);
-    }
-
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
+        ((ScrollView) this.findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
+
         //back press removes fragment layout
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ((FrameLayout) findViewById(R.id.showFragment)).removeAllViewsInLayout();
@@ -539,7 +266,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         } else {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
-//                new doLogout(this).execute();
                 return;
             }
 
@@ -558,6 +284,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         setResult(resultCode, data);
 
         if (requestCode == OPEN_NEW_ACTIVITY) {
@@ -639,21 +366,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return stringToSplit.split(splitBy);
     }
 
-    View.OnClickListener btnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            String fnm = "profile_ic_" + v.getTag();
-            int imgId = getResources().getIdentifier(getApplicationContext().getPackageName() + ":drawable/" + fnm, null, null);
-            Drawable res = getResources().getDrawable(imgId);
-            profile_image.setImageDrawable(res);
-            profileDialog.hide();
-
-            pref.edit()
-                    .putString("PREF_PROFILE_IMG", String.valueOf(imgId))
-                    .apply();
-        }
-    };
-
     @Override
     public void onResume() {
         super.onResume();
@@ -665,60 +377,18 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     protected void onStart() {
         super.onStart();
-        LogOutTimerUtil.startLogoutTimer(this, this);
     }
 
     @Override
-    public void doLogout() {
-        startActivity(new Intent(HomePage.this, SplashLoading.class));
-        finish();
-    }
+    public void processFinish(ArrayList<SubjectAttendance> attendanceList) {
+        if (attendanceList != null) {
+            Log.i(TAG, "Attendance List: " + attendanceList.get(3).getSubjectName());
 
+            AttendanceListAdapter adapter = new AttendanceListAdapter(this, R.layout.adapter_attendance, attendanceList);
+            ListView mListView = (ListView) findViewById(R.id.homelistAtendance);
+            mListView.setAdapter(adapter);
 
-    private void fetchCGPUStories() {
-        final ArrayList<String> bannerList = new ArrayList<>();
-        slider = findViewById(R.id.banner_slider1);
-
-        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.cgpu_stories_url),
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response == null) {
-                            return;
-                        }
-
-                        List<String> items = new Gson().fromJson(response.toString(), new TypeToken<List<String>>() {
-                        }.getType());
-
-                        // adding contacts to contacts list
-                        bannerList.clear();
-                        bannerList.addAll(items);
-
-                        slider.setAdapter(new MainSliderAdapter(bannerList));
-                        slider.setSelectedSlide(0);
-
-                        if (bannerList.size() != 1) {
-                            slider.setLoopSlides(true);
-                            slider.setInterval(3300);
-                        }
-
-                        new android.os.Handler().postDelayed(
-                                new Runnable() {
-                                    public void run() {
-                                        ((ImageView) findViewById(R.id.cgpuPlaceholder)).setVisibility(View.GONE);
-                                        slider.setVisibility(View.VISIBLE);
-                                    }
-                                }, 1000);
-
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // error in getting json
-                Log.e("HomePage", "Error: " + error.getMessage());
-            }
-        });
-        MyApplication.getInstance().addToRequestQueue(request);
+            ((CardView) findViewById(R.id.home_attendance_view)).setVisibility(View.VISIBLE);
+        }
     }
 }

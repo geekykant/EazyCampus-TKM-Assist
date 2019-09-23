@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#ffffff</item>
-        <item name="colorPrimaryDark">#2e2d2d</item>
+        <item name="colorPrimaryDark">#ffffff</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">#ededed</item>
-        <item name="colorControlActivated">#d810a7</item>
         <item name="colorControlHighlight">#f44336</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
     </style>
 
     <style name="AppTheme.GreenRipple">
@@ -17,14 +16,13 @@
 
     <style name="HomePageTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#7200d9</item>
-        <item name="colorPrimaryDark">#7200d9</item>
+        <item name="colorPrimary">#fff</item>
+        <item name="colorPrimaryDark">#fff</item>
         <item name="android:fontFamily">@font/circular_std</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">#fff</item>
-        <item name="colorControlActivated">#d810a7</item>
         <item name="colorControlHighlight">#f44336</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
     </style>
 
     <style name="AttendanceTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -71,11 +69,6 @@
         <item name="colorPrimary">#ffffff</item>
         <!-- Background color when SELECTED -->
         <item name="colorControlHighlight">#9727fd</item>
-    </style>
-
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@color/bg_black</item>
-        <item name="colorPrimaryDark">@color/bg_black</item>
     </style>
 
     <style name="creditsTheme" parent="Theme.AppCompat.DayNight.NoActionBar">

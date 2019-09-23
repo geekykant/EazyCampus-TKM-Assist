@@ -8,16 +8,6 @@
             android:icon="@drawable/ic_home"
             android:iconTint="@color/cpb_blue"
             android:title="Home" />
-        <!--<item-->
-            <!--android:id="@+id/events"-->
-            <!--android:icon="@drawable/ic_notifications"-->
-            <!--android:iconTint="@color/deeppurple"-->
-            <!--android:title="Announcements" />-->
-        <item
-            android:id="@+id/feedback"
-            android:icon="@drawable/ic_help"
-            android:iconTint="#757575"
-            android:title="@string/feedback_help" />
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_settings"

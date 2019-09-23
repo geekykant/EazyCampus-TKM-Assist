@@ -60,7 +60,7 @@
                     android:text="Minimum attendance is : "
                     android:textColor="@color/cpb_white" />
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -135,7 +135,7 @@
                         </LinearLayout>
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
                 <Button
                     android:id="@+id/submitAttendance"
@@ -163,7 +163,7 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarAttendance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
                 android:theme="@style/MyApp.ActionBarTheme"
                 app:titleTextColor="@color/cpb_white" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cardView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
 
                 </HorizontalScrollView>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
         </RelativeLayout>
     </ScrollView>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="190dp"
     android:background="@drawable/tkm_cover"
     android:orientation="vertical"
     android:backgroundTint="#11000000"
@@ -13,7 +13,7 @@
         android:id="@+id/profile_image"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="33dp"
         android:scaleType="centerCrop"
         android:src="@drawable/profile_ic_1"
         app:civ_border_color="#ffffff"

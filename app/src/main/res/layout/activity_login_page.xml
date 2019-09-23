@@ -1,91 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrolllogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2e2d2d"
+    android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="none">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:gravity="center"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rememberme"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="80dp"
+            android:background="@drawable/login_button"
+            android:fontFamily="sans-serif"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="@color/cpb_white" />
 
         <ImageView
             android:id="@+id/eazylogo"
             android:layout_width="350dp"
             android:layout_height="130dp"
+            android:tint="@color/colorPrimary"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/eazycampus_logo" />
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/usrbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/eazylogo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
-            android:hint="Username"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:textColorHint="#ffffff">
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:fontFamily="sans-serif"
-                android:inputType="number"
-                android:maxLength="7"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#d810a7" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/usrbox"
-            android:layout_centerHorizontal="true"
-            android:hint="Password"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:textColorHint="#ffffff"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="#ffffff">
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:fontFamily="sans-serif"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:textAllCaps="false"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#d810a7" />
-
-        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/rememberme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_below="@id/passbox"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
-            android:layout_marginTop="5dp"
             android:gravity="right">
 
             <CheckBox
@@ -97,37 +60,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remember Me"
-                android:textColor="@color/cpb_white" />
+                android:textColor="@color/bg_black"
+                android:text="Remember Me" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/rememberme"
-            android:layout_marginLeft="80dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/login_button"
-            android:fontFamily="sans-serif"
-            android:text="Login"
-            android:textAllCaps="false"
-            android:textColor="@color/cpb_white" />
-
-        <TextView
-            android:id="@+id/contact_developer"
+        <ProgressBar
+            android:id="@+id/progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_button"
+            android:layout_below="@id/privacy_policy"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:fontFamily="sans-serif"
-            android:text="@string/contact_developer"
-            android:textColor="@color/cpb_white"
-            android:textSize="13sp" />
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/privacy_policy"
@@ -138,23 +82,74 @@
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
+            android:textColor="@color/bg_black"
             android:padding="10dp"
             android:text="@string/privacy_policy_text"
-            android:textColor="@color/cpb_white"
             android:textSize="13sp" />
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/contact_developer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/bg_black"
+            android:layout_below="@id/login_button"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/contact_developer"
+            android:textSize="13sp" />
 
-            <ProgressBar
-                android:id="@+id/progressbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible" />
-        </RelativeLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passbox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usrbox"
+            android:layout_centerHorizontal="true"
+            android:hint="Password"
+            android:paddingLeft="5dp"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:textAllCaps="false"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorPrimary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usrbox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eazylogo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/bg_black"
+            android:hint="Username"
+            android:paddingLeft="5dp">
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:inputType="number"
+                android:maxLength="7"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorPrimary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
     </RelativeLayout>
 
 </ScrollView>

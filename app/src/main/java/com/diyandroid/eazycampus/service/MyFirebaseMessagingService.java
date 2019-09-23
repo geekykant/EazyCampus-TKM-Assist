@@ -3,11 +3,15 @@ package com.diyandroid.eazycampus.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.diyandroid.eazycampus.activity.EventsActivity;
+import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.diyandroid.eazycampus.activity.ReferenceActivity;
+import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.util.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -21,6 +25,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
     private NotificationUtils notificationUtils;
+
+    private void sendRegistrationToServer(final String token) {
+        // sending gcm token to server
+        Log.e(TAG, "sendRegistrationToServer: " + token);
+    }
+
+    private void storeRegIdInPref(String token) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("regId", token);
+        editor.apply();
+    }
+
+    @Override
+    public void onNewToken(@NonNull String refreshedToken) {
+        super.onNewToken(refreshedToken);
+
+        // Saving reg id to shared preferences
+        storeRegIdInPref(refreshedToken);
+
+        // sending reg id to your server
+        sendRegistrationToServer(refreshedToken);
+
+        // Notify UI that registration has completed, so the progress indicator can be hidden.
+        Intent registrationComplete = new Intent(Config.REGISTRATION_COMPLETE);
+        registrationComplete.putExtra("token", refreshedToken);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -77,7 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
 //            notificationUtils.playNotificationSound();
 
-            Intent resultIntent = new Intent(getApplicationContext(), EventsActivity.class);
+            Intent resultIntent = null;
 
             if (!TextUtils.isEmpty(intent_url)) {
                 resultIntent = new Intent(getApplicationContext(), ReferenceActivity.class);
