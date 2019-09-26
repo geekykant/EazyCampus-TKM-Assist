@@ -33,6 +33,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.SubjectAttendance;
@@ -60,6 +61,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
+
+    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -103,6 +106,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
 
         new AttendanceGrabber(this, this).execute(jsonCookies);
+
+        mySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        new AttendanceGrabber(getApplicationContext(), HomePage.this).execute(jsonCookies);
+                    }
+                }
+        );
 
 
         TextView welName = (TextView) findViewById(R.id.welName);
@@ -158,6 +171,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 //                    sendIntent.setType("text/plain");
 //                    startActivity(sendIntent);
 //                    return true;
+
                 case R.id.app_notification:
                     Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
                     String remoteURL = "https://ktu.edu.in/eu/core/announcements.htm";
@@ -165,6 +179,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     intent.putExtra("IS_CALENDAR", false);
                     startActivity(intent);
                     break;
+
             }
         }
         return super.onOptionsItemSelected(item);
@@ -214,7 +229,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             getSupportFragmentManager().popBackStack();
             ft.commit();
             ((ScrollView) findViewById(R.id.scroll_home)).setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             ((ScrollView) findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
         }
 
@@ -389,6 +404,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             mListView.setAdapter(adapter);
 
             ((CardView) findViewById(R.id.home_attendance_view)).setVisibility(View.VISIBLE);
+            mySwipeRefreshLayout.setRefreshing(false);
+        } else {
+            ((CardView) findViewById(R.id.home_attendance_view)).setVisibility(View.GONE);
         }
     }
 }

@@ -2,7 +2,6 @@ package com.diyandroid.eazycampus.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,9 +9,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -25,11 +26,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.diyandroid.eazycampus.Contact;
-import com.diyandroid.eazycampus.FacultyProfile;
 import com.diyandroid.eazycampus.MyApplication;
 import com.diyandroid.eazycampus.MyDividerItemDecoration;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.ContactsAdapter;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,10 +47,16 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
     ProgressBar progressBar;
 
+    LinearLayout layoutBottomSheet;
+    BottomSheetBehavior sheetBehavior;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
 
         progressBar = findViewById(R.id.progressbarContact);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -74,6 +81,45 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
         fetchContacts();
         recyclerView.getRecycledViewPool().clear();
+
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+//                        btnBottomSheet.setText("Close Sheet");
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+//                        btnBottomSheet.setText("Expand Sheet");
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+    }
+
+    public void toggleBottomSheet() {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//            btnBottomSheet.setText("Close sheet");
+        } else {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//            btnBottomSheet.setText("Expand sheet");
+        }
     }
 
     /**
@@ -235,11 +281,13 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
     @Override
     public void onContactSelected(Contact contact) {
-        String jsonContact = new Gson().toJson(contact);
 
-        Intent intent = new Intent(FacultyDirectory.this, FacultyProfile.class);
-        intent.putExtra("SELECTED_FACULTY", jsonContact);
-        startActivity(intent);
+        toggleBottomSheet();
+//        String jsonContact = new Gson().toJson(contact);
+//
+//        Intent intent = new Intent(FacultyDirectory.this, FacultyProfile.class);
+//        intent.putExtra("SELECTED_FACULTY", jsonContact);
+//        startActivity(intent);
     }
 
     //Closing Activity with back button
