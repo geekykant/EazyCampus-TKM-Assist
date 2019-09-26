@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -121,7 +120,9 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
         ((ImageView)findViewById(R.id.bottom_close)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
             }
         });
     }
