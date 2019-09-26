@@ -4,113 +4,112 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fff"
     android:orientation="vertical"
     android:padding="@dimen/activity_margin"
     app:behavior_hideable="true"
+    android:background="#202020"
+    android:clickable="true"
+    android:focusable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_margin"
             android:layout_weight="2"
             android:text="Faculty Details"
-            android:textColor="#444"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
             android:textSize="18dp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text=""
-            android:textSize="18dp"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/bottom_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:tint="#fff"
+            android:src="@drawable/ic_close" />
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:gravity="center"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingTop="15dp">
+            android:layout_toStartOf="@id/bottom_image"
+            android:layout_alignParentStart="true">
 
             <TextView
-                android:id="@+id/profile_name"
+                android:id="@+id/bottom_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:textColor="#000"
+                android:textColor="#fff"
                 android:textStyle="bold"
                 android:text="Sreekant Shenoy"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/profile_department"
+                android:id="@+id/bottom_department"
                 android:layout_width="wrap_content"
-                android:textColor="#444"
+                android:textColor="#fff"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:padding="3dp"
                 android:text="Electronics And Communication"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:textStyle="italic" />
 
             <TextView
-                android:id="@+id/profile_designation"
+                android:id="@+id/bottom_designation"
                 android:layout_width="match_parent"
-                android:textColor="#444"
+                android:textColor="#fff"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:paddingLeft="3dp"
                 android:text="Student"
-                android:textSize="17sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:paddingLeft="20dp"
+            android:id="@+id/bottom_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
             android:src="@drawable/contact"
-            app:civ_border_color="#000"
-            app:civ_border_width="4dp" />
+            app:civ_border_color="#fff"
+            app:civ_border_width="3dp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Contact Details"
-        android:textColor="#444"
+        android:textColor="#fff"
         android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="17dp"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/mobileNoLayout"
+            android:id="@+id/bottom_mob_layout"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
@@ -120,11 +119,11 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/call_mobile"
+                android:id="@+id/bottom_call_mobile"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="9dp"
+                android:layout_marginStart="9dp"
                 android:background="@drawable/circle"
                 android:backgroundTint="#039be5"
                 android:drawableTop="@drawable/ic_call"
@@ -133,7 +132,7 @@
                 android:textColor="#fff" />
 
             <TextView
-                android:id="@+id/profile_mobile_no"
+                android:id="@+id/bottom_mobile_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -142,11 +141,11 @@
                 android:gravity="center"
                 android:text="+91 9897221772"
                 android:textColor="#000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/message_mobile"
+                android:id="@+id/bottom_message_mobile"
                 android:layout_width="60dp"
                 android:foregroundTint="@color/cpb_white"
                 android:layout_height="60dp"
@@ -168,8 +167,8 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/officeNoLayout"
-                android:padding="10dp"
+                android:padding="5dp"
+                android:id="@+id/bottom_office_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -182,22 +181,23 @@
                     android:tint="#66bb6a" />
 
                 <TextView
-                    android:id="@+id/profile_office_phone"
+                    android:id="@+id/bottom_office_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
+                    android:textColor="#fff"
                     android:text="+91 9897221772"
-                    android:textSize="17sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/emailLayout"
+                android:id="@+id/bottom_mail_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -208,20 +208,21 @@
                     android:src="@drawable/ic_mail" />
 
                 <TextView
-                    android:id="@+id/profile_email"
+                    android:id="@+id/bottom_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#fff"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
                     android:text="geekykant@gmail.com"
-                    android:textSize="17sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/addressLayout"
+            android:id="@+id/bottom_address_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -237,8 +238,9 @@
                 android:tint="@color/colorAccent" />
 
             <TextView
-                android:id="@+id/profile_address"
+                android:id="@+id/bottom_address"
                 android:layout_width="wrap_content"
+                android:textColor="#fff"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
@@ -247,14 +249,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="#000"
-        android:foreground="?attr/selectableItemBackground"
-        android:text="SHARE FACULTY DETAILS"
-        android:textColor="#fff" />
-
 </LinearLayout>

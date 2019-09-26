@@ -1,16 +1,22 @@
 package com.diyandroid.eazycampus.activity;
 
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +31,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.diyandroid.eazycampus.Contact;
 import com.diyandroid.eazycampus.MyApplication;
 import com.diyandroid.eazycampus.MyDividerItemDecoration;
@@ -57,6 +66,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         progressBar = findViewById(R.id.progressbarContact);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -87,6 +97,9 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                    case BottomSheetBehavior.STATE_SETTLING:
+                    case BottomSheetBehavior.STATE_DRAGGING:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED: {
 //                        btnBottomSheet.setText("Close Sheet");
@@ -96,17 +109,18 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 //                        btnBottomSheet.setText("Expand Sheet");
                     }
                     break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                        break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        ((ImageView)findViewById(R.id.bottom_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });
@@ -158,62 +172,6 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
         MyApplication.getInstance().addToRequestQueue(request);
     }
 
-//    private static final int REQUEST_SEND_SMS = 110, REQUEST_CALL_PHONE = 111;
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//
-//            //request permission
-//
-//            boolean hasPermissionSms = (ContextCompat.checkSelfPermission(getApplicationContext(),
-//                    Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED);
-//            if (!hasPermissionSms) {
-//                ActivityCompat.requestPermissions(FacultyDirectory.this,
-//                        new String[]{Manifest.permission.SEND_SMS},
-//                        REQUEST_SEND_SMS);
-//            }
-//
-//            boolean hasPermissionPhone = (ContextCompat.checkSelfPermission(getApplicationContext(),
-//                    Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED);
-//            if (!hasPermissionPhone) {
-//                ActivityCompat.requestPermissions(FacultyDirectory.this,
-//                        new String[]{Manifest.permission.CALL_PHONE},
-//                        REQUEST_CALL_PHONE);
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case REQUEST_SEND_SMS: {
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-////                    Toast.makeText(FacultyDirectory.this, "Permission granted.", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(FacultyDirectory.this, "Permission denied. Please consider granting it this permission", Toast.LENGTH_LONG).show();
-//                    finish();
-//                }
-//            }
-//            break;
-//
-//            case REQUEST_CALL_PHONE: {
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-////                    Toast.makeText(FacultyDirectory.this, "Permission granted.", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(FacultyDirectory.this, "Permission denied. Please consider granting it this permission", Toast.LENGTH_LONG).show();
-//                    finish();
-//                }
-//            }
-//            break;
-//
-//        }
-//
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -238,6 +196,11 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
             @Override
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
+
+                if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+
                 mAdapter.getFilter().filter(query);
                 return false;
             }
@@ -267,6 +230,12 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
             searchView.setIconified(true);
             return;
         }
+
+        if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            return;
+        }
+
         super.onBackPressed();
     }
 
@@ -280,9 +249,83 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
     }
 
     @Override
-    public void onContactSelected(Contact contact) {
+    public void onContactSelected(final Contact contact) {
+        ((TextView) findViewById(R.id.bottom_name)).setText(contact.getName());
+        ((TextView) findViewById(R.id.bottom_designation)).setText(contact.getDesignation());
+        ((TextView) findViewById(R.id.bottom_department)).setText(contact.getDepartment());
+        ((TextView) findViewById(R.id.bottom_address)).setText(contact.getAddress());
+        ((TextView) findViewById(R.id.bottom_email)).setText(contact.getEmail());
+        ((TextView) findViewById(R.id.bottom_office_phone)).setText(contact.getOffice_phone());
+        ((TextView) findViewById(R.id.bottom_mobile_no)).setText(contact.getPhone());
+
+        if (contact.getPhone() == null) {
+            ((LinearLayout) findViewById(R.id.bottom_mob_layout)).setVisibility(View.GONE);
+        } else {
+            ((LinearLayout) findViewById(R.id.bottom_mob_layout)).setVisibility(View.VISIBLE);
+        }
+
+        if (contact.getAddress() == null) {
+            ((LinearLayout) findViewById(R.id.bottom_address_layout)).setVisibility(View.GONE);
+        } else {
+            ((LinearLayout) findViewById(R.id.bottom_address_layout)).setVisibility(View.VISIBLE);
+        }
+
+        if (contact.getOffice_phone() == null) {
+            ((LinearLayout) findViewById(R.id.bottom_office_layout)).setVisibility(View.GONE);
+        } else {
+            ((LinearLayout) findViewById(R.id.bottom_office_layout)).setVisibility(View.VISIBLE);
+        }
+        if (contact.getEmail() == null) {
+            ((LinearLayout) findViewById(R.id.bottom_mail_layout)).setVisibility(View.GONE);
+        } else {
+            ((LinearLayout) findViewById(R.id.bottom_mail_layout)).setVisibility(View.VISIBLE);
+        }
+
+        Glide.with(this)
+                .load(contact.getImage())
+                .apply(RequestOptions.circleCropTransform())
+                .apply(new RequestOptions().placeholder(R.drawable.error_faculty))
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .skipMemoryCache(true))
+                .into((ImageView) findViewById(R.id.bottom_image));
+
+        ((TextView)findViewById(R.id.bottom_call_mobile)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri number = Uri.parse("tel:+91 " + contact.getPhone());
+                Intent dial = new Intent(Intent.ACTION_DIAL, number);
+                startActivity(dial);
+            }
+        });
+
+        ((TextView)findViewById(R.id.bottom_message_mobile)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", contact.getPhone(), null)));
+            }
+        });
+
+        ((TextView)findViewById(R.id.bottom_email)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String mailto = "mailto:" + contact.getEmail();
+
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.setData(Uri.parse(mailto));
+
+                try {
+                    startActivity(emailIntent);
+                } catch (ActivityNotFoundException e) {
+                    //TODO: Handle case where no email app is available
+                    Toast.makeText(getApplicationContext(), "No Email Apps found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         toggleBottomSheet();
+
 //        String jsonContact = new Gson().toJson(contact);
 //
 //        Intent intent = new Intent(FacultyDirectory.this, FacultyProfile.class);
@@ -290,10 +333,10 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 //        startActivity(intent);
     }
 
-    //Closing Activity with back button
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
-    }
+//    //Closing Activity with back button
+//    @Override
+//    public boolean onSupportNavigateUp() {
+//        finish();
+//        return true;
+//    }
 }
