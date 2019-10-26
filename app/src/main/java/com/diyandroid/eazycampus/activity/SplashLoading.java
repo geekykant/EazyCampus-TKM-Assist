@@ -47,7 +47,8 @@ public class SplashLoading extends AppCompatActivity {
 
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
-    String USR_NAME, PASS_NAME;
+    private String USR_NAME, PASS_NAME;
+    private boolean CHK_EVAL;
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -84,6 +85,8 @@ public class SplashLoading extends AppCompatActivity {
                                 if (!FIRST_TIME) {
                                     USR_NAME = pref.getString("username", null);
                                     PASS_NAME = pref.getString("password", null);
+
+                                    CHK_EVAL = pref.getBoolean("skipEvaluation", false);
 
                                     if (!TextUtils.isEmpty(USR_NAME) && !TextUtils.isEmpty(PASS_NAME)) {
                                         new getWebsite(getApplicationContext()).execute();
@@ -172,14 +175,15 @@ public class SplashLoading extends AppCompatActivity {
 
                 Document parsed = getName.parse();
 
-                if (parsed.getElementById("userName") != null) {
+                if (homePage != null && CHK_EVAL) {
+                    LoginName = "Paavam";
+                } else if (parsed.getElementById("userName") != null) {
                     LoginName = parsed.getElementById("userName").val().split(" ")[0];
                 }
 
                 Log.e("gummi", "Before: " + LoginName);
 
                 if (TextUtils.isEmpty(LoginName)) {
-
                     try {
                         Log.e("gummi", "Noww4: " + parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1));
                         LoginName = parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1).text().split(" ")[0];
@@ -194,7 +198,6 @@ public class SplashLoading extends AppCompatActivity {
                 ex.printStackTrace();
                 parsingSuccessful = false;
             }
-
 
             if (!TextUtils.isEmpty(LoginName)) {
                 loginCheck = true;

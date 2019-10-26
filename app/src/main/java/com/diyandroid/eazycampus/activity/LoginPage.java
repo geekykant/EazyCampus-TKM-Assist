@@ -43,7 +43,7 @@ public class LoginPage extends AppCompatActivity {
 
     private EditText username, password;
     private ProgressBar progressBar;
-    private CheckBox checkBox;
+    private CheckBox checkBox, checkBox2;
     private Button login_button;
 
     public boolean isNetworkAvailable() {
@@ -77,8 +77,10 @@ public class LoginPage extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
         checkBox = (CheckBox) findViewById(R.id.rememberCheck);
+        checkBox2 = (CheckBox) findViewById(R.id.skipEvalCheckbox);
 
-        LinearLayout layout = findViewById(R.id.rememberme);
+        LinearLayout layout1 = findViewById(R.id.rememberme);
+        LinearLayout layout2 = findViewById(R.id.evalLayout);
 
         ((TextView) findViewById(R.id.privacy_policy)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,13 +92,25 @@ public class LoginPage extends AppCompatActivity {
         });
 
         //Listener for Remember Me
-        layout.setOnClickListener(new View.OnClickListener() {
+        layout1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkBox.isChecked()) {
                     checkBox.setChecked(false);
                 } else {
                     checkBox.setChecked(true);
+                }
+            }
+        });
+
+        //Listener for Eval Check
+        layout2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBox2.isChecked()) {
+                    checkBox2.setChecked(false);
+                } else {
+                    checkBox2.setChecked(true);
                 }
             }
         });
@@ -151,13 +165,143 @@ public class LoginPage extends AppCompatActivity {
 
 
     private class getWebsite extends ExceptionHandlingAsyncTask<String, Void, Element> {
-
         private boolean loginCheck = false;
         private Map<String, String> loginCookies = new HashMap<>();
         private String LoginName = "";
         private Connection.Response homePage, getName;
 
         public getWebsite(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Progress bar implementations
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Element doInBackground2(String... strings) {
+            try {
+                final String userAgent = "Firefox";
+
+                Connection.Response loginForm = Jsoup.connect("https://tkmce.linways.com/student/index.php")
+                        .method(Connection.Method.GET)
+                        .userAgent(userAgent)
+                        .execute();
+
+                Log.d("FacultyDirectory", "Scraped Login Page!");
+
+//                Document loginPage = loginForm.parse(); //Same
+                loginCookies = loginForm.cookies(); //Grabs all cookies
+
+                homePage = Jsoup.connect("https://tkmce.linways.com/student/index.php")
+                        .data("studentAccount", username.getText().toString())
+                        .data("studentPassword", password.getText().toString())
+                        .userAgent(userAgent)
+                        .followRedirects(true)
+                        .referrer("https://tkmce.linways.com/student/index.php")
+                        .cookies(loginCookies)
+                        .method(Connection.Method.POST)
+                        .timeout(120 * 1000)
+                        .execute();
+
+                getName = Jsoup.connect("https://tkmce.linways.com/student/student.php?menu=student_details&action=frm_edit")
+                        .userAgent(userAgent)
+                        .referrer("https://tkmce.linways.com/student/index.php")
+                        .cookies(loginCookies)
+                        .followRedirects(true)
+                        .method(Connection.Method.GET)
+                        .timeout(120 * 1000)
+                        .execute();
+
+                Document parsed = getName.parse();
+
+                if (homePage != null && checkBox2.isChecked()) {
+                    LoginName = "Paavam";
+                } else if (parsed.getElementById("userName") != null) {
+                    LoginName = parsed.getElementById("userName").val().split(" ")[0];
+                }
+
+                Log.e("gummi", "Before: " + LoginName);
+
+                if (TextUtils.isEmpty(LoginName)) {
+                    try {
+                        Log.e("gummi", "Noww4: " + parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1));
+                        LoginName = parsed.getElementsByTag("tr").get(5).getElementsByTag("td").get(1).text().split(" ")[0];
+                    } catch (NullPointerException ex) {
+                        Log.e("gummi", "doInBackground2: Null expception in LoginPage");
+                    }
+                }
+
+                Log.i("gummi", "After: " + LoginName);
+
+            } catch (IOException | RuntimeException ex) {
+                ex.printStackTrace();
+            }
+
+
+            if (!TextUtils.isEmpty(LoginName)) {
+                loginCheck = true;
+                Log.d("LoginPage", "Logged In!");
+            } else {
+                Log.d("LoginPage", "Not Logged In!");
+                new doCheckEvaluation(getApplicationContext()).execute();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute2(Element element) {
+            progressBar.setVisibility(View.GONE);
+            login_button.setClickable(true);
+            username.setEnabled(true);
+            password.setEnabled(true);
+
+            if (loginCheck) {
+                Intent intent = new Intent(LoginPage.this, HomePage.class);
+
+                String jsonCookie = new Gson().toJson(loginCookies);
+
+                if (checkBox.isChecked()) {
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                            .edit()
+                            .putString("username", username.getText().toString())
+                            .putString("password", password.getText().toString())
+                            .apply();
+
+                    if(checkBox2.isChecked()){
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                .edit()
+                                .putBoolean("skipEvaluation", true)
+                                .apply();
+                    }
+                }
+
+                intent.putExtra("COOKIES", jsonCookie);  //send cookies
+                intent.putExtra("LOGIN_NAME", LoginName);
+                startActivity(intent);
+                finish();
+
+                overridePendingTransition(R.anim.load_up_anim, 0);
+
+            } else {
+                username.setError("Username incorrect");
+                password.setError("Password incorrect");
+            }
+        }
+    }
+
+    private class doCheckEvaluation extends ExceptionHandlingAsyncTask<String, Void, Element> {
+
+        private boolean loginCheck = false;
+        private Map<String, String> loginCookies = new HashMap<>();
+        private String LoginName = "";
+        private Connection.Response homePage, getName;
+
+        public doCheckEvaluation(Context context) {
             super(context);
         }
 

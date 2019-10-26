@@ -2,6 +2,7 @@ package com.diyandroid.eazycampus.util;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.diyandroid.eazycampus.AsyncTaskResult;
 import com.diyandroid.eazycampus.BuildConfig;
@@ -147,6 +148,7 @@ public class AttendanceGrabber extends ExceptionHandlingAsyncTask<String, Void, 
             delegate.processFinish(attendanceList);
         } else {
             Log.i("AttendanceGrabber", "Failed retrieving data!");
+            Toast.makeText(getContext(), "Failed to get attendance!", Toast.LENGTH_SHORT).show();
             got_attendance = false;
         }
     }

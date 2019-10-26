@@ -343,10 +343,10 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
 //        startActivity(intent);
     }
 
-//    //Closing Activity with back button
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        finish();
-//        return true;
-//    }
+    //Closing Activity with back button
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 }
