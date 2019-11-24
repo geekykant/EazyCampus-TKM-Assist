@@ -3,12 +3,13 @@ package com.diyandroid.eazycampus.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.SubjectAttendance;
@@ -44,11 +45,11 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
             convertView = LayoutInflater.from(mContext).inflate(mResource, parent, false);
             holder = new ViewHolder();
 
-            holder.subjectName = (TextView) convertView.findViewById(R.id.subname);
-            holder.totalClasses = (TextView) convertView.findViewById(R.id.totalsub);
-            holder.totalAttended = (TextView) convertView.findViewById(R.id.attdsub);
-            holder.attendancePerct = (TextView) convertView.findViewById(R.id.percentageattnd);
-            holder.bunksub = (TextView) convertView.findViewById(R.id.bunksub);
+            holder.subjectName = convertView.findViewById(R.id.subname);
+            holder.totalClasses = convertView.findViewById(R.id.totalsub);
+            holder.totalAttended = convertView.findViewById(R.id.attdsub);
+            holder.attendancePerct = convertView.findViewById(R.id.percentageattnd);
+            holder.bunksub = convertView.findViewById(R.id.bunksub);
 
             convertView.setTag(holder);
         } else {
@@ -57,7 +58,10 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
 
         holder.subjectName.setText(person.getSubjectName());
         holder.totalClasses.setText(person.getTotalClasses());
-        holder.totalAttended.setText(person.getTotalAttended());
+        holder.totalAttended.setText(person.getTotalAttended() + "/" + person.getTotalClasses());
+
+        holder.totalClasses.setVisibility(View.GONE);
+
         holder.attendancePerct.setText(person.getAttendancePercent());
 
         //May crash if integer not received

@@ -63,15 +63,6 @@ public class AttendanceGrabber extends ExceptionHandlingAsyncTask<String, Void, 
         fromAttendance = mFirebaseRemoteConfig.getString("FROM_ATTENDANCE_DATE_TAG");
         toAttendance = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
-//
-//    public ArrayList<SubjectAttendance> getAttendanceList() {
-//        Log.i("sada", "onPostExecute2: 9999231" + got_attendance);
-//        if (!got_attendance) {
-//            return null;
-//        }
-//
-//        return attendanceList;
-//    }
 
     @Override
     protected void onPreExecute() {

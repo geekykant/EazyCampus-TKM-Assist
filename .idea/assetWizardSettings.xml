@@ -62,7 +62,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="backgroundColor" value="fcfcfc" />
                                       <entry key="foregroundImage" value="$USER_HOME$/Desktop/Projects/EazyCampus/3_0-min.png" />
                                     </map>
                                   </option>

@@ -255,7 +255,7 @@ public class LoginPage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute2(Element element) {
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.INVISIBLE);
             login_button.setClickable(true);
             username.setEnabled(true);
             password.setEnabled(true);
@@ -384,7 +384,7 @@ public class LoginPage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute2(Element element) {
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.INVISIBLE);
             login_button.setClickable(true);
             username.setEnabled(true);
             password.setEnabled(true);

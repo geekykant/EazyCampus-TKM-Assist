@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:gl="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/parent.contentLayout"
+    tools:showIn="@layout/homepage_layout"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.diyandroid.eazycampus.activity.HomePage">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/welName"
+            style="@style/viewParent.headerText"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Hello Sreekant!" />
+
+        <TextView
+            style="@style/viewParent.headerText.contentText"
+            android:layout_marginBottom="10dp"
+            android:text="Never trust anyone who has not brought a book with them." />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="15dp"
+            app:cardPreventCornerOverlap="true">
+
+            <net.colindodd.gradientlayout.GradientRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="80dp"
+                android:padding="10dp"
+                gl:end_color="@color/gradientViolet"
+                gl:orientation="LEFT_RIGHT"
+                gl:start_color="@color/gradientLightBlue">
+
+                <TextView
+                    android:id="@+id/textViewSub3Title"
+                    style="@style/viewParent.headerText.HomeCardTitle"
+                    android:text="Attendance Status" />
+
+                <TextView
+                    style="@style/viewParent.headerText.homeCardContent"
+                    android:layout_below="@id/textViewSub3Title"
+                    android:text="You are all good!" />
+
+                <ImageView
+                    android:maxHeight="90dp"
+                    android:src="@drawable/ic_education_desk"
+                    style="@style/homeCardImage" />
+
+            </net.colindodd.gradientlayout.GradientRelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/home_attendance_view"
+            android:layout_marginTop="14dp"
+            android:clickable="false"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            app:cardPreventCornerOverlap="true">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:fillViewport="true"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/homelistAtendance"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="5dp" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

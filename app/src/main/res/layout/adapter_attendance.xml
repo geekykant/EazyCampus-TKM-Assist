@@ -14,7 +14,10 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="13sp"
-            android:padding="9dp"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
             android:text="Introduction to Electronics Engineering"
             android:textColor="@color/black" />
 
@@ -30,7 +33,7 @@
 
         <TextView
             android:id="@+id/attdsub"
-            android:layout_width="50dp"
+            android:layout_width="80dp"
             android:textSize="13sp"
             android:layout_height="match_parent"
             android:gravity="center"

@@ -253,8 +253,8 @@ public class SplashLoading extends AppCompatActivity {
             adsDialogue.setView(adsDialogueView);
 
             ((TextView) adsDialogueView.findViewById(R.id.headingDialogue)).setText(R.string.update_available);
-            ((Button) adsDialogueView.findViewById(R.id.contribute)).setVisibility(View.GONE);
-            Button update = (Button) adsDialogueView.findViewById(R.id.later);
+            adsDialogueView.findViewById(R.id.contribute).setVisibility(View.GONE);
+            Button update = adsDialogueView.findViewById(R.id.later);
             update.setText(R.string.update_button_title);
             adsDialogue.show();
 

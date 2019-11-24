@@ -56,13 +56,13 @@
         <item name="colorControlNormal">@color/cpb_white</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowNoTitle">true</item>
-        <item name="colorControlNormal">#000</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:textColorSecondary">#000</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
+<!--    <style name="AppTheme.NoActionBar">-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="colorControlNormal">#000</item>-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="android:textColorSecondary">#000</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--    </style>-->
 
     <style name="NavigationTheme">
         <!-- Color of text and icon when SELECTED -->
@@ -77,4 +77,62 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--styles for education app-->
+    <style name="viewParent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="parent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="parent.contentLayout">
+        <item name="android:background">@color/contentBodyColor</item>
+        <item name="android:paddingLeft">@dimen/normalPadding</item>
+        <item name="android:paddingRight">@dimen/normalPadding</item>
+        <item name="android:paddingBottom">@dimen/normalPadding</item>
+    </style>
+
+    <style name="viewParent.headerText">
+        <item name="android:textColor">@color/contentTextColor</item>
+        <item name="android:textSize">@dimen/headerTextSize</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="viewParent.headerText.contentText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/miniTitleColor</item>
+    </style>
+
+    <style name="homeCardImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:cropToPadding">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="viewParent.headerText.homeCardContent" parent="viewParent.headerText.contentText">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textColor">@color/whiteTextColor</item>
+    </style>
+
+    <style name="viewParent.headerText.HomeCardTitle">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:textColor">@color/whiteTextColor</item>
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+    
 </resources>

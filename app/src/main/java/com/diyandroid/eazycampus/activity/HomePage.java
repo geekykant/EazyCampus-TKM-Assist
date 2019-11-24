@@ -16,9 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,20 +25,21 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.diyandroid.eazycampus.BottomNavigationBehavior;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.SubjectAttendance;
 import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
 import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.util.AttendanceGrabber;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -60,9 +59,35 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public static final int OPEN_NEW_ACTIVITY = 6588;
 
     private DrawerLayout mDrawerLayout;
+    private  BottomNavigationView bottomNavigationView;
     private ActionBarDrawerToggle mToggle;
 
-    private SwipeRefreshLayout mySwipeRefreshLayout;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment;
+            switch (item.getItemId()) {
+                case R.id.navigationDirectory:
+//                    fragmentTransaction.add(R.id.fragment_container, fragment);
+////                    fragmentTransaction.commit();
+
+                    Intent intentPhonDirect = new Intent(HomePage.this, FacultyDirectory.class);
+                    startActivity(intentPhonDirect);
+                    return true;
+                case R.id.navigationMyCourses:
+                    return true;
+                case R.id.navigationHome:
+                    return true;
+                case R.id.navigationSearch:
+                    return true;
+                case R.id.navigationMenu:
+                    return true;
+            }
+            return false;
+        }
+    };
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -70,6 +95,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationBehavior());
+
+        bottomNavigationView.setSelectedItemId(R.id.navigationHome);
 
         boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
 
@@ -90,11 +122,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
-//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.drawer_button); //back button change
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.drawer_button); //back button change
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(null);
 
-        navigationView = (NavigationView) findViewById(R.id.navigationview);
+        navigationView = findViewById(R.id.navigationview);
 
         final View headView = navigationView.getHeaderView(0);
         TextView drawerName = headView.findViewById(R.id.drawerName);
@@ -107,31 +139,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         new AttendanceGrabber(this, this).execute(jsonCookies);
 
-        mySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        mySwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        new AttendanceGrabber(getApplicationContext(), HomePage.this).execute(jsonCookies);
-                    }
-                }
-        );
-
-
-        TextView welName = (TextView) findViewById(R.id.welName);
+        TextView welName = findViewById(R.id.welName);
         if (!TextUtils.isEmpty(loginName)) {
             loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
             welName.setText("Hi " + loginName + "!");
             drawerName.setText(loginName);
         }
 
-        int[] intentIds = {
-                R.id.booster, R.id.calendar, R.id.marks, R.id.directory
-        };
-
-        for (int intentId : intentIds) {
-            ((LinearLayout) findViewById(intentId)).setOnClickListener(this);
-        }
+//        int[] intentIds = {
+//                R.id.booster, R.id.calendar, R.id.marks, R.id.directory
+//        };
+//
+//        for (int intentId : intentIds) {
+//            ((LinearLayout) findViewById(intentId)).setOnClickListener(this);
+//        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -164,13 +185,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             return true;
         } else {
             switch (item.getItemId()) {
-//                case R.id.app_send:
-//                    Intent sendIntent = new Intent();
-//                    sendIntent.setAction(Intent.ACTION_SEND);
-//                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
-//                    sendIntent.setType("text/plain");
-//                    startActivity(sendIntent);
-//                    return true;
+                case R.id.app_send:
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                    return true;
 
                 case R.id.app_notification:
                     Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
@@ -192,7 +213,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         switch (id) {
             case R.id.home:
-                FrameLayout layout = (FrameLayout) findViewById(R.id.showFragment);
+                FrameLayout layout = findViewById(R.id.showFragment);
                 layout.removeAllViewsInLayout();
                 break;
 
@@ -228,9 +249,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             ft.addToBackStack(null);
             getSupportFragmentManager().popBackStack();
             ft.commit();
-            ((ScrollView) findViewById(R.id.scroll_home)).setVisibility(View.INVISIBLE);
+//            findViewById(R.id.scroll_home).setVisibility(View.INVISIBLE);
         } else {
-            ((ScrollView) findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
+//            findViewById(R.id.scroll_home).setVisibility(View.VISIBLE);
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -239,31 +260,32 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.marks:
-                Intent IntentMarks = new Intent(HomePage.this, MarksPage.class);
-                IntentMarks.putExtra("COOKIES", jsonCookies);
-                startActivity(IntentMarks);
-                break;
 
-            case R.id.directory:
-                Intent intentPhonDirect = new Intent(HomePage.this, FacultyDirectory.class);
-                intentPhonDirect.putExtra("COOKIES", jsonCookies);
-                startActivity(intentPhonDirect);
-                break;
-
-            case R.id.calendar:
-                Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
-                String remoteURL = getString(R.string.academic_calendar_url);
-                intent.putExtra("INTENT_URL", remoteURL);
-                intent.putExtra("IS_CALENDAR", true);
-                startActivity(intent);
-                break;
-
-            case R.id.booster:
-                startActivity(new Intent(HomePage.this, BoosterAttendance.class));
-                break;
-        }
+//        switch (view.getId()) {
+//            case R.id.marks:
+//                Intent IntentMarks = new Intent(HomePage.this, MarksPage.class);
+//                IntentMarks.putExtra("COOKIES", jsonCookies);
+//                startActivity(IntentMarks);
+//                break;
+//
+//            case R.id.directory:
+//                Intent intentPhonDirect = new Intent(HomePage.this, FacultyDirectory.class);
+//                intentPhonDirect.putExtra("COOKIES", jsonCookies);
+//                startActivity(intentPhonDirect);
+//                break;
+//
+//            case R.id.calendar:
+//                Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
+//                String remoteURL = getString(R.string.academic_calendar_url);
+//                intent.putExtra("INTENT_URL", remoteURL);
+//                intent.putExtra("IS_CALENDAR", true);
+//                startActivity(intent);
+//                break;
+//
+//            case R.id.booster:
+//                startActivity(new Intent(HomePage.this, BoosterAttendance.class));
+//                break;
+//        }
 
     }
 
@@ -271,7 +293,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public void onBackPressed() {
-        ((ScrollView) this.findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
+//        this.findViewById(R.id.scroll_home).setVisibility(View.VISIBLE);
 
         //back press removes fragment layout
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
@@ -304,7 +326,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         if (requestCode == OPEN_NEW_ACTIVITY) {
             navigationView.setCheckedItem(R.id.home);
-            FrameLayout layout = (FrameLayout) findViewById(R.id.showFragment);
+            FrameLayout layout = findViewById(R.id.showFragment);
             layout.removeAllViewsInLayout();
 
         } else if (requestCode == 1337) {
@@ -335,9 +357,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     contriDialogue.setCanceledOnTouchOutside(false);
                     contriDialogue.setView(contributionView);
 
-                    Button tryagain = (Button) contributionView.findViewById(R.id.tryagain);
-                    Button cont_later = (Button) contributionView.findViewById(R.id.cont_later);
-                    CircleImageView tick = (CircleImageView) contributionView.findViewById(R.id.tick);
+                    Button tryagain = contributionView.findViewById(R.id.tryagain);
+                    Button cont_later = contributionView.findViewById(R.id.cont_later);
+                    CircleImageView tick = contributionView.findViewById(R.id.tick);
 
                     if (Status.equals("SUCCESS")) {
                         tryagain.setVisibility(View.VISIBLE);
@@ -400,13 +422,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             Log.i(TAG, "Attendance List: " + attendanceList.get(3).getSubjectName());
 
             AttendanceListAdapter adapter = new AttendanceListAdapter(this, R.layout.adapter_attendance, attendanceList);
-            ListView mListView = (ListView) findViewById(R.id.homelistAtendance);
+            ListView mListView = findViewById(R.id.homelistAtendance);
+            mListView.smoothScrollBy(0, 0);
             mListView.setAdapter(adapter);
 
-            ((CardView) findViewById(R.id.home_attendance_view)).setVisibility(View.VISIBLE);
-            mySwipeRefreshLayout.setRefreshing(false);
+            findViewById(R.id.home_attendance_view).setVisibility(View.VISIBLE);
         } else {
-            ((CardView) findViewById(R.id.home_attendance_view)).setVisibility(View.GONE);
+            findViewById(R.id.home_attendance_view).setVisibility(View.GONE);
         }
     }
 }

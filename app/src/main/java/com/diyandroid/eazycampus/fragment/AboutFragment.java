@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -49,7 +48,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 //open navigation drawer when click navigation back button
                 ((FrameLayout) getActivity().findViewById(R.id.showFragment)).removeAllViewsInLayout();
-                ((ScrollView) getActivity().findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
+//                ((ScrollView) getActivity().findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
                 ((NavigationView) getActivity().findViewById(R.id.navigationview)).setCheckedItem(R.id.home);
             }
         });

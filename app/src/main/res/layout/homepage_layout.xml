@@ -1,248 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/showFragment"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <ScrollView
-        android:id="@+id/scroll_home"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:scrollbars="none">
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swiperefresh"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:minHeight="?attr/actionBarSize" />
 
-                <TextView
-                    android:id="@+id/welName"
+            <ScrollView
+                android:layout_width="match_parent"
+                android:fillViewport="true"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:id="@+id/showFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:fontFamily="@font/circular_std"
-                    android:gravity="center"
-                    android:text="@string/hi_sreekant"
-                    android:textColor="#000"
-                    android:textSize="24sp"
-                    tools:ignore="RtlSymmetry" />
+                    android:layout_marginTop="?attr/actionBarSize"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/home_attendance_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/cardView"
-                    android:layout_marginTop="9dp"
-                    android:fontFamily="@font/circular_std"
-                    android:paddingStart="25dp"
-                    android:text="Attendance"
-                    android:textColor="#000"
-                    android:textSize="20sp" />
+                    <include layout="@layout/home_items" />
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:minHeight="?attr/actionBarSize" />
+                </FrameLayout>
+            </ScrollView>
+        </RelativeLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/home_attendance_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/home_attendance_text"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:clickable="false"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:visibility="gone"
-                    app:cardBackgroundColor="@color/cpb_white"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="4dp">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?android:attr/windowBackground"
+            android:foreground="?attr/selectableItemBackground"
+            app:menu="@menu/master_bottom_navigation"
+            app:elevation="10dp"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@color/bottom_navigation_color"
+            app:itemTextColor="@color/bottom_navigation_color"
+            android:layout_alignParentBottom="true"
+            app:itemBackground="@color/bottomNavigationBackground" />
 
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <ListView
-                                android:id="@+id/homelistAtendance"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="3dp"
-                                android:layout_marginEnd="5dp" />
-                        </LinearLayout>
-
-                    </HorizontalScrollView>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/welName"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="22dp"
-                    android:layout_marginBottom="11dp"
-                    android:clickable="false"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/cpb_white"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal"
-                            android:weightSum="4">
-
-                            <LinearLayout
-                                android:id="@+id/marks"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="52dp"
-                                    android:layout_height="52dp"
-                                    android:background="@drawable/login_button"
-                                    android:backgroundTint="@color/deeppurple"
-                                    android:padding="16dp"
-                                    android:src="@drawable/ic_marks"
-                                    android:tint="#fff" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:text="@string/marks"
-                                    android:textColor="#000"
-                                    android:textSize="12sp" />
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/directory"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="52dp"
-                                    android:layout_height="52dp"
-                                    android:background="@drawable/login_button"
-                                    android:backgroundTint="#009688"
-                                    android:padding="16dp"
-                                    android:src="@drawable/ic_faculty_directory"
-                                    android:tint="#fff" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:gravity="center"
-                                    android:text="@string/directory"
-                                    android:textColor="#000"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/booster"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="52dp"
-                                    android:layout_height="52dp"
-                                    android:background="@drawable/login_button"
-                                    android:backgroundTint="#ffb74d"
-                                    android:padding="18dp"
-                                    android:src="@drawable/login_button"
-                                    android:tint="#fff" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:gravity="center"
-                                    android:text="@string/booster"
-                                    android:textColor="#000"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/calendar"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="52dp"
-                                    android:layout_height="52dp"
-                                    android:background="@drawable/login_button"
-                                    android:backgroundTint="#2196F3"
-                                    android:padding="15dp"
-                                    android:src="@drawable/ic_flag"
-                                    android:tint="#fff" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:text="@string/calendar"
-                                    android:textColor="#000"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-            </RelativeLayout>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationview"
@@ -252,8 +66,6 @@
         android:fitsSystemWindows="true"
         android:theme="@style/NavigationTheme"
         app:headerLayout="@layout/header_drawer"
-        app:menu="@menu/drawer_mainmenu">
-
-    </com.google.android.material.navigation.NavigationView>
+        app:menu="@menu/drawer_mainmenu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
