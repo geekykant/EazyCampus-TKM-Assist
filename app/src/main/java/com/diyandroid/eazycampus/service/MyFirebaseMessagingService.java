@@ -12,7 +12,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.diyandroid.eazycampus.activity.ReferenceActivity;
 import com.diyandroid.eazycampus.app.Config;
-import com.diyandroid.eazycampus.util.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

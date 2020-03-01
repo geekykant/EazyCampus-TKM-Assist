@@ -1,4 +1,4 @@
-package com.diyandroid.eazycampus;
+package com.diyandroid.eazycampus.util;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

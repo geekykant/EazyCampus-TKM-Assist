@@ -26,20 +26,19 @@
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="20dp"
             android:layout_toEndOf="@id/graduationIcon"
+            android:fontFamily="@font/circular_std"
             android:padding="10dp"
             android:text="Support this app!"
             android:textColor="#ff000000"
             android:textSize="18sp" />
-
     </RelativeLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="17dp"
-        android:paddingRight="17dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:paddingTop="10dp">
 
         <TextView
@@ -47,9 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:fontFamily="@font/circular_std"
             android:text="@string/ads_dialog_message"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
     </LinearLayout>
 
@@ -67,9 +67,9 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:background="@drawable/login_button"
-            android:backgroundTint="@color/cpb_red"
-            android:fontFamily="sans-serif"
-            android:text="Yes! Contribute"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="@font/circular_std"
+            android:text="Yes! Do It Now!"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="14sp" />
@@ -81,8 +81,8 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:background="@drawable/login_button"
-            android:backgroundTint="@color/colorPrimary"
-            android:fontFamily="sans-serif"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/circular_std"
             android:text="Later"
             android:textAllCaps="false"
             android:textColor="#fff"

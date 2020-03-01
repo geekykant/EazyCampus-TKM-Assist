@@ -51,25 +51,7 @@
             android:layout_marginEnd="44dp"
             android:layout_marginRight="40dp">
 
-            <LinearLayout
-                android:id="@+id/evalLayout"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
 
-                <CheckBox
-                    android:id="@+id/skipEvalCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/bg_black"
-                    android:text="Skip Evaluation" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/rememberme"

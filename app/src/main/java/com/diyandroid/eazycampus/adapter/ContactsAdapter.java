@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.diyandroid.eazycampus.Contact;
+import com.diyandroid.eazycampus.model.Contact;
 import com.diyandroid.eazycampus.R;
 
 import java.util.ArrayList;

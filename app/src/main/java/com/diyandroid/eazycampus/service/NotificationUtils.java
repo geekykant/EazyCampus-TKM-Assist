@@ -1,4 +1,4 @@
-package com.diyandroid.eazycampus.util;
+package com.diyandroid.eazycampus.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

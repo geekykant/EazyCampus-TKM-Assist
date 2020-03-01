@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.diyandroid.eazycampus.Marks;
+import com.diyandroid.eazycampus.model.Marks;
 import com.diyandroid.eazycampus.R;
 
 import java.util.ArrayList;

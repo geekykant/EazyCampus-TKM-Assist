@@ -1,4 +1,4 @@
-package com.diyandroid.eazycampus;
+package com.diyandroid.eazycampus.model;
 
 import androidx.annotation.Keep;
 

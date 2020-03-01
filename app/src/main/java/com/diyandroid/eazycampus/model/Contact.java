@@ -1,17 +1,17 @@
-package com.diyandroid.eazycampus;
+package com.diyandroid.eazycampus.model;
 
 import androidx.annotation.Keep;
 
 @Keep
 public class Contact {
-    String name;
-    String image;
-    String mobile_no;
-    String office_phone;
-    String email;
-    String designation;
-    String department;
-    String address;
+    public String name;
+    public String image;
+    public String mobile_no;
+    public String office_phone;
+    public String email;
+    public String designation;
+    public String department;
+    public String address;
 
     public Contact() {
     }

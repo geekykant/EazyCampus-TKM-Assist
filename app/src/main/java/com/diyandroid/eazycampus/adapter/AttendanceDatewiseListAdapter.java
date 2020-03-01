@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.diyandroid.eazycampus.R;
-import com.diyandroid.eazycampus.SubjectAttendance;
+import com.diyandroid.eazycampus.model.SubjectAttendance;
 
 import java.util.ArrayList;
 

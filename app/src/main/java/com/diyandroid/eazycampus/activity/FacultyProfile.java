@@ -1,11 +1,9 @@
-package com.diyandroid.eazycampus;
+package com.diyandroid.eazycampus.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.diyandroid.eazycampus.R;
+import com.diyandroid.eazycampus.model.Contact;
 import com.google.gson.Gson;
 
 public class FacultyProfile extends AppCompatActivity {

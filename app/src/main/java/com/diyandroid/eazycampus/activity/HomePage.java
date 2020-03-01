@@ -2,21 +2,16 @@ package com.diyandroid.eazycampus.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,98 +20,90 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.diyandroid.eazycampus.BottomNavigationBehavior;
 import com.diyandroid.eazycampus.R;
-import com.diyandroid.eazycampus.SubjectAttendance;
-import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
 import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
-import com.diyandroid.eazycampus.util.AttendanceGrabber;
+import com.diyandroid.eazycampus.fragment.AttendanceFragment;
+import com.diyandroid.eazycampus.util.TokenUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        AttendanceGrabber.AsyncResponse {
+public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "HomePage";
-    private SharedPreferences pref;
 
     private NavigationView navigationView;
-    private String jsonCookies;
-    public static final int OPEN_NEW_ACTIVITY = 6588;
 
     private DrawerLayout mDrawerLayout;
-    private  BottomNavigationView bottomNavigationView;
     private ActionBarDrawerToggle mToggle;
+    private FragmentManager fm;
+
+    private TokenUser tokenUser;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment fragment;
             switch (item.getItemId()) {
-                case R.id.navigationDirectory:
-//                    fragmentTransaction.add(R.id.fragment_container, fragment);
-////                    fragmentTransaction.commit();
-
-                    Intent intentPhonDirect = new Intent(HomePage.this, FacultyDirectory.class);
-                    startActivity(intentPhonDirect);
-                    return true;
-                case R.id.navigationMyCourses:
-                    return true;
                 case R.id.navigationHome:
+                    loadFragment(new AttendanceFragment(getApplicationContext()));
                     return true;
-                case R.id.navigationSearch:
-                    return true;
-                case R.id.navigationMenu:
-                    return true;
+                case R.id.navigationDirectory:
+                    startActivity(new Intent(HomePage.this, FacultyDirectory.class));
+                    return false;
             }
             return false;
         }
     };
 
-    @SuppressLint("SetTextI18n")
+    private void loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.showFragment, fragment);
+            ft.addToBackStack(null);
+            getSupportFragmentManager().popBackStack();
+            ft.commit();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        bottomNavigationView = findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
-        layoutParams.setBehavior(new BottomNavigationBehavior());
+        loadFragment(new AttendanceFragment(getApplicationContext()));
+        tokenUser = new TokenUser(this);
+        fm = getSupportFragmentManager();
 
-        bottomNavigationView.setSelectedItemId(R.id.navigationHome);
+        init();
 
-        boolean FIRST_RUN = pref.getBoolean("FIRST_RUN", true);
-
-        String loginName = getIntent().getStringExtra("LOGIN_NAME");
-
-        if (FIRST_RUN) {
+        if (tokenUser.isFirstTime()) {
             FirebaseMessaging.getInstance().subscribeToTopic("all_semesters");
             FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-            pref.edit().putBoolean("FIRST_RUN", false).apply();
         }
+    }
+
+    private void init() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNavigationView.setSelectedItemId(R.id.navigationHome);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // toolbar fancy stuff
+        // Drawer fancy navigation bar
         mDrawerLayout = findViewById(R.id.drawerLayout);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open_toggle, R.string.close_toggle);
         mDrawerLayout.addDrawerListener(mToggle);
@@ -128,31 +115,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         navigationView = findViewById(R.id.navigationview);
 
+        //Drawer header details - RollNo, Name
         final View headView = navigationView.getHeaderView(0);
         TextView drawerName = headView.findViewById(R.id.drawerName);
+        TextView drawerRollNo = headView.findViewById(R.id.drawerRollNo);
+
+        drawerName.setText(tokenUser.getPrefLoginName());
+        drawerRollNo.setText(tokenUser.getPrefRollNo());
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.home);
-
-        jsonCookies = getIntent().getStringExtra("COOKIES");
-
-
-        new AttendanceGrabber(this, this).execute(jsonCookies);
-
-        TextView welName = findViewById(R.id.welName);
-        if (!TextUtils.isEmpty(loginName)) {
-            loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
-            welName.setText("Hi " + loginName + "!");
-            drawerName.setText(loginName);
-        }
-
-//        int[] intentIds = {
-//                R.id.booster, R.id.calendar, R.id.marks, R.id.directory
-//        };
-//
-//        for (int intentId : intentIds) {
-//            ((LinearLayout) findViewById(intentId)).setOnClickListener(this);
-//        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -174,8 +146,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.home_menu, menu);
+        getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
     }
 
@@ -185,6 +156,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             return true;
         } else {
             switch (item.getItemId()) {
+                case android.R.id.home:
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                    break;
                 case R.id.app_send:
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
@@ -194,11 +168,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     return true;
 
                 case R.id.app_notification:
-                    Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
-                    String remoteURL = "https://ktu.edu.in/eu/core/announcements.htm";
-                    intent.putExtra("INTENT_URL", remoteURL);
-                    intent.putExtra("IS_CALENDAR", false);
-                    startActivity(intent);
+                    String ktu_url = "https://ktu.edu.in/eu/core/announcements.htm";
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ktu_url)));
                     break;
 
             }
@@ -208,7 +179,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment fragment = null;
         int id = item.getItemId();
 
         switch (id) {
@@ -218,13 +188,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 break;
 
             case R.id.settings:
-                getSupportFragmentManager().popBackStack();
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(intent, OPEN_NEW_ACTIVITY);
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
             case R.id.about:
-                fragment = new AboutFragment();
+                loadFragment(new AboutFragment());
                 break;
 
             case R.id.signout:
@@ -232,69 +200,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 startActivity(signoutIntent);
                 finish();
 
-                pref.edit()
-                        .remove("username")
-                        .remove("password")
-                        .apply();
-
+                new TokenUser(this).removeTokens();
                 Toast.makeText(this, "You have logged out!", Toast.LENGTH_SHORT).show();
                 break;
         }
 
-        if (fragment != null) {
-            navigationView.setCheckedItem(id);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.showFragment, fragment);
-            ft.addToBackStack(null);
-            getSupportFragmentManager().popBackStack();
-            ft.commit();
-//            findViewById(R.id.scroll_home).setVisibility(View.INVISIBLE);
-        } else {
-//            findViewById(R.id.scroll_home).setVisibility(View.VISIBLE);
-        }
-
+        navigationView.setCheckedItem(id);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onClick(View view) {
-
-//        switch (view.getId()) {
-//            case R.id.marks:
-//                Intent IntentMarks = new Intent(HomePage.this, MarksPage.class);
-//                IntentMarks.putExtra("COOKIES", jsonCookies);
-//                startActivity(IntentMarks);
-//                break;
-//
-//            case R.id.directory:
-//                Intent intentPhonDirect = new Intent(HomePage.this, FacultyDirectory.class);
-//                intentPhonDirect.putExtra("COOKIES", jsonCookies);
-//                startActivity(intentPhonDirect);
-//                break;
-//
-//            case R.id.calendar:
-//                Intent intent = new Intent(HomePage.this, ReferenceActivity.class);
-//                String remoteURL = getString(R.string.academic_calendar_url);
-//                intent.putExtra("INTENT_URL", remoteURL);
-//                intent.putExtra("IS_CALENDAR", true);
-//                startActivity(intent);
-//                break;
-//
-//            case R.id.booster:
-//                startActivity(new Intent(HomePage.this, BoosterAttendance.class));
-//                break;
-//        }
-
     }
 
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
-//        this.findViewById(R.id.scroll_home).setVisibility(View.VISIBLE);
-
         //back press removes fragment layout
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ((FrameLayout) findViewById(R.id.showFragment)).removeAllViewsInLayout();
@@ -324,13 +243,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         super.onActivityResult(requestCode, resultCode, data);
         setResult(resultCode, data);
 
-        if (requestCode == OPEN_NEW_ACTIVITY) {
-            navigationView.setCheckedItem(R.id.home);
-            FrameLayout layout = findViewById(R.id.showFragment);
-            layout.removeAllViewsInLayout();
-
-        } else if (requestCode == 1337) {
-
+        if (requestCode == 1337) {
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Pleaseee contribute! ;_;", Toast.LENGTH_LONG).show();
             } else {
@@ -366,7 +279,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         ((TextView) contributionView.findViewById(R.id.contribution_title)).setText(R.string.thank_you);
                         ((TextView) contributionView.findViewById(R.id.transaction_desc)).setText(R.string.contribution_sent_message);
 
-                        pref.edit().putInt("FIRST_COUNT", -1).apply();
+//                        pref.edit().putInt("FIRST_COUNT", -1).apply();
                     } else if (Status.equals("FAILURE")) {
                         tick.setImageResource(R.drawable.ic_cross);
                         ((TextView) contributionView.findViewById(R.id.contribution_title)).setText(R.string.transaction_failed);
@@ -401,34 +314,5 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             return null;
         }
         return stringToSplit.split(splitBy);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (pref.getBoolean("FIRST_RUN", true)) {
-            pref.edit().putBoolean("FIRST_RUN", false).apply();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void processFinish(ArrayList<SubjectAttendance> attendanceList) {
-        if (attendanceList != null) {
-            Log.i(TAG, "Attendance List: " + attendanceList.get(3).getSubjectName());
-
-            AttendanceListAdapter adapter = new AttendanceListAdapter(this, R.layout.adapter_attendance, attendanceList);
-            ListView mListView = findViewById(R.id.homelistAtendance);
-            mListView.smoothScrollBy(0, 0);
-            mListView.setAdapter(adapter);
-
-            findViewById(R.id.home_attendance_view).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.home_attendance_view).setVisibility(View.GONE);
-        }
     }
 }

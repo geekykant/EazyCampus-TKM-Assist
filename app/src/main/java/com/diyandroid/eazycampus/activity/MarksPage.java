@@ -16,8 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import com.diyandroid.eazycampus.BuildConfig;
-import com.diyandroid.eazycampus.ExceptionHandlingAsyncTask;
-import com.diyandroid.eazycampus.Marks;
+import com.diyandroid.eazycampus.model.Marks;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.MarksListAdapter;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;

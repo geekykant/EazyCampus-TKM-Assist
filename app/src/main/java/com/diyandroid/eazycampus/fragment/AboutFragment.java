@@ -14,17 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.activity.CreditsPage;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -40,18 +37,18 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         //initialize the toolbar
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.fragToolbar);
-//        toolbar.setTitle("About");
-        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //open navigation drawer when click navigation back button
-                ((FrameLayout) getActivity().findViewById(R.id.showFragment)).removeAllViewsInLayout();
-//                ((ScrollView) getActivity().findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
-                ((NavigationView) getActivity().findViewById(R.id.navigationview)).setCheckedItem(R.id.home);
-            }
-        });
+//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.fragToolbar);
+////        toolbar.setTitle("About");
+//        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //open navigation drawer when click navigation back button
+//                ((FrameLayout) getActivity().findViewById(R.id.showFragment)).removeAllViewsInLayout();
+////                ((ScrollView) getActivity().findViewById(R.id.scroll_home)).setVisibility(View.VISIBLE);
+//                ((NavigationView) getActivity().findViewById(R.id.navigationview)).setCheckedItem(R.id.home);
+//            }
+//        });
 
         facebook = view.findViewById(R.id.facebook);
         youtube = view.findViewById(R.id.youtube);

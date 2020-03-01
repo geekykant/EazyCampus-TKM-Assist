@@ -3,8 +3,6 @@ package com.diyandroid.eazycampus.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -13,6 +11,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.diyandroid.eazycampus.R;
 
@@ -31,14 +32,14 @@ public class ReferenceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
 
-        pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        pullToRefresh = findViewById(R.id.swiperefresh);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBarNotes);
-        firstProgress = (ProgressBar) findViewById(R.id.firstProgressNotes);
-        frameLayout = (FrameLayout) findViewById(R.id.frameLayoutNotes);
+        progressBar = findViewById(R.id.progressBarNotes);
+        firstProgress = findViewById(R.id.firstProgressNotes);
+        frameLayout = findViewById(R.id.frameLayoutNotes);
 
         //WebView
-        mwebView = (WebView) findViewById(R.id.webViewNotes);
+        mwebView = findViewById(R.id.webViewNotes);
         WebSettings webSettings = mwebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 

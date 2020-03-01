@@ -7,17 +7,17 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/navigationMenu"
+        android:id="@+id/navigationAssignment"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="Assignment" />
 
     <item
-        android:id="@+id/navigationMyCourses"
+        android:id="@+id/navigationPerformance"
         android:icon="@drawable/ic_effort"
         android:title="Performance" />
 
     <item
-        android:id="@+id/navigationSearch"
+        android:id="@+id/navigationNormalised"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="Normalised" />
 

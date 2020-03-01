@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.diyandroid.eazycampus.Notification;
+import com.diyandroid.eazycampus.model.Notification;
 import com.diyandroid.eazycampus.R;
 
 import java.util.ArrayList;

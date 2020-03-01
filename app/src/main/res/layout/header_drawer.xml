@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/tkm_cover"
     android:orientation="vertical"
-    android:backgroundTint="#11000000"
+    android:backgroundTint="@color/whiteBodyColor"
     android:backgroundTintMode="src_over"
     android:theme="@style/RobotoTextViewStyle"
-    android:padding="18dp">
+    android:paddingStart="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="18dp">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
@@ -16,7 +18,7 @@
         android:layout_marginTop="33dp"
         android:scaleType="centerCrop"
         android:src="@drawable/profile_ic_1"
-        app:civ_border_color="#ffffff"
+        app:civ_border_color="#000"
         android:backgroundTint="@color/colorPrimary"
         android:background="@drawable/login_button"
         app:civ_border_width="3dp" />
@@ -27,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="Sreekant Shenoy"
-        android:textColor="#ffffff"
+        android:textColor="#000"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -35,8 +37,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TKM College of Engineering"
-        android:textColor="@color/cpb_white"
-        android:textSize="13sp"
-        android:textStyle="italic" />
+        android:textColor="#000"
+        android:textSize="13sp"/>
+    
+    <TextView
+        android:id="@+id/drawerRollNo"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roll No: B17EC54"
+        android:textColor="#000"
+        android:textSize="13sp"/>
+
+    <View
+        android:layout_marginTop="20dp"
+        android:background="#2E2E2E"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 </LinearLayout>

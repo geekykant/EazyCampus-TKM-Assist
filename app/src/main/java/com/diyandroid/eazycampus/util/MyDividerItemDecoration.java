@@ -1,4 +1,4 @@
-package com.diyandroid.eazycampus;
+package com.diyandroid.eazycampus.util;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -6,10 +6,11 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MyDividerItemDecoration  extends RecyclerView.ItemDecoration {
 

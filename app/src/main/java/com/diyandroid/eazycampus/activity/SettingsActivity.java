@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.diyandroid.eazycampus.AppCompatPreferenceActivity;
+import com.diyandroid.eazycampus.util.AppCompatPreferenceActivity;
 import com.diyandroid.eazycampus.R;
 import com.google.firebase.messaging.FirebaseMessaging;
 

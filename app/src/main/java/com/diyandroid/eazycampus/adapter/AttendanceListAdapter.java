@@ -6,55 +6,35 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.diyandroid.eazycampus.R;
-import com.diyandroid.eazycampus.SubjectAttendance;
+import com.diyandroid.eazycampus.model.SubjectAttendance;
 
 import java.util.ArrayList;
 
-public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
+public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAdapter.MyViewHolder> {
 
     private static final String TAG = "AttendanceListAdapter";
 
     private Context mContext;
     private int mResource;
 
-    private static class ViewHolder {
-        TextView subjectName, totalClasses, totalAttended, attendancePerct, bunksub;
-    }
-
-    public AttendanceListAdapter(Context context, int resource, ArrayList<SubjectAttendance> objects) {
-        super(context, resource, objects);
-        mContext = context;
-        mResource = resource;
-    }
-
-    private ViewHolder holder;
+    private ArrayList<SubjectAttendance> list_items;
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        //Create the person object with the information
-        SubjectAttendance person = getItem(position);
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(mResource, parent, false);
+        return new MyViewHolder(view);
+    }
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(mResource, parent, false);
-            holder = new ViewHolder();
-
-            holder.subjectName = convertView.findViewById(R.id.subname);
-            holder.totalClasses = convertView.findViewById(R.id.totalsub);
-            holder.totalAttended = convertView.findViewById(R.id.attdsub);
-            holder.attendancePerct = convertView.findViewById(R.id.percentageattnd);
-            holder.bunksub = convertView.findViewById(R.id.bunksub);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        SubjectAttendance person = list_items.get(position);
 
         holder.subjectName.setText(person.getSubjectName());
         holder.totalClasses.setText(person.getTotalClasses());
@@ -66,15 +46,37 @@ public class AttendanceListAdapter extends ArrayAdapter<SubjectAttendance> {
 
         //May crash if integer not received
         if (position != 0) {
-            holder.bunksub.setText(getPFAttendance(Integer.parseInt(person.getTotalAttended()), Integer.parseInt(person.getTotalClasses())));
+            holder.bunksub.setText(getPFAttendance(Integer.parseInt(person.getTotalAttended()), Integer.parseInt(person.getTotalClasses()), holder));
         } else {
             holder.bunksub.setText("");
         }
-
-        return convertView;
     }
 
-    String getPFAttendance(int classesAttended, int classesTotal) {
+    @Override
+    public int getItemCount() {
+        return list_items.size();
+    }
+
+    public AttendanceListAdapter(Context context, int resource, ArrayList<SubjectAttendance> objects) {
+        this.mContext = context;
+        this.mResource = resource;
+        this.list_items = objects;
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView subjectName, totalClasses, totalAttended, attendancePerct, bunksub;
+
+        public MyViewHolder(View view) {
+            super(view);
+            subjectName = view.findViewById(R.id.subname);
+            totalClasses = view.findViewById(R.id.totalsub);
+            totalAttended = view.findViewById(R.id.attdsub);
+            attendancePerct = view.findViewById(R.id.percentageattnd);
+            bunksub = view.findViewById(R.id.bunksub);
+        }
+    }
+
+    private String getPFAttendance(int classesAttended, int classesTotal, MyViewHolder holder) {
         int ATTENDANCE_PERCENT = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("ATTENDANCE_PERCENT", 75);
 
         if (classesTotal == 0) {

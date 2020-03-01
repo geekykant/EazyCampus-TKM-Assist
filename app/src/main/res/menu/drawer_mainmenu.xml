@@ -6,7 +6,7 @@
         <item
             android:id="@+id/home"
             android:icon="@drawable/ic_home"
-            android:iconTint="@color/cpb_blue"
+            android:iconTint="@color/black_overlay"
             android:title="Home" />
         <item
             android:id="@+id/settings"
@@ -18,6 +18,11 @@
             android:icon="@drawable/ic_flag"
             android:iconTint="@color/black_overlay"
             android:title="About" />
+        <item
+            android:id="@+id/donate"
+            android:icon="@drawable/ic_donate"
+            android:iconTint="@color/black_overlay"
+            android:title="Donate/Support" />
         <item
             android:id="@+id/signout"
             android:icon="@drawable/ic_logout"
