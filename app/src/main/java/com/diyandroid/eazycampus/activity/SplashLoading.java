@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,20 +22,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.diyandroid.eazycampus.BuildConfig;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.helper.LoginHelper;
+import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.model.User;
 import com.diyandroid.eazycampus.util.TokenUser;
+import com.diyandroid.eazycampus.util.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
+import java.util.ArrayList;
+
 
 public class SplashLoading extends AppCompatActivity implements LoginHelper.LoginListener {
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
-    private TokenUser tokenUser = new TokenUser(this);
+    private TokenUser tokenUser;
     private LoginHelper loginHelper;
+
+    private DilatingDotsProgressBar progress;
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -49,6 +54,10 @@ public class SplashLoading extends AppCompatActivity implements LoginHelper.Logi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_loading);
 
+        progress = findViewById(R.id.progress);
+        progress.showNow();
+
+        tokenUser = new TokenUser(this);
         loginHelper = new LoginHelper(this);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -78,26 +87,33 @@ public class SplashLoading extends AppCompatActivity implements LoginHelper.Logi
                                 loginHelper.doLogin(user);
                             }
                         } else {
-                            Toast.makeText(SplashLoading.this, "Please restart app to work!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SplashLoading.this, "Restart app with Internet ON to work!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    @Override
-    public void onLoginSuccessful(User user) {
-        DilatingDotsProgressBar progress = findViewById(R.id.progress);
-        progress.showNow();
 
-        startActivity(new Intent(SplashLoading.this, HomePage.class));
+    @Override
+    public void onLoginSuccessful(User user, ArrayList<SubjectAttendance> attendanceList) {
+        Intent intent = new Intent(SplashLoading.this, HomePage.class);
+        intent.putExtra("ATTENDANCE_LIST", Utils.getGsonParser().toJson(attendanceList));
+
+        Log.d("k", "onLoginSuccessful: " + attendanceList);
+
+        startActivity(intent);
         finish();
+
+        overridePendingTransition(R.anim.load_up_anim, 0);
     }
 
     @Override
     public void onLoginFailed(String message, boolean show_error) {
-        if (TextUtils.isEmpty(message)) {
-            return;
-        }
+//        if (TextUtils.isEmpty(message)) {
+//            return;
+//        }
+
+        progress.hide();
 
         startActivity(new Intent(SplashLoading.this, LoginPage.class));
         finish();

@@ -4,24 +4,24 @@ import com.diyandroid.eazycampus.model.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface GetDataService {
 
     //TODO: Can be implemented with Cookies too...
 
-    @GET("/eazycampus/login")
+    @POST("/eazycampus/login")
     Call<APIResponse> doLogin(@Body User user);
 
-    @GET("/eazycampus/attendance")
+    @POST("/eazycampus/attendance")
     Call<APIResponse> getAttendance(@Body User user);
 
-    @GET("/eazycampus/assignment")
+    @POST("/eazycampus/assignment")
     Call<APIResponse> getAssignmentMarks(@Body User user);
 
-    @GET("/eazycampus/performance")
+    @POST("/eazycampus/performance")
     Call<APIResponse> getPerformanceMarks(@Body User user);
 
-    @GET("/eazycampus/normalised_marks")
+    @POST("/eazycampus/normalised_marks")
     Call<APIResponse> getNormalisedMarks(@Body User user);
 }

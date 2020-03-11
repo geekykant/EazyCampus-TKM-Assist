@@ -13,11 +13,7 @@
             android:icon="@drawable/ic_settings"
             android:iconTint="@color/black_overlay"
             android:title="Settings" />
-        <item
-            android:id="@+id/about"
-            android:icon="@drawable/ic_flag"
-            android:iconTint="@color/black_overlay"
-            android:title="About" />
+
         <item
             android:id="@+id/donate"
             android:icon="@drawable/ic_donate"

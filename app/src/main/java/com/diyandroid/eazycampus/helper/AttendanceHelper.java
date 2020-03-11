@@ -1,5 +1,7 @@
 package com.diyandroid.eazycampus.helper;
 
+import android.util.Log;
+
 import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.model.User;
 import com.diyandroid.eazycampus.service.APIResponse;
@@ -13,6 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AttendanceHelper {
+    private static final String TAG = AttendanceHelper.class.getSimpleName();
 
     private AttendanceListener listener;
     private GetDataService service;
@@ -30,6 +33,8 @@ public class AttendanceHelper {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                 APIResponse apiResponse = response.body();
+
+                Log.d(TAG, "onResponse: ");
 
                 if (response.isSuccessful() && apiResponse.getList() != null) {
                     listener.onAttendanceSuccess(apiResponse.getList());

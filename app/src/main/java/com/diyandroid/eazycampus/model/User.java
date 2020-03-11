@@ -4,18 +4,18 @@ public class User {
     private int username;
     private String password;
 
-    private String login_name, branch_roll_no;
+    private String login_name, rollno;
 
     public User(int username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public User(int username, String password, String login_name, String branch_roll_no) {
+    public User(int username, String password, String login_name, String rollno) {
         this.username = username;
         this.password = password;
         this.login_name = login_name;
-        this.branch_roll_no = branch_roll_no;
+        this.rollno = rollno;
     }
 
     public int getUsername() {
@@ -30,7 +30,7 @@ public class User {
         return login_name;
     }
 
-    public String getBranch_roll_no() {
-        return branch_roll_no;
+    public String getRoll_no() {
+        return rollno;
     }
 }

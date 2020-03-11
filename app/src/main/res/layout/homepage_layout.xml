@@ -30,8 +30,6 @@
                 android:layout_marginTop="?attr/actionBarSize"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/home_items" />
-
             </FrameLayout>
         </RelativeLayout>
 

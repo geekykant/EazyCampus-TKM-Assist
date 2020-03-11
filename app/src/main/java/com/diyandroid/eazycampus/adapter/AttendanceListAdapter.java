@@ -24,6 +24,14 @@ public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAd
     private int mResource;
 
     private ArrayList<SubjectAttendance> list_items;
+    private int subjects_under_counter;
+
+    public AttendanceListAdapter(Context context, int resource, ArrayList<SubjectAttendance> objects) {
+        this.mContext = context;
+        this.mResource = resource;
+        this.list_items = objects;
+        this.subjects_under_counter = 0;
+    }
 
     @NonNull
     @Override
@@ -57,16 +65,10 @@ public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAd
         return list_items.size();
     }
 
-    public AttendanceListAdapter(Context context, int resource, ArrayList<SubjectAttendance> objects) {
-        this.mContext = context;
-        this.mResource = resource;
-        this.list_items = objects;
-    }
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        private TextView subjectName, totalClasses, totalAttended, attendancePerct, bunksub;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView subjectName, totalClasses, totalAttended, attendancePerct, bunksub;
-
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
             subjectName = view.findViewById(R.id.subname);
             totalClasses = view.findViewById(R.id.totalsub);
@@ -107,6 +109,7 @@ public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAd
 
 //            return "You've to sit in " + flag + " more classes to be eligible to write exams!";
             holder.bunksub.setTextColor(Color.RED);
+//            listener.incrementAttendanceDrop();
             return "(-" + flag + ")";
         }
     }

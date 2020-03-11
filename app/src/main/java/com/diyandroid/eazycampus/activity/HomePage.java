@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +29,15 @@ import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
 import com.diyandroid.eazycampus.fragment.AttendanceFragment;
+import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.util.TokenUser;
+import com.diyandroid.eazycampus.util.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -50,6 +53,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private FragmentManager fm;
 
     private TokenUser tokenUser;
+    private ArrayList<SubjectAttendance> attendance_list;
+    private BottomNavigationView bottomNavigationView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -58,11 +63,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigationHome:
-                    loadFragment(new AttendanceFragment(getApplicationContext()));
+                    loadFragment(new AttendanceFragment(getApplicationContext(), attendance_list));
                     return true;
                 case R.id.navigationDirectory:
-                    startActivity(new Intent(HomePage.this, FacultyDirectory.class));
-                    return false;
+                    startActivityForResult(new Intent(HomePage.this, FacultyDirectory.class), 900);
+                    return true;
             }
             return false;
         }
@@ -73,7 +78,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.showFragment, fragment);
             ft.addToBackStack(null);
-            getSupportFragmentManager().popBackStack();
             ft.commit();
         }
     }
@@ -83,9 +87,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
 
-        loadFragment(new AttendanceFragment(getApplicationContext()));
-        tokenUser = new TokenUser(this);
+        String json = getIntent().getStringExtra("ATTENDANCE_LIST");
+        attendance_list = Utils.getGsonParser().fromJson(json, new TypeToken<ArrayList<SubjectAttendance>>() {
+        }.getType());
+
+        Log.d(TAG, "onCreate: ");
+
         fm = getSupportFragmentManager();
+        loadFragment(new AttendanceFragment(getApplicationContext(), attendance_list));
+        tokenUser = new TokenUser(this);
 
         init();
 
@@ -96,7 +106,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     private void init() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         bottomNavigationView.setSelectedItemId(R.id.navigationHome);
 
@@ -183,15 +193,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         switch (id) {
             case R.id.home:
-                FrameLayout layout = findViewById(R.id.showFragment);
-                layout.removeAllViewsInLayout();
+                loadFragment(new AttendanceFragment(getApplicationContext(), attendance_list));
                 break;
 
             case R.id.settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivityForResult(new Intent(this, SettingsActivity.class), 700);
                 break;
 
-            case R.id.about:
+            case R.id.donate:
                 loadFragment(new AboutFragment());
                 break;
 
@@ -214,34 +223,38 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public void onBackPressed() {
-        //back press removes fragment layout
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            ((FrameLayout) findViewById(R.id.showFragment)).removeAllViewsInLayout();
-            getSupportFragmentManager().popBackStack();
-            navigationView.setCheckedItem(R.id.home);
-        } else {
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
-            }
-
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
+        if (doubleBackToExitPressedOnce) {
+            finish();
+            return;
         }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         setResult(resultCode, data);
+
+        if (requestCode == 900) {
+            bottomNavigationView.setSelectedItemId(R.id.navigationHome);
+            return;
+        }
+
+        if (requestCode == 700) {
+            navigationView.setCheckedItem(R.id.home);
+            loadFragment(new AttendanceFragment(getApplicationContext(), attendance_list));
+            return;
+        }
 
         if (requestCode == 1337) {
             if (resultCode == RESULT_CANCELED) {

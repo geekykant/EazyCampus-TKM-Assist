@@ -1,5 +1,6 @@
 package com.diyandroid.eazycampus.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -16,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -116,7 +116,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.clickToDonate:
-                Toast.makeText(getActivity(), "Please UPI to geekykant@oksbi", Toast.LENGTH_LONG).show();
+                paywithUPI();
                 break;
         }
     }
@@ -144,5 +144,22 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         pref.edit().putInt("FIRST_COUNT", -1).apply();
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void paywithUPI() {
+        Uri UPI = new Uri.Builder()
+                .scheme("upi")
+                .authority("pay")
+                .appendQueryParameter("pa", "geekykant@oksbi")
+                .appendQueryParameter("pn", "SREEKANT SHENOY")
+                .appendQueryParameter("tn", "EazyCampus Development Support :)")
+                .appendQueryParameter("cu", "INR")
+                .build();
+
+        Intent intent = new Intent();
+        intent.setData(UPI);
+        Intent chooser = Intent.createChooser(intent, "Pay with...");
+        startActivityForResult(chooser, 1337, null);
     }
 }

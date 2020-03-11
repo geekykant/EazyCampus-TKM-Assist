@@ -12,26 +12,29 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.helper.LoginHelper;
+import com.diyandroid.eazycampus.helper.ProgressDialog;
+import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.model.User;
 import com.diyandroid.eazycampus.util.TokenUser;
-import com.google.android.material.textfield.TextInputLayout;
+import com.diyandroid.eazycampus.util.Utils;
+
+import java.util.ArrayList;
 
 public class LoginPage extends AppCompatActivity implements LoginHelper.LoginListener {
 
     private EditText username, password;
-    private ProgressBar progressBar;
     private CheckBox remember;
     private Button login_button;
 
-    private TokenUser tokenUser = new TokenUser(this);
+    private TokenUser tokenUser;
     private LoginHelper loginHelper;
+    private ProgressDialog dialogLoad;
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -43,6 +46,7 @@ public class LoginPage extends AppCompatActivity implements LoginHelper.LoginLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+        tokenUser = new TokenUser(this);
 
         loginHelper = new LoginHelper(this);
 
@@ -80,20 +84,25 @@ public class LoginPage extends AppCompatActivity implements LoginHelper.LoginLis
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
 
-        progressBar = findViewById(R.id.progressbar);
         remember = findViewById(R.id.rememberCheck);
     }
 
     private void doLogin() {
         if (isNetworkAvailable()) {
-            if (TextUtils.isEmpty(username.getText()) && TextUtils.isEmpty(password.getText())) {
+            if (TextUtils.isEmpty(username.getText()) || TextUtils.isEmpty(password.getText())) {
                 username.setError("Username incorrect");
                 password.setError("Password incorrect");
-
-                User user = new User(Integer.parseInt(username.getText().toString()), password.getText().toString());
-                loginHelper.doLogin(user);
                 return;
             }
+
+            if (dialogLoad != null) dialogLoad.dismiss();
+            dialogLoad = new ProgressDialog();
+            dialogLoad.show(getSupportFragmentManager(), "");
+
+            User user = new User(Integer.parseInt(username.getText().toString()), password.getText().toString());
+            System.out.println(user);
+
+            loginHelper.doLogin(user);
 
             login_button.setClickable(false);
             username.setEnabled(false);
@@ -107,15 +116,17 @@ public class LoginPage extends AppCompatActivity implements LoginHelper.LoginLis
     protected void onStart() {
         super.onStart();
 
-        int USR_NAME = tokenUser.getPrefUsename();
-        String PASS_NAME = tokenUser.getPrefPassword();
-
-        if (USR_NAME != -1 && !TextUtils.isEmpty(PASS_NAME)) {
-            //Prompt for username and password
-            username.setText(USR_NAME);
-            password.setText(PASS_NAME);
-            ((TextInputLayout) findViewById(R.id.passbox)).setPasswordVisibilityToggleEnabled(false);
-        }
+//        tokenUser = new TokenUser(this);
+//
+//        int USR_NAME = tokenUser.getPrefUsername();
+//        String PASS_NAME = tokenUser.getPrefPassword();
+//
+//        if (USR_NAME != -1 && !TextUtils.isEmpty(PASS_NAME)) {
+//            //Prompt for username and password
+//            username.setText(USR_NAME);
+//            password.setText(PASS_NAME);
+//            ((TextInputLayout) findViewById(R.id.passbox)).setPasswordVisibilityToggleEnabled(false);
+//        }
     }
 
     @Override
@@ -124,22 +135,29 @@ public class LoginPage extends AppCompatActivity implements LoginHelper.LoginLis
 //        super.onBackPressed();
     }
 
-    @Override
-    public void onLoginSuccessful(User user) {
-        startActivity(new Intent(LoginPage.this, HomePage.class));
-        finish();
+    private static final String TAG = LoginPage.class.getSimpleName();
 
+    @Override
+    public void onLoginSuccessful(User user, ArrayList<SubjectAttendance> attendanceList) {
         if (remember.isChecked()) {
-            tokenUser.storeToken(user);
+            tokenUser.storeToken(user, Integer.parseInt(username.getText().toString()), password.getText().toString());
         }
 
+        Intent intent = new Intent(LoginPage.this, HomePage.class);
+        intent.putExtra("ATTENDANCE_LIST", Utils.getGsonParser().toJson(attendanceList));
+
         tokenUser.setFirstTime(false);
+
+        startActivity(intent);
+        finish();
+
         overridePendingTransition(R.anim.load_up_anim, 0);
     }
 
     @Override
     public void onLoginFailed(String message, boolean show_error) {
-        progressBar.setVisibility(View.INVISIBLE);
+        dialogLoad.dismiss();
+
         login_button.setClickable(true);
         username.setEnabled(true);
         password.setEnabled(true);
@@ -147,8 +165,8 @@ public class LoginPage extends AppCompatActivity implements LoginHelper.LoginLis
         if (show_error) {
             username.setError("Username incorrect");
             password.setError("Password incorrect");
-        } else {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
+
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

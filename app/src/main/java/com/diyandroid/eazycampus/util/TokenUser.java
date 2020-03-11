@@ -2,6 +2,7 @@ package com.diyandroid.eazycampus.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -9,26 +10,26 @@ import androidx.annotation.NonNull;
 
 import com.diyandroid.eazycampus.model.User;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 public class TokenUser {
 
     private static final String TAG = TokenUser.class.getSimpleName();
     private SharedPreferences pref;
 
     public TokenUser(@NonNull Context context) {
-        pref = getDefaultSharedPreferences(context);
+        pref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void storeToken(User user) {
+    public void storeToken(User user, int username, String password) {
         pref.edit().clear().apply();
         pref.edit()
-                .putInt("username", user.getUsername())
-                .putString("password", user.getPassword())
-                .putString("roll_no", user.getBranch_roll_no()).apply();
+                .putInt("int_username", username)
+                .putString("nice_password", password)
+                .putString("login_name", user.getLogin_name())
+                .putString("rollno", user.getRoll_no()).apply();
 
         Log.i(TAG, "storeToken: " + user.getUsername());
         Log.i(TAG, "storeToken: " + user.getPassword());
+        Log.i(TAG, "storeToken: " + user.getLogin_name());
     }
 
     public void removeTokens() {
@@ -36,13 +37,15 @@ public class TokenUser {
     }
 
     public User getUser() {
-        int username = getPrefUsename();
+        int username = getPrefUsername();
         String password = getPrefPassword();
         String login_name = getPrefLoginName();
         String roll_no = getPrefRollNo();
 
         Log.i(TAG, "getUser: " + username);
         Log.i(TAG, "getUser: " + password);
+        Log.i(TAG, "getUser: " + login_name);
+        Log.i(TAG, "getUser: " + roll_no);
 
         if (username == -1 || TextUtils.isEmpty(password) || TextUtils.isEmpty(login_name)
                 || TextUtils.isEmpty(roll_no)) {
@@ -52,12 +55,12 @@ public class TokenUser {
         return new User(username, password, login_name, roll_no);
     }
 
-    public int getPrefUsename() {
-        return pref.getInt("username", -1);
+    private int getPrefUsername() {
+        return pref.getInt("int_username", -1);
     }
 
-    public String getPrefPassword() {
-        return pref.getString("password", null);
+    private String getPrefPassword() {
+        return pref.getString("nice_password", null);
     }
 
     public String getPrefRollNo() {
@@ -69,11 +72,11 @@ public class TokenUser {
     }
 
     public void setFirstTime(boolean bool) {
-        pref.edit().putBoolean("FIRST_RUN", bool).apply();
+        pref.edit().putBoolean("YES_FIRST_RUN", bool).apply();
     }
 
     public Boolean isFirstTime() {
-        return pref.getBoolean("FIRST_RUN", true);
+        return pref.getBoolean("YES_FIRST_RUN", true);
     }
 
 }

@@ -1,15 +1,21 @@
 package com.diyandroid.eazycampus.helper;
 
+import android.util.Log;
+
+import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.model.User;
 import com.diyandroid.eazycampus.service.APIResponse;
 import com.diyandroid.eazycampus.service.GetDataService;
 import com.diyandroid.eazycampus.util.RetrofitClientInstance;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginHelper {
+    private static final String TAG = LoginHelper.class.getSimpleName();
 
     private LoginListener listener;
     private GetDataService service;
@@ -26,11 +32,14 @@ public class LoginHelper {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                 APIResponse apiResponse = response.body();
+                Log.d(TAG, "onResponse: ");
+
 
                 if (response.isSuccessful()) {
-                    listener.onLoginSuccessful(apiResponse.getUser());
-                } else {
-                    listener.onLoginFailed(apiResponse.getMessage(), true);
+                    if (apiResponse.getList() == null)
+                        listener.onLoginFailed(apiResponse.getMessage(), true);
+                    else
+                        listener.onLoginSuccessful(apiResponse.getUser(), apiResponse.getList());
                 }
             }
 
@@ -43,7 +52,7 @@ public class LoginHelper {
     }
 
     public interface LoginListener {
-        void onLoginSuccessful(User user);
+        void onLoginSuccessful(User user, ArrayList<SubjectAttendance> attendanceList);
 
         void onLoginFailed(String message, boolean show_error);
     }
