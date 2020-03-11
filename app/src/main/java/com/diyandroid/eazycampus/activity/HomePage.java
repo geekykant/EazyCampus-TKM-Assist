@@ -65,6 +65,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigationHome:
+                    if (navigationView != null)
+                        navigationView.setCheckedItem(R.id.home);
                     loadFragment(new AttendanceFragment(getApplicationContext(), attendance_list));
                     return true;
                 case R.id.navigationDirectory:
@@ -88,6 +90,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
+
+        Utils.setLightStatusBar(getWindow().getDecorView(), this);
 
         String json = getIntent().getStringExtra("ATTENDANCE_LIST");
         attendance_list = Utils.getGsonParser().fromJson(json, new TypeToken<ArrayList<SubjectAttendance>>() {
@@ -170,7 +174,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //code for setting dark mode
                 //true for dark mode, false for day mode, currently toggling on each click
-                
+
             }
         });
 
@@ -186,7 +190,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 case android.R.id.home:
                     mDrawerLayout.openDrawer(GravityCompat.START);
                     break;
-                    
+
 //                case R.id.app_send:
 //                    Intent sendIntent = new Intent();
 //                    sendIntent.setAction(Intent.ACTION_SEND);
@@ -269,6 +273,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         if (requestCode == 900) {
             bottomNavigationView.setSelectedItemId(R.id.navigationHome);
+            navigationView.setCheckedItem(R.id.home);
             return;
         }
 

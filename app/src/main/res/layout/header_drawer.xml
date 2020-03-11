@@ -18,7 +18,7 @@
         android:layout_marginTop="33dp"
         android:scaleType="centerCrop"
         android:src="@drawable/profile_ic_1"
-        app:civ_border_color="#000"
+        app:civ_border_color="@color/contentTextColor"
         android:backgroundTint="@color/colorPrimary"
         android:background="@drawable/login_button"
         app:civ_border_width="3dp" />
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="Sreekant Shenoy"
-        android:textColor="#000"
+        android:textColor="@color/miniTitleColor"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TKM College of Engineering"
-        android:textColor="#000"
+        android:textColor="@color/miniTitleColor"
         android:textSize="13sp"/>
     
     <TextView
@@ -46,12 +46,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Roll No: B17EC54"
-        android:textColor="#000"
+        android:textColor="@color/miniTitleColor"
         android:textSize="13sp"/>
 
     <View
         android:layout_marginTop="20dp"
-        android:background="#2E2E2E"
+        android:background="@color/miniTitleColor"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 

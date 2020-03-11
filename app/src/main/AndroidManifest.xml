@@ -16,6 +16,7 @@
         <activity
             android:name=".activity.FacultyDirectory"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -26,6 +27,7 @@
         </activity>
 
         <activity
+            android:launchMode="singleInstance"
             android:name=".activity.SplashLoading"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -37,22 +39,30 @@
         <activity
             android:name=".activity.LoginPage"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"/>
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.HomePage"
             android:configChanges="uiMode"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsTheme" />
 
         <activity
+            android:launchMode="singleInstance"
             android:name=".activity.BoosterAttendance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CreditsPage"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
 
         <meta-data

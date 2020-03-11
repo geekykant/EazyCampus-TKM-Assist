@@ -7,21 +7,21 @@
         <item name="colorPrimaryDark">@color/navigationcolor</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/circular_std</item>
-        <item name="colorControlHighlight">#f44336</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+<!--        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>-->
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/circular_std</item>
     </style>
 
-    <style name="SettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#7200d9</item>
-        <item name="colorPrimaryDark">#7200d9</item>
-        <item name="colorAccent">#7200d9</item>
-        <item name="android:textColor">#000</item>
-        <item name="android:textColorSecondary">#8A000000</item>
-        <item name="android:windowBackground">@color/cpb_white</item>
+    <style name="SettingsTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/whiteBodyColor</item>
+        <item name="colorPrimaryDark">@color/navigationcolor</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/contentTextColor</item>
+        <item name="android:textColorSecondary">@color/miniTitleColor</item>
+        <item name="android:windowBackground">@color/contentBodyColor</item>
     </style>
 
     <style name="NavigationTheme">

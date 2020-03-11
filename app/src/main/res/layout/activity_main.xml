@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:theme="@style/AppTheme.NoActionBar"
-            android:background="@android:color/white"
             app:popupTheme="@style/AppTheme.NoActionBar"/>
 
     </com.google.android.material.appbar.AppBarLayout>

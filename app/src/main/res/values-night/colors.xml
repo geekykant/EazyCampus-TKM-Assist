@@ -3,10 +3,11 @@
     <!--colors for dark mode-->
     <color name="contentBodyColor">#121212</color>
     <color name="contentTextColor">#fff</color>
-    <color name="bottomNavigationBackground">#121212</color>
+    <color name="bottomNavigationBackground">#272727</color>
     <color name="navigationcolor">#363636</color>
     <color name="miniTitleColor">#EBEBEB</color>
 
     <color name="colorAccent">#EBEBEB</color>
+    <color name="whiteBodyColor">#363636</color>
 
 </resources>

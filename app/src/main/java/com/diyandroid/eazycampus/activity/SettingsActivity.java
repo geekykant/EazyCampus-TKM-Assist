@@ -10,8 +10,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.diyandroid.eazycampus.util.AppCompatPreferenceActivity;
 import com.diyandroid.eazycampus.R;
+import com.diyandroid.eazycampus.util.AppCompatPreferenceActivity;
+import com.diyandroid.eazycampus.util.Utils;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
@@ -22,6 +23,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLightStatusBar(getWindow().getDecorView(), this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new GeneralPreferenceFragment()).commit();
     }

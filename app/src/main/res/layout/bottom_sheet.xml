@@ -25,7 +25,7 @@
             android:text="Faculty Details"
             android:textAllCaps="true"
             android:textColor="#FFFFFF"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <ImageView
@@ -58,7 +58,7 @@
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:text="Sreekant Shenoy"
-                android:textSize="20sp" />
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/bottom_department"
@@ -79,7 +79,7 @@
                 android:gravity="left"
                 android:paddingLeft="3dp"
                 android:text="Student"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -141,7 +141,7 @@
                 android:gravity="center"
                 android:text="+91 9897221772"
                 android:textColor="#000"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Button
@@ -173,8 +173,8 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
                     android:src="@drawable/ic_call"
@@ -189,7 +189,7 @@
                     android:gravity="center"
                     android:textColor="#fff"
                     android:text="+91 9897221772"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -201,8 +201,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
                     android:src="@drawable/ic_mail" />
@@ -216,7 +216,7 @@
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
                     android:text="geekykant@gmail.com"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -230,8 +230,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="60dp"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:src="@drawable/ic_address"
@@ -245,7 +245,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:text="House Avenue 3, Bandra, Mumbai 400004"
-                android:textSize="14dp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
     </LinearLayout>

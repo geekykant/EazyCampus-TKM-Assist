@@ -22,7 +22,7 @@
                 android:layout_alignParentTop="true"
                 android:padding="20dp"
                 android:text="Credits &amp; Licenses"
-                android:textColor="@color/black"
+                android:textColor="@color/contentTextColor"
                 android:textSize="25sp" />
 
             <androidx.appcompat.widget.Toolbar

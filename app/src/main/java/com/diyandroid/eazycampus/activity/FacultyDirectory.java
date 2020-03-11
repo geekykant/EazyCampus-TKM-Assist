@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,11 +32,12 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.diyandroid.eazycampus.model.Contact;
 import com.diyandroid.eazycampus.MyApplication;
-import com.diyandroid.eazycampus.util.MyDividerItemDecoration;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.ContactsAdapter;
+import com.diyandroid.eazycampus.model.Contact;
+import com.diyandroid.eazycampus.util.MyDividerItemDecoration;
+import com.diyandroid.eazycampus.util.Utils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -62,6 +62,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Utils.setLightStatusBar(getWindow().getDecorView(), this);
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
@@ -254,7 +255,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
             int flags = view.getSystemUiVisibility();
             flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             view.setSystemUiVisibility(flags);
-            getWindow().setStatusBarColor(Color.WHITE);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.navigationcolor, null));
         }
     }
 
