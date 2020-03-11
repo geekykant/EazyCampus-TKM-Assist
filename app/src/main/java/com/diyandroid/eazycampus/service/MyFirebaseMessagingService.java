@@ -10,7 +10,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.diyandroid.eazycampus.activity.ReferenceActivity;
 import com.diyandroid.eazycampus.app.Config;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -110,10 +109,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             Intent resultIntent = null;
 
-            if (!TextUtils.isEmpty(intent_url)) {
-                resultIntent = new Intent(getApplicationContext(), ReferenceActivity.class);
-                resultIntent.putExtra("INTENT_URL", intent_url);
-            }
+//            if (!TextUtils.isEmpty(intent_url)) {
+//                resultIntent = new Intent(getApplicationContext(), ReferenceActivity.class);
+//                resultIntent.putExtra("INTENT_URL", intent_url);
+//            }
 
             // check for image attachment
             if (TextUtils.isEmpty(imageUrl)) {

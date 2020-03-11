@@ -80,7 +80,7 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
         mAdapter = new ContactsAdapter(this, contactList, this);
 
         // white background notification bar
-        whiteNotificationBar(recyclerView);
+//        whiteNotificationBar(recyclerView);
 
         final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);

@@ -6,23 +6,24 @@
         <item
             android:id="@+id/home"
             android:icon="@drawable/ic_home"
-            android:iconTint="@color/black_overlay"
             android:title="Home" />
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_settings"
-            android:iconTint="@color/black_overlay"
             android:title="Settings" />
+
+        <item
+            android:id="@+id/booster"
+            android:icon="@drawable/ic_booster_menu"
+            android:title="Booster" />
 
         <item
             android:id="@+id/donate"
             android:icon="@drawable/ic_donate"
-            android:iconTint="@color/black_overlay"
             android:title="Donate/Support" />
         <item
             android:id="@+id/signout"
             android:icon="@drawable/ic_logout"
-            android:iconTint="@color/black_overlay"
             android:title="Signout" />
 
     </group>

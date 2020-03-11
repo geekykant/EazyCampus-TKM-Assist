@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--colors for dark mode-->
-    <color name="contentBodyColor">#000</color>
+    <color name="contentBodyColor">#121212</color>
     <color name="contentTextColor">#fff</color>
-    <color name="bottomNavigationBackground">#000</color>
-    <color name="miniTitleColor">#fff</color>
+    <color name="bottomNavigationBackground">#121212</color>
+    <color name="navigationcolor">#363636</color>
+    <color name="miniTitleColor">#EBEBEB</color>
 
+    <color name="colorAccent">#EBEBEB</color>
 
 </resources>

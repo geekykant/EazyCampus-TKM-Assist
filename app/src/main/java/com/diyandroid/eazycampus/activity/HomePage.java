@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -156,7 +158,22 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.home_menu, menu);
+
         getMenuInflater().inflate(R.menu.home_menu, menu);
+        MenuItem item = menu.findItem(R.id.app_send);
+        item.setActionView(R.layout.dark_mode_button);
+
+        SwitchCompat darkmode = item.getActionView().findViewById(R.id.switchForDarkMode);
+        darkmode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //code for setting dark mode
+                //true for dark mode, false for day mode, currently toggling on each click
+                
+            }
+        });
+
         return true;
     }
 
@@ -169,13 +186,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 case android.R.id.home:
                     mDrawerLayout.openDrawer(GravityCompat.START);
                     break;
-                case R.id.app_send:
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
-                    sendIntent.setType("text/plain");
-                    startActivity(sendIntent);
-                    return true;
+                    
+//                case R.id.app_send:
+//                    Intent sendIntent = new Intent();
+//                    sendIntent.setAction(Intent.ACTION_SEND);
+//                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
+//                    sendIntent.setType("text/plain");
+//                    startActivity(sendIntent);
+//                    return true;
 
                 case R.id.app_notification:
                     String ktu_url = "https://ktu.edu.in/eu/core/announcements.htm";
@@ -198,6 +216,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
             case R.id.settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class), 700);
+                break;
+
+            case R.id.booster:
+                startActivityForResult(new Intent(this, BoosterAttendance.class), 900);
                 break;
 
             case R.id.donate:

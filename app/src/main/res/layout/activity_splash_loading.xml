@@ -8,7 +8,7 @@
         android:id="@+id/splashLogo"
         android:layout_width="240dp"
         android:layout_height="200dp"
-        android:tint="@color/deeppurple"
+        android:tint="@color/colorAccent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/eazycampus_logo" />
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/splashLogo"
-        android:color="@color/deeppurple"
+        android:color="@color/colorAccent"
         android:radius="5dp"
         app:dd_animationDuration="500"
         android:layout_centerHorizontal="true"

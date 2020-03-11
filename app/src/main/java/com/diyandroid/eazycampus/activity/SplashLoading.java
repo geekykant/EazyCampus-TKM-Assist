@@ -162,5 +162,4 @@ public class SplashLoading extends AppCompatActivity implements LoginHelper.Logi
         }
         return false;
     }
-
 }

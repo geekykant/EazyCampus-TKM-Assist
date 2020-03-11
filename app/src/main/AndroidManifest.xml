@@ -26,10 +26,6 @@
         </activity>
 
         <activity
-            android:name=".activity.FacultyProfile"
-            android:screenOrientation="portrait"
-            android:theme="@style/AttendanceTheme" />
-        <activity
             android:name=".activity.SplashLoading"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -41,28 +37,14 @@
         <activity
             android:name=".activity.LoginPage"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activity.HomePage"
+            android:configChanges="uiMode"
             android:screenOrientation="portrait"
-            android:theme="@style/HomePageTheme">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
-        <activity
-            android:name=".activity.MarksPage"
-            android:screenOrientation="portrait"
-            android:theme="@style/AttendanceTheme" />
+            android:theme="@style/AppTheme"/>
 
-        <!-- Firebase Notifications -->
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -71,18 +53,7 @@
 
         <activity
             android:name=".activity.BoosterAttendance"
-            android:screenOrientation="portrait"
-            android:theme="@style/AttendanceTheme" />
-
-        <activity
-            android:name=".activity.ReferenceActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AttendanceTheme" />
-
-        <activity
-            android:name=".activity.CreditsPage"
-            android:screenOrientation="portrait"
-            android:theme="@style/creditsTheme" />
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
