@@ -1,11 +1,14 @@
 package com.diyandroid.eazycampus.service;
 
+import androidx.annotation.Keep;
+
 import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.model.User;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+@Keep
 public class APIResponse {
     private String message;
     private User user;

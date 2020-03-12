@@ -27,18 +27,8 @@
 #    public private *;
 #}
 
--keepnames class org.jsoup.nodes.Entities
 -keepattributes *Annotation*, Signature, Exception
 #-repackageclasses
--repackageclasses ''
-
-#-keepclassmembers class * {
-#    public void *test*(...);
-#}
-
-#-keep public class org.jsoup.** {
-#    public *;
-#}
 
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class com.zl.reik.dilatingdotsprogressbar.DilatingDotDrawable { *; }

@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/circular_std</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
-<!--        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>-->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
@@ -16,7 +16,7 @@
     </style>
 
     <style name="SettingsTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/whiteBodyColor</item>
+        <item name="colorPrimary">@color/navigationcolor</item>
         <item name="colorPrimaryDark">@color/navigationcolor</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/contentTextColor</item>

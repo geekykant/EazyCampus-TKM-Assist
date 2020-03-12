@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:theme="@style/RobotoTextViewStyle"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -14,7 +15,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="13sp"
-            android:fontFamily="@font/circular_std"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:paddingTop="9dp"
@@ -28,7 +28,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:padding="9dp"
-            android:fontFamily="@font/circular_std"
             android:textSize="13sp"
             android:text="29"
             android:textColor="@color/miniTitleColor" />
@@ -36,7 +35,6 @@
         <TextView
             android:id="@+id/attdsub"
             android:layout_width="80dp"
-            android:fontFamily="@font/circular_std"
             android:textSize="13sp"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -52,7 +50,6 @@
             android:paddingBottom="9dp"
             android:textSize="13sp"
             android:paddingStart="9dp"
-            android:fontFamily="@font/circular_std"
             android:paddingTop="9dp"
             android:text="79.3"
             android:textColor="@color/miniTitleColor" />
@@ -63,7 +60,6 @@
             android:layout_height="match_parent"
             android:textSize="13sp"
             android:gravity="center"
-            android:fontFamily="@font/circular_std"
             android:text=" (+1) "
             android:textColor="@color/miniTitleColor" />
 

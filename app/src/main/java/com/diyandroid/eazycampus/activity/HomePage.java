@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -30,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.app.Config;
 import com.diyandroid.eazycampus.fragment.AboutFragment;
+import com.diyandroid.eazycampus.fragment.AssignmentFragment;
 import com.diyandroid.eazycampus.fragment.AttendanceFragment;
 import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.util.TokenUser;
@@ -72,6 +71,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 case R.id.navigationDirectory:
                     startActivityForResult(new Intent(HomePage.this, FacultyDirectory.class), 900);
                     return true;
+                case R.id.navigationAssignment:
+                    loadFragment(new AssignmentFragment(getApplicationContext()));
+                    return true;
+                case R.id.navigationPerformance:
+                case R.id.navigationNormalised:
+                    Toast.makeText(HomePage.this, "Will be added in the next update!", Toast.LENGTH_SHORT).show();
+                    return false;
             }
             return false;
         }
@@ -90,8 +96,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_layout);
-
-        Utils.setLightStatusBar(getWindow().getDecorView(), this);
 
         String json = getIntent().getStringExtra("ATTENDANCE_LIST");
         attendance_list = Utils.getGsonParser().fromJson(json, new TypeToken<ArrayList<SubjectAttendance>>() {
@@ -162,22 +166,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.home_menu, menu);
-
         getMenuInflater().inflate(R.menu.home_menu, menu);
-        MenuItem item = menu.findItem(R.id.app_send);
-        item.setActionView(R.layout.dark_mode_button);
-
-        SwitchCompat darkmode = item.getActionView().findViewById(R.id.switchForDarkMode);
-        darkmode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //code for setting dark mode
-                //true for dark mode, false for day mode, currently toggling on each click
-
-            }
-        });
-
         return true;
     }
 
@@ -191,13 +180,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     mDrawerLayout.openDrawer(GravityCompat.START);
                     break;
 
-//                case R.id.app_send:
-//                    Intent sendIntent = new Intent();
-//                    sendIntent.setAction(Intent.ACTION_SEND);
-//                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
-//                    sendIntent.setType("text/plain");
-//                    startActivity(sendIntent);
-//                    return true;
+                case R.id.app_send:
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_eazycampus_text));
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                    return true;
 
                 case R.id.app_notification:
                     String ktu_url = "https://ktu.edu.in/eu/core/announcements.htm";

@@ -15,7 +15,6 @@
         android:id="@+id/welName"
         style="@style/viewParent.headerText"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         tools:text="Hello Sreekant!" />
 
     <TextView

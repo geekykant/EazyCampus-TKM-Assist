@@ -37,7 +37,6 @@ import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.ContactsAdapter;
 import com.diyandroid.eazycampus.model.Contact;
 import com.diyandroid.eazycampus.util.MyDividerItemDecoration;
-import com.diyandroid.eazycampus.util.Utils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -62,7 +61,6 @@ public class FacultyDirectory extends AppCompatActivity implements ContactsAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Utils.setLightStatusBar(getWindow().getDecorView(), this);
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);

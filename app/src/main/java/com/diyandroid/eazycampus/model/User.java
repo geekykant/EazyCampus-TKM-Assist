@@ -1,5 +1,8 @@
 package com.diyandroid.eazycampus.model;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class User {
     private int username;
     private String password;

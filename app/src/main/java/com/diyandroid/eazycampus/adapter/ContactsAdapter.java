@@ -90,8 +90,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
 
         Glide.with(context)
                 .load(contact.getImage())
-                .apply(RequestOptions.circleCropTransform())
-                .apply(new RequestOptions().placeholder(R.drawable.error_faculty))
+                .placeholder(R.drawable.error_faculty)
+                .centerCrop()
+                .circleCrop()
                 .apply(new RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .skipMemoryCache(true))

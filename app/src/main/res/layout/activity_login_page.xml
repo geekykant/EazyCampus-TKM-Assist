@@ -35,7 +35,7 @@
             android:id="@+id/eazylogo"
             android:layout_width="350dp"
             android:layout_height="130dp"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/colorAccent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/eazycampus_logo" />
@@ -71,7 +71,7 @@
                     android:id="@+id/remembertext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/bg_black"
+                    android:textColor="@color/miniTitleColor"
                     android:text="Remember Me" />
 
             </LinearLayout>
@@ -96,7 +96,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:textColor="@color/bg_black"
+            android:textColor="@color/miniTitleColor"
             android:padding="10dp"
             android:text="@string/privacy_policy_text"
             android:textSize="13sp" />
@@ -105,7 +105,7 @@
             android:id="@+id/contact_developer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/bg_black"
+            android:textColor="@color/miniTitleColor"
             android:layout_below="@id/login_button"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
@@ -135,7 +135,7 @@
                 android:maxLength="20"
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorAccent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,7 +148,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
-            android:textColor="@color/bg_black"
+            android:textColor="@color/colorAccent"
             android:hint="Username"
             android:paddingLeft="5dp">
 
@@ -161,7 +161,7 @@
                 android:inputType="number"
                 android:maxLength="7"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorAccent" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>
