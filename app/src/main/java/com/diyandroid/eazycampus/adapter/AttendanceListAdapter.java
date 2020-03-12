@@ -45,11 +45,7 @@ public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAd
         SubjectAttendance person = list_items.get(position);
 
         holder.subjectName.setText(person.getSubjectName());
-        holder.totalClasses.setText(person.getTotalClasses());
-        holder.totalAttended.setText(person.getTotalAttended() + "/" + person.getTotalClasses());
-
-        holder.totalClasses.setVisibility(View.GONE);
-
+        holder.totalAttendedBytotalClasses.setText(person.getTotalAttended() + "/" + person.getTotalClasses());
         holder.attendancePerct.setText(person.getAttendancePercent());
 
         //May crash if integer not received
@@ -66,13 +62,12 @@ public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAd
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView subjectName, totalClasses, totalAttended, attendancePerct, bunksub;
+        private TextView subjectName, totalAttendedBytotalClasses, attendancePerct, bunksub;
 
         MyViewHolder(View view) {
             super(view);
             subjectName = view.findViewById(R.id.subname);
-            totalClasses = view.findViewById(R.id.totalsub);
-            totalAttended = view.findViewById(R.id.attdsub);
+            totalAttendedBytotalClasses = view.findViewById(R.id.attdsub);
             attendancePerct = view.findViewById(R.id.percentageattnd);
             bunksub = view.findViewById(R.id.bunksub);
         }
@@ -108,7 +103,7 @@ public class AttendanceListAdapter extends RecyclerView.Adapter<AttendanceListAd
             } while (percent < ATTENDANCE_PERCENT);
 
 //            return "You've to sit in " + flag + " more classes to be eligible to write exams!";
-            holder.bunksub.setTextColor(Color.RED);
+            holder.bunksub.setTextColor(Color.parseColor("#ffff4444"));
 //            listener.incrementAttendanceDrop();
             return "(-" + flag + ")";
         }

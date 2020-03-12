@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diyandroid.eazycampus.R;
 import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
 import com.diyandroid.eazycampus.helper.AttendanceHelper;
+import com.diyandroid.eazycampus.helper.ProgressDialog;
 import com.diyandroid.eazycampus.model.SubjectAttendance;
 import com.diyandroid.eazycampus.util.TokenUser;
 
@@ -42,6 +43,7 @@ public class AttendanceFragment extends Fragment implements AttendanceHelper.Att
     private AttendanceHelper attendanceHelper;
 
     private TokenUser tokenUser;
+    private ProgressDialog dialogLoad;
 
     public AttendanceFragment(Context context, ArrayList<SubjectAttendance> list) {
         this.context = context;
@@ -63,12 +65,17 @@ public class AttendanceFragment extends Fragment implements AttendanceHelper.Att
             attendanceHelper.fetchAttendance(tokenUser.getUser());
         } else {
             checkAttendanceDrop();
+            dialogLoad.dismiss();
         }
 
         return view;
     }
 
     private void init() {
+        if (dialogLoad != null) dialogLoad.dismiss();
+        dialogLoad = new ProgressDialog();
+        dialogLoad.show(getChildFragmentManager(), "");
+
         RecyclerView recyclerView = view.findViewById(R.id.homelistAtendance);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
@@ -98,14 +105,18 @@ public class AttendanceFragment extends Fragment implements AttendanceHelper.Att
     public void onAttendanceSuccess(ArrayList<SubjectAttendance> attendanceList) {
         Log.i(TAG, "Attendance List: " + attendanceList.get(3).getSubjectName());
 
-        attendanceListMain.clear();
+        attendanceListMain = new ArrayList<>();
         attendanceListMain.addAll(attendanceList);
         adapter.notifyDataSetChanged();
+
+        dialogLoad.dismiss();
     }
 
     @Override
     public void onAttendanceFailed(String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+        dialogLoad.dismiss();
     }
 
     public void checkAttendanceDrop() {

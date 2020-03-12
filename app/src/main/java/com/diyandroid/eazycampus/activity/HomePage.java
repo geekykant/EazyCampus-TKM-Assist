@@ -268,6 +268,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         if (requestCode == 700) {
             navigationView.setCheckedItem(R.id.home);
+            bottomNavigationView.setSelectedItemId(R.id.navigationHome);
             loadFragment(new AttendanceFragment(getApplicationContext(), attendance_list));
             return;
         }

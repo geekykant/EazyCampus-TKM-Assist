@@ -29,10 +29,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     private ContactsAdapterListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, phone, headerTextView, hodBadge;
-        public ImageView thumbnail;
+        private TextView name, phone, headerTextView, hodBadge;
+        private ImageView thumbnail;
 
-        public MyViewHolder(View view) {
+        private MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.name);
             phone = view.findViewById(R.id.phone);

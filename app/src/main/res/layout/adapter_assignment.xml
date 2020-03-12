@@ -3,17 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/RobotoTextViewStyle"
-    android:orientation="horizontal">
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/assignment_no"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:text="Assignment No: 0"
+        android:textColor="@color/colorAccent" />
 
     <LinearLayout
-        android:gravity="center_horizontal"
         android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/subname"
-            android:layout_width="200dp"
+            android:id="@+id/subject_name"
+            android:layout_width="230dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="13sp"
@@ -25,8 +39,8 @@
             android:textColor="@color/miniTitleColor" />
 
         <TextView
-            android:id="@+id/attdsub"
-            android:layout_width="80dp"
+            android:id="@+id/marks"
+            android:layout_width="60dp"
             android:textSize="13sp"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -35,7 +49,7 @@
             android:textColor="@color/miniTitleColor" />
 
         <TextView
-            android:id="@+id/percentageattnd"
+            android:id="@+id/max_marks"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -43,16 +57,7 @@
             android:textSize="13sp"
             android:paddingStart="9dp"
             android:paddingTop="9dp"
-            android:text="79.3"
-            android:textColor="@color/miniTitleColor" />
-
-        <TextView
-            android:id="@+id/bunksub"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:text=" (+1) "
+            android:text="25.00"
             android:textColor="@color/miniTitleColor" />
 
     </LinearLayout>

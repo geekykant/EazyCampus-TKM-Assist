@@ -2,13 +2,10 @@ package com.diyandroid.eazycampus.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,29 +16,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diyandroid.eazycampus.R;
-import com.diyandroid.eazycampus.adapter.AttendanceListAdapter;
-import com.diyandroid.eazycampus.helper.AttendanceHelper;
-import com.diyandroid.eazycampus.model.SubjectAttendance;
+import com.diyandroid.eazycampus.adapter.AssignmentListAdapter;
+import com.diyandroid.eazycampus.helper.AssignmentHelper;
+import com.diyandroid.eazycampus.helper.ProgressDialog;
+import com.diyandroid.eazycampus.model.AssignmentMarks;
 import com.diyandroid.eazycampus.util.TokenUser;
-
-import net.colindodd.gradientlayout.GradientRelativeLayout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
-import static android.graphics.drawable.GradientDrawable.Orientation.RIGHT_LEFT;
-
-public class AssignmentFragment extends Fragment implements AttendanceHelper.AttendanceListener {
+public class AssignmentFragment extends Fragment implements AssignmentHelper.AssignmentListener {
 
     private final static String TAG = AssignmentFragment.class.getSimpleName();
 
     private Context context;
     private View view;
 
-    private ArrayList<SubjectAttendance> attendanceListMain;
-    private AttendanceListAdapter adapter;
-    private AttendanceHelper attendanceHelper;
-
+    private AssignmentListAdapter adapter;
+    private AssignmentHelper assignmentHelper;
     private TokenUser tokenUser;
+
+    private ArrayList<AssignmentMarks> assignmentMarks;
+    private ProgressDialog dialogLoad;
+    private MaterialCardView home_assignment_view;
 
     public AssignmentFragment(Context context) {
         this.context = context;
@@ -50,87 +47,54 @@ public class AssignmentFragment extends Fragment implements AttendanceHelper.Att
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.home_items, container, false);
+        view = inflater.inflate(R.layout.assignment_items, container, false);
 
         tokenUser = new TokenUser(context);
         init();
 
-        attendanceHelper = new AttendanceHelper(this);
-
-        if (attendanceListMain == null) {
-            attendanceListMain = new ArrayList<>();
-            attendanceHelper.fetchAttendance(tokenUser.getUser());
-        } else {
-            checkAttendanceDrop();
-        }
+        assignmentHelper = new AssignmentHelper(this);
+        assignmentHelper.fetchAssignment(tokenUser.getUser());
 
         return view;
     }
 
     private void init() {
-        RecyclerView recyclerView = view.findViewById(R.id.homelistAtendance);
+        home_assignment_view = view.findViewById(R.id.home_assignment_view);
+        home_assignment_view.setVisibility(View.GONE);
+
+        if (dialogLoad != null) dialogLoad.dismiss();
+        dialogLoad = new ProgressDialog();
+        dialogLoad.show(getChildFragmentManager(), "");
+
+        assignmentMarks = new ArrayList<>();
+
+        RecyclerView recyclerView = view.findViewById(R.id.homeListAssignment);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        adapter = new AttendanceListAdapter(context, R.layout.adapter_attendance, attendanceListMain);
+        adapter = new AssignmentListAdapter(context, R.layout.adapter_assignment, assignmentMarks);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
-        String loginName = tokenUser.getPrefLoginName();
-
-        TextView welName = view.findViewById(R.id.welName);
-        if (!TextUtils.isEmpty(loginName)) {
-            loginName = loginName.substring(0, 1).toUpperCase() + loginName.substring(1).toLowerCase();
-
-            if (loginName.split(" ").length != 1) {
-                loginName = loginName.split(" ")[0];
-            }
-
-            welName.setText("Hi " + loginName + "!");
-        }
     }
 
 
     @Override
-    public void onAttendanceSuccess(ArrayList<SubjectAttendance> attendanceList) {
-        Log.i(TAG, "Attendance List: " + attendanceList.get(3).getSubjectName());
+    public void onAssignmentSuccess(ArrayList<AssignmentMarks> assignments) {
+        Log.i(TAG, "Attendance List: " + assignments.get(0).getAssignment_no());
 
-        attendanceListMain.clear();
-        attendanceListMain.addAll(attendanceList);
+        assignmentMarks.addAll(assignments);
         adapter.notifyDataSetChanged();
+
+        home_assignment_view.setVisibility(View.VISIBLE);
+        dialogLoad.dismiss();
     }
 
     @Override
-    public void onAttendanceFailed(String message) {
+    public void onAssignmentFailed(String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
 
-    public void checkAttendanceDrop() {
-        int counter = 0;
-        int ATTENDANCE_PERCENT = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("ATTENDANCE_PERCENT", 75);
-
-        for (int i = 1; i < attendanceListMain.size(); i++) {
-            int attended = Integer.parseInt(attendanceListMain.get(i).getTotalAttended());
-            int total_classes = Integer.parseInt(attendanceListMain.get(i).getTotalClasses());
-
-            float percentAttendance = (attended * 100.0f) / total_classes;
-            if (percentAttendance < ATTENDANCE_PERCENT) {
-                counter++;
-            }
-        }
-
-        if (counter == 0) return;
-
-        TextView attendance_status = view.findViewById(R.id.attendance_status);
-        GradientRelativeLayout gradientRelativeLayout = view.findViewById(R.id.gradient_box);
-
-        gradientRelativeLayout.setGradientBackgroundConfig(getResources().getColor(R.color.gradientOrange),
-                getResources().getColor(R.color.cpb_red), RIGHT_LEFT);
-        if (counter == 1)
-            attendance_status.setText("Manh! You are under in " + counter + " subject!");
-        else
-            attendance_status.setText("Manh! You are under in " + counter + " subjects!");
+        dialogLoad.dismiss();
     }
 }

@@ -2,7 +2,7 @@ package com.diyandroid.eazycampus.helper;
 
 import android.util.Log;
 
-import com.diyandroid.eazycampus.model.SubjectAttendance;
+import com.diyandroid.eazycampus.model.AssignmentMarks;
 import com.diyandroid.eazycampus.model.User;
 import com.diyandroid.eazycampus.service.APIResponse;
 import com.diyandroid.eazycampus.service.GetDataService;
@@ -14,20 +14,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AttendanceHelper {
-    private static final String TAG = AttendanceHelper.class.getSimpleName();
+public class AssignmentHelper {
+    private static final String TAG = AssignmentHelper.class.getSimpleName();
 
-    private AttendanceListener listener;
+    private AssignmentListener listener;
     private GetDataService service;
 
-
-    public AttendanceHelper(AttendanceListener listener) {
+    public AssignmentHelper(AssignmentListener listener) {
         this.listener = listener;
         this.service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
     }
 
-    public void fetchAttendance(User user) {
-        Call<APIResponse> call = service.getAttendance(user);
+    public void fetchAssignment(User user) {
+        Call<APIResponse> call = service.getAssignmentMarks(user);
 
         call.enqueue(new Callback<APIResponse>() {
             @Override
@@ -36,24 +35,24 @@ public class AttendanceHelper {
 
                 Log.d(TAG, "onResponse: ");
 
-                if (response.isSuccessful() && apiResponse.getAttendanceList() != null) {
-                    listener.onAttendanceSuccess(apiResponse.getAttendanceList());
+                if (response.isSuccessful() && apiResponse.getAssignments() != null) {
+                    listener.onAssignmentSuccess(apiResponse.getAssignments());
                 } else {
-                    listener.onAttendanceFailed(apiResponse.getMessage());
+                    listener.onAssignmentFailed(apiResponse.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
                 t.printStackTrace();
-                listener.onAttendanceFailed("Error connecting.");
+                listener.onAssignmentFailed("Error connecting.");
             }
         });
     }
 
-    public interface AttendanceListener {
-        void onAttendanceSuccess(ArrayList<SubjectAttendance> sa);
+    public interface AssignmentListener {
+        void onAssignmentSuccess(ArrayList<AssignmentMarks> assignments);
 
-        void onAttendanceFailed(String message);
+        void onAssignmentFailed(String message);
     }
 }

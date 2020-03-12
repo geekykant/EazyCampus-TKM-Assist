@@ -36,10 +36,10 @@ public class LoginHelper {
 
 
                 if (response.isSuccessful()) {
-                    if (apiResponse.getList() == null)
+                    if (apiResponse.getAttendanceList() == null)
                         listener.onLoginFailed(apiResponse.getMessage(), false);
                     else
-                        listener.onLoginSuccessful(apiResponse.getUser(), apiResponse.getList());
+                        listener.onLoginSuccessful(apiResponse.getUser(), apiResponse.getAttendanceList());
                 }else{
                     listener.onLoginFailed(apiResponse.getMessage(), true);
                 }

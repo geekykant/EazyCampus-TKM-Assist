@@ -9,4 +9,12 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
+    <style name="SettingsTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/whiteBodyColor</item>
+        <item name="colorPrimaryDark">@color/navigationcolor</item>
+        <item name="colorAccent">@color/deeppurple</item>
+        <item name="android:textColor">@color/contentTextColor</item>
+        <item name="android:textColorSecondary">@color/miniTitleColor</item>
+    </style>
+
 </resources>
