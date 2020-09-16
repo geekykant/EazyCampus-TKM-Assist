@@ -4,7 +4,7 @@
 
 🔥🎓 **Eazy Campus** - A Campus app for TKM College of Engineering Kollam students that eases the process of browsing website with some amazing extra features.
 
-<img src="https://lh3.googleusercontent.com/cHGXBI7dLvaLo1CwWifgJbc3EkJkeClsWlS1-22Rh8vB_RohMSGdCTI-gYgUgCE8-EU=s180-rw">/
+<img src="https://lh3.googleusercontent.com/cHGXBI7dLvaLo1CwWifgJbc3EkJkeClsWlS1-22Rh8vB_RohMSGdCTI-gYgUgCE8-EU=s180-rw">
 
 ## App Features
 - Grab attendance and marks report in less than 8 seconds
@@ -12,8 +12,6 @@
 - Faculty directory lets you grab college staffs/teachers details easily
 - Share app with friends in 1 tap, without complicated steps
 - Intuitive and user-friendly UI.
-
-<img src="https://i.imgur.com/CDugLle.jpg" height="400px" weight="800px">
 
 ### Feature details:
 
@@ -29,4 +27,7 @@
 - Datewise attendance
 - Events & Workshops daily notification
 
-License: [GPLv2](https://github.com/geekykant/EazyCampus-TKM-Assist/blob/2.0/LICENSE.md)
+License: [MIT](https://github.com/geekykant/EazyCampus-TKM-Assist/blob/2.0/LICENSE.md)
+
+<img src="https://i.imgur.com/CDugLle.jpg" height="400px" weight="600px">
+
