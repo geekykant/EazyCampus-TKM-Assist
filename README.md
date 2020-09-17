@@ -15,7 +15,10 @@
 - Share app with friends in 1 tap, without complicated steps
 - Intuitive and user-friendly UI.
 
+<div>
 <img src="https://i.imgur.com/NnFQsB1.png" width="300px">
+<img src="https://i.imgur.com/JcRGlgo.png" width="300px">
+</div>
 
 ### Feature details:
 
