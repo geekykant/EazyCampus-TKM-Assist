@@ -1,8 +1,12 @@
 # EazyCampus 2.0: A Campus Assist
 
+<div>
+  
+<img src="https://lh3.googleusercontent.com/cHGXBI7dLvaLo1CwWifgJbc3EkJkeClsWlS1-22Rh8vB_RohMSGdCTI-gYgUgCE8-EU=s180-rw" width="80px"> 
 <img src="https://camo.githubusercontent.com/59c5c810fc8363f8488c3a36fc78f89990d13e99/68747470733a2f2f706c61792e676f6f676c652e636f6d2f696e746c2f656e5f75732f6261646765732f696d616765732f67656e657269632f656e5f62616467655f7765625f67656e657269632e706e67" height="80px">
+  </div>
 
-🔥🎓 **Eazy Campus** - A Campus app for TKM College of Engineering Kollam students that eases the process of browsing website with some amazing extra features.
+#### 🔥🎓 **Eazy Campus** - A Campus app for TKM College of Engineering Kollam students that eases the process of browsing website with some amazing extra features.
 
 ## App Features
 - Grab attendance and marks report in less than 8 seconds
@@ -11,8 +15,7 @@
 - Share app with friends in 1 tap, without complicated steps
 - Intuitive and user-friendly UI.
 
-<img src="https://lh3.googleusercontent.com/cHGXBI7dLvaLo1CwWifgJbc3EkJkeClsWlS1-22Rh8vB_RohMSGdCTI-gYgUgCE8-EU=s180-rw">
-
+<img src="https://i.imgur.com/NnFQsB1.png" width="300px">
 
 ### Feature details:
 
@@ -30,5 +33,5 @@
 
 License: [MIT](https://github.com/geekykant/EazyCampus-TKM-Assist/blob/2.0/LICENSE.md)
 
-<img src="https://i.imgur.com/CDugLle.jpg" height="400px" weight="600px">
+<img src="https://i.imgur.com/UphAgJ8.png"  weight="800px">
 
